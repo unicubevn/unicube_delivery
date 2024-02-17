@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:32+0000\n"
+"POT-Creation-Date: 2024-01-29 10:46+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Marianna Ciofani, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
@@ -252,7 +252,7 @@ msgstr "<span>Personalizza</span>"
 #: code:addons/web_editor/static/src/xml/snippets.xml:0
 #, python-format
 msgid "ACCESS OPTIONS ANYWAY"
-msgstr ""
+msgstr "ACCEDI COMUNQUE ALLE OPZIONI"
 
 #. module: web_editor
 #. odoo-javascript
@@ -299,6 +299,7 @@ msgstr "Aggiungi riga"
 
 #. module: web_editor
 #. odoo-javascript
+#: code:addons/web_editor/static/src/components/media_dialog/document_selector.js:0
 #: code:addons/web_editor/static/src/components/media_dialog/image_selector.js:0
 #, python-format
 msgid "Add URL"
@@ -338,13 +339,6 @@ msgstr "Aggiungi link"
 #, python-format
 msgid "Add an emoji"
 msgstr "Aggiungi emoji"
-
-#. module: web_editor
-#. odoo-javascript
-#: code:addons/web_editor/static/src/components/media_dialog/document_selector.js:0
-#, python-format
-msgid "Add document"
-msgstr "Aggiungi documento"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
@@ -2486,7 +2480,7 @@ msgstr "Campo QWeb qweb"
 #: code:addons/web_editor/static/src/xml/snippets.xml:0
 #, python-format
 msgid "REPLACE BY NEW VERSION"
-msgstr ""
+msgstr "SOSTITUISCI CON NUOVA VERSIONE"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.colorpicker
@@ -3215,7 +3209,7 @@ msgstr "Questo URL non è valido. L'anteprima non può essere aggiornata."
 #: code:addons/web_editor/static/src/xml/snippets.xml:0
 #, python-format
 msgid "This block is outdated."
-msgstr ""
+msgstr "Questo blocco è obsoleto."
 
 #. module: web_editor
 #. odoo-javascript
@@ -3612,6 +3606,8 @@ msgstr "Sì"
 #, python-format
 msgid "You can still access the block options but it might be ineffective."
 msgstr ""
+"È ancora possibile accedere alle opzioni del blocco ma potrebbero non essere"
+" applicate."
 
 #. module: web_editor
 #. odoo-javascript
@@ -3629,7 +3625,7 @@ msgstr ""
 #: code:addons/web_editor/static/src/xml/snippets.xml:0
 #, python-format
 msgid "You might not be able to customize it anymore."
-msgstr ""
+msgstr "Potresti non essere più in grado di personalizzarlo."
 
 #. module: web_editor
 #. odoo-python

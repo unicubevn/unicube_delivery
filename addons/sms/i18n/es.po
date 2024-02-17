@@ -389,7 +389,7 @@ msgstr "Editar contactos"
 #. module: sms
 #: model:ir.model,name:sms.model_mail_thread
 msgid "Email Thread"
-msgstr "Hilo de mensajes"
+msgstr "Hilo de correo electrónico"
 
 #. module: sms
 #. odoo-javascript
@@ -493,7 +493,7 @@ msgstr "ID"
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Si está marcado hay nuevos mensajes que requieren su atención."
+msgstr "Si está marcada, hay nuevos mensajes que requieren su atención."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_account_analytic_account__message_has_sms_error
@@ -529,7 +529,7 @@ msgstr "Si está marcado hay nuevos mensajes que requieren su atención."
 #: model:ir.model.fields,help:sms.field_res_partner__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_res_users__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Si se encuentra marcado, algunos mensajes tienen error de envío."
+msgstr "Si está marcada, algunos mensajes tienen error de envío."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__phone_sanitized_blacklisted
@@ -677,7 +677,7 @@ msgstr "Mensaje"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_has_error
 msgid "Message Delivery error"
-msgstr "Error de Envío de Mensaje"
+msgstr "Error de envío de mensaje"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_notification
@@ -1015,7 +1015,7 @@ msgstr "SMS (sin nota)"
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_res_users__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "Error de entrega del SMS"
+msgstr "Error de envío del SMS"
 
 #. module: sms
 #. odoo-javascript
@@ -1037,7 +1037,7 @@ msgstr "Número SMS"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "SMS Preview"
-msgstr "Previsualización del SMS"
+msgstr "Vista previa del SMS"
 
 #. module: sms
 #. odoo-javascript
@@ -1175,7 +1175,7 @@ msgstr "Enviar SMS como"
 #: model:ir.actions.act_window,name:sms.sms_composer_action_form
 #, python-format
 msgid "Send SMS Text Message"
-msgstr "Manda Mensaje de Texto SMS"
+msgstr "Enviar mensaje de texto SMS"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_composer
@@ -1342,7 +1342,7 @@ msgstr "El tipo de plantilla de este documento puede ser usado con"
 #: code:addons/sms/models/sms_sms.py:0
 #, python-format
 msgid "There are no SMS Text Messages to resend."
-msgstr "No hay mensajes SMS para reenviar"
+msgstr "No hay mensajes de texto SMS para reenviar."
 
 #. module: sms
 #. odoo-python

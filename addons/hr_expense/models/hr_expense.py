@@ -76,6 +76,12 @@ class HrExpense(models.Model):
     quantity = fields.Float(required=True, digits='Product Unit of Measure', default=1)
     description = fields.Text(string="Internal Notes")
     nb_attachment = fields.Integer(string="Number of Attachments", compute='_compute_nb_attachment')
+    attachment_ids = fields.One2many(
+        comodel_name='ir.attachment',
+        inverse_name='res_id',
+        domain="[('res_model', '=', 'hr.expense')]",
+        string="Attachments",
+    )
     state = fields.Selection(
         selection=[
             ('draft', 'To Report'),
@@ -132,11 +138,11 @@ class HrExpense(models.Model):
         compute='_compute_total_amount', inverse='_inverse_total_amount', precompute=True, store=True, readonly=False,
         tracking=True,
     )
-    price_unit = fields.Monetary(
+    price_unit = fields.Float(
         string="Unit Price",
-        currency_field='company_currency_id',
         compute='_compute_price_unit', precompute=True, store=True, required=True, readonly=True,
         copy=True,
+        digits='Product Price',
     )
     currency_id = fields.Many2one(
         comodel_name='res.currency',
@@ -392,8 +398,13 @@ class HrExpense(models.Model):
            when edited after creation.
         """
         for expense in self:
-            if expense.product_id and expense.product_has_cost and not expense.nb_attachment:
-                expense.price_unit = expense.product_id._price_compute('standard_price', currency=expense.company_currency_id)[expense.product_id.id]
+            product_id = expense.product_id
+            if product_id and expense.product_has_cost and not expense.nb_attachment:
+                expense.price_unit = product_id._price_compute(
+                    'standard_price',
+                    uom=expense.product_uom_id,
+                    company=expense.company_id,
+                )[product_id.id]
             else:
                 expense.price_unit = expense.company_currency_id.round(expense.total_amount / expense.quantity) if expense.quantity else 0.
 
@@ -536,8 +547,11 @@ class HrExpense(models.Model):
                 raise UserError(_('You cannot delete a posted or approved expense.'))
 
     def write(self, vals):
+        expense_to_previous_sheet = {}
         if 'sheet_id' in vals:
             self.env['hr.expense.sheet'].browse(vals['sheet_id']).check_access_rule('write')
+            for expense in self:
+                expense_to_previous_sheet[expense] = expense.sheet_id
         if 'tax_ids' in vals or 'analytic_distribution' in vals or 'account_id' in vals:
             if any(not expense.is_editable for expense in self):
                 raise UserError(_('You are not authorized to edit this expense report.'))
@@ -553,7 +567,34 @@ class HrExpense(models.Model):
                     self.sheet_id.write({'employee_id': vals['employee_id']})
                 elif len(employees) > 1:
                     self.sheet_id = False
+        if 'sheet_id' in vals:
+            # The sheet_id has been modified, either by an explicit write on sheet_id of the expense,
+            # or by processing a command on the sheet's expense_line_ids.
+            # We need to delete the attachments on the previous sheet coming from the expenses that were modified,
+            # and copy the attachments of the expenses to the new sheet,
+            # if it's a no-op (writing same sheet_id as the current sheet_id of the expense),
+            # nothing should be done (no unlink then copy of the same attachments)
+            attachments_to_unlink = self.env['ir.attachment']
+            for expense in self:
+                previous_sheet = expense_to_previous_sheet[expense]
+                checksums = set((expense.attachment_ids - previous_sheet.expense_line_ids.attachment_ids).mapped('checksum'))
+                attachments_to_unlink += previous_sheet.attachment_ids.filtered(lambda att: att.checksum in checksums)
+                if vals['sheet_id'] and expense.sheet_id != previous_sheet:
+                    for attachment in expense.attachment_ids.with_context(sync_attachment=False):
+                        attachment.copy({
+                            'res_model': 'hr.expense.sheet',
+                            'res_id': vals['sheet_id'],
+                        })
+            attachments_to_unlink.with_context(sync_attachment=False).unlink()
         return res
+
+    def unlink(self):
+        attachments_to_unlink = self.env['ir.attachment']
+        for sheet in self.sheet_id:
+            checksums = set((sheet.expense_line_ids.attachment_ids & self.attachment_ids).mapped('checksum'))
+            attachments_to_unlink += sheet.attachment_ids.filtered(lambda att: att.checksum in checksums)
+        attachments_to_unlink.with_context(sync_attachment=False).unlink()
+        return super().unlink()
 
     @api.model
     def get_empty_list_help(self, help_message):

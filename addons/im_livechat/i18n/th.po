@@ -72,6 +72,8 @@ msgid ""
 "%(new_line)sType %(bold_start)s:shortcut%(bold_end)s to insert a canned "
 "response in your message."
 msgstr ""
+"%(new_line)sพิมพ์ %(bold_start)s:shortcut%(bold_end)s "
+"เพื่อแทรกคำตอบสำเร็จรูปในข้อความของคุณ"
 
 #. module: im_livechat
 #. odoo-python
@@ -392,7 +394,7 @@ msgstr "กฎของช่อง"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_discuss_channel__channel_type
 msgid "Channel Type"
-msgstr "Channel Type"
+msgstr "ประเภทช่อง"
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.support_channels

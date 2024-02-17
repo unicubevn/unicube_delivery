@@ -3,10 +3,10 @@
 # 	* base_import_module
 # 
 # Translators:
-# Jakub Smolka, 2023
 # Ivana Bartonkova, 2023
 # Wil Odoo, 2023
 # Tomáš Píšek, 2024
+# Jakub Smolka, 2024
 # 
 msgid ""
 msgstr ""
@@ -14,13 +14,23 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Tomáš Píšek, 2024\n"
+"Last-Translator: Jakub Smolka, 2024\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: cs\n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid ""
+"\n"
+"You may need the Enterprise version to install the data module. Please visit https://www.odoo.com/pricing-plan for more information.\n"
+"If you need Website themes, it can be downloaded from https://github.com/odoo/design-themes.\n"
+msgstr ""
 
 #. module: base_import_module
 #: model_terms:ir.ui.view,arch_db:base_import_module.module_view_kanban_apps_inherit
@@ -50,7 +60,7 @@ msgstr "Zavřít"
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
 msgid "Connection to %s failed The list of industry modules cannot be fetched"
-msgstr "Selhalo spojení na %s. Nelze získat seznam odvětvových modulů"
+msgstr "Selhalo spojení na %s. Nelze získat seznam aplikací pro odvětví"
 
 #. module: base_import_module
 #. odoo-python
@@ -205,6 +215,13 @@ msgstr "Oficiální aplikace"
 
 #. module: base_import_module
 #. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid "Only administrators can install data modules."
+msgstr ""
+
+#. module: base_import_module
+#. odoo-python
 #: code:addons/base_import_module/controllers/main.py:0
 #, python-format
 msgid "Only administrators can upload a module"
@@ -240,8 +257,17 @@ msgstr "Přizpůsobení aplikace Studio vyžadují aplikaci Odoo Studio."
 #. odoo-python
 #: code:addons/base_import_module/models/ir_module.py:0
 #, python-format
-msgid "The following modules will be also installed:\n"
-msgstr "Budou instalovány také následující moduly:\n"
+msgid "The following modules will also be installed:\n"
+msgstr ""
+
+#. module: base_import_module
+#. odoo-python
+#: code:addons/base_import_module/models/ir_module.py:0
+#, python-format
+msgid ""
+"The installation of the data module would fail as the following dependencies"
+" can't be found in the addons-path:\n"
+msgstr ""
 
 #. module: base_import_module
 #. odoo-python
@@ -249,8 +275,7 @@ msgstr "Budou instalovány také následující moduly:\n"
 #, python-format
 msgid ""
 "The list of industry applications cannot be fetched. Please try again later"
-msgstr ""
-"Nelze získat seznam odvětvových aplikací. Prosím, zkuste to znovu později"
+msgstr "Nelze získat seznam aplikací pro odvětví. Zkuste to znovu později"
 
 #. module: base_import_module
 #. odoo-python

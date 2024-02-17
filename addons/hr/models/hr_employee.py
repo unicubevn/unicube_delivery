@@ -175,7 +175,7 @@ class HrEmployeePrivate(models.Model):
                 continue
             avatar = employee._origin[image_field]
             if not avatar and employee.user_id:
-                avatar = employee.user_id[avatar_field]
+                avatar = employee.user_id.sudo()[avatar_field]
             employee[avatar_field] = avatar
         super(HrEmployeePrivate, self.browse(employee_wo_user_or_image_ids))._compute_avatar(avatar_field, image_field)
 
@@ -517,7 +517,8 @@ class HrEmployeePrivate(models.Model):
     def _get_calendar_attendances(self, date_from, date_to):
         self.ensure_one()
         employee_timezone = timezone(self.tz) if self.tz else None
-        return self.resource_calendar_id\
+        calendar = self.resource_calendar_id or self.company_id.resource_calendar_id
+        return calendar\
             .with_context(employee_timezone=employee_timezone)\
             .get_work_duration_data(
                 date_from,

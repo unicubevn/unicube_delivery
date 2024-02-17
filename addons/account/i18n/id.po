@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Abe Manyo, 2024\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
@@ -256,7 +256,7 @@ msgstr ").<br/>"
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid "- %(name)s in %(company)s"
-msgstr ""
+msgstr "- %(name)s di %(company)s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1379,7 +1379,7 @@ msgid ""
 "                payments on a daily basis."
 msgstr ""
 "Kasir memungkinkan Anda untuk mengelola entri tunai pada jurnal\n"
-"                tunai Anda. Fitur ini menyediakan cara gampang untuk follow up pembayaran\n"
+"                tunai Anda. Fitur ini menyediakan cara yang mudah untuk follow up pembayaran\n"
 "                tunai dari hari ke hari."
 
 #. module: account
@@ -1547,7 +1547,7 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "A temporary number can not be used in a real matching"
-msgstr ""
+msgstr "Angka yang sementara tidak dapat digunakan untuk matching asli "
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
@@ -4242,7 +4242,7 @@ msgstr "Perusahaan yang terkait dengan jurnal ini"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Complete the partner data with email"
-msgstr ""
+msgstr "Selesaikan data partner dengan email"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__use_sections
@@ -6357,6 +6357,17 @@ msgstr "Ekuitas"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"Error while loading the localization. You should probably update your "
+"localization app first."
+msgstr ""
+"Eror selagi memuat lokalisasi. Anda sebaiknya mengupdate app lokalisasi Anda"
+" terlebih dahulu."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/res_config_settings.py:0
 #, python-format
 msgid "Error!"
@@ -7068,11 +7079,13 @@ msgid ""
 "Gaps due to canceled invoices, deleted entries or manual errors in open "
 "period."
 msgstr ""
+"Bolong karena faktur yang dibatalkan, entri yang dihapus atau error manual "
+"di periode yang terbuka."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Gaps in the sequence"
-msgstr ""
+msgstr "Bolong di urutan"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries_generate_entries
@@ -7998,6 +8011,13 @@ msgstr "\"Kode Pos\" tidak valid, silakan konfigurasi yang betul."
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid "Invalid domain for expression '%s' of line '%s': %s"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Invalid fiscal year last day"
@@ -8282,10 +8302,39 @@ msgstr "Statistik Faktur"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+#, python-format
+msgid "Invoices are being sent in the background."
+msgstr "Faktur sedang dikirim di latar belakang."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Invoices in error"
+msgstr "Faktur yang error"
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "Invoices owed to you"
 msgstr "Faktur terhutang kepada Anda"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Invoices sent"
+msgstr "Faktur yang terkirim"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Invoices sent successfully."
+msgstr "Faktur yang sukses terkirim."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -10209,7 +10258,7 @@ msgstr ""
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Once your invoice is ready, confirm it."
-msgstr ""
+msgstr "Setelah faktur Anda siap, konfirmasi."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -10217,6 +10266,13 @@ msgid "One or more Bank Accounts set on this partner are also used by other"
 msgstr ""
 "Satu atau lebih Akun Bank yang ditetapkan pada mitra ini sudah digunakan "
 "oleh "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "One or more invoices couldn't be processed."
+msgstr "Satu atau lebih faktur tidak dapat diproses."
 
 #. module: account
 #: model:ir.ui.menu,name:account.root_payment_menu
@@ -10294,8 +10350,11 @@ msgid "Oops"
 msgstr "Oops"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__posted
 #: model:ir.model.fields.selection,name:account.selection__account_journal__invoice_reference_type__none
+#, python-format
 msgid "Open"
 msgstr "Terbuka"
 
@@ -10793,14 +10852,14 @@ msgstr "Rekanan"
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid "Partners that are used in hashed entries cannot be merged."
-msgstr ""
+msgstr "Partner yang digunakan di entri hash tidak dapat digabungkan."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_move_send.py:0
 #, python-format
 msgid "Partners without email"
-msgstr ""
+msgstr "Partner tanpa email"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11235,7 +11294,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_send_form
 msgid "Please specify an email address on the"
-msgstr ""
+msgstr "Mohon tentukan alamat email pada"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -12717,9 +12776,23 @@ msgstr ""
 "mengirimkan uang."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+#, python-format
+msgid "Sending invoices"
+msgstr "Mengirim faktur"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Sent"
 msgstr "Terkirim"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Sent invoices"
+msgstr "Faktur-faktur terkirim"
 
 #. module: account
 #: model:mail.template,description:account.mail_template_data_payment_receipt
@@ -14709,6 +14782,10 @@ msgid ""
 "The financial end year detected here is '%(year_end)s'.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
+"Urutan akan dulang dari 1 pada awal setiap tahun finansial.\n"
+"Awal tahun finansial yang dideteksi di sini adalah '%(year)s'.\n"
+"Akhir tahun finansial  yang dideteksi di sini adalah '%(year_end)s'.\n"
+"Angka yang bertambah di kasus ini adalah '%(formatted_seq)s'. "
 
 #. module: account
 #. odoo-python
@@ -16252,6 +16329,8 @@ msgid ""
 "We can't leave this document without any company. Please select a company "
 "for this document."
 msgstr ""
+"Kita tidak dapat meninggalkan dokumen ini tanpa perusahaan apapun. Mohon "
+"pilih perusahan untuk dokumen ini."
 
 #. module: account
 #. odoo-python
@@ -16935,20 +17014,16 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot import the \"openning_balance\" if the opening move (%s) is "
-"already posted.                         If you are absolutely sure you want "
-"to modify the opening balance of your accounts, reset the move to draft."
+"already posted. If you are absolutely sure you want to modify the opening "
+"balance of your accounts, reset the move to draft."
 msgstr ""
-"Anda tidak dapat mengimpor \"openning_balance\" bila opening move (%s) sudah"
-" dipost.                         Bila Anda benar-benar yakin Anda ingin "
-"memodifikasi saldo awal akun-akun Anda, reset pergerakan tersebut menjadi "
-"draft."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "You cannot merge accounts."
-msgstr ""
+msgstr "Anda tidak dapat menggabungkan akun."
 
 #. module: account
 #. odoo-python
@@ -17443,7 +17518,7 @@ msgstr "contoh domain.com"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_send_form
 msgid "following partners."
-msgstr ""
+msgstr "mengikuti partner."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -17505,6 +17580,13 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__payment_tolerance_type__percentage
 msgid "in percentage"
 msgstr "dalam persentase"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+#, python-format
+msgid "invoices"
+msgstr "Faktur"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account

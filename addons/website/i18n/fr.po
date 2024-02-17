@@ -3,17 +3,17 @@
 # 	* website
 # 
 # Translators:
-# Jolien De Paepe, 2024
 # Martin Trigaux, 2024
 # Wil Odoo, 2024
+# Jolien De Paepe, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Jolien De Paepe, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1074,6 +1074,10 @@ msgid ""
 "                            info@yourcompany.example.com\n"
 "                        </small>"
 msgstr ""
+"<small>\n"
+"                            <i class=\"fa fa-1x fa-fw fa-envelope me-1\"/>\n"
+"                            info@yourcompany.example.com\n"
+"                        </small>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -1625,6 +1629,13 @@ msgid "About us"
 msgstr "À propos de nous"
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/website.py:0
+#, python-format
+msgid "Access Denied"
+msgstr "Accès refusé"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__access_token
 msgid "Access Token"
 msgstr "Jeton d'accès"
@@ -1853,6 +1864,11 @@ msgstr "Ajouter un nouveau champ après celui-ci"
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Add a new field at the end"
 msgstr "Ajouter un nouveau champ à la fin"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.view_view_form_extend
+msgid "Add groups in the \"Access Rights\" tab below."
+msgstr "Ajoutez des groupes dans l'onglet \"Droits d'accès\" ci-dessous."
 
 #. module: website
 #. odoo-python
@@ -5690,6 +5706,18 @@ msgid "Google Search Console"
 msgstr "Console Google Search"
 
 #. module: website
+#. odoo-python
+#: code:addons/website/models/res_config_settings.py:0
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+#, python-format
+msgid ""
+"Google doesn't need to be pinged anymore. It will automatically fetch your "
+"/sitemap.xml."
+msgstr ""
+"Google n'a plus besoin d'être interrogé. Il récupérera automatiquement votre"
+" /sitemap.xml."
+
+#. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__google_search_console
 #: model:ir.model.fields,help:website.field_website__google_search_console
 msgid "Google key, or Enable to access first reply"
@@ -7546,7 +7574,7 @@ msgstr "Buffet méditerranéen d'entrées, de plats principaux et de desserts"
 #: model_terms:ir.ui.view,arch_db:website.s_rating_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Medium"
-msgstr "Moyenne"
+msgstr "Médium"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_full_1_s_text_block_h2
@@ -8124,6 +8152,11 @@ msgstr "Fenêtre contextuelle newsletter"
 #, python-format
 msgid "Next"
 msgstr "Suivant"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.step_wizard
+msgid "Next:"
+msgstr "Suivant :"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
@@ -10236,7 +10269,7 @@ msgstr "Grande ombre"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Shadow medium"
-msgstr "Moyenne ombre"
+msgstr "Médium ombre"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -12100,7 +12133,7 @@ msgstr "Url ou email"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_page_view_search
 msgid "Urls & Pages"
-msgstr "URLs et Pages"
+msgstr "URL et Pages"
 
 #. module: website
 #. odoo-javascript
@@ -13245,7 +13278,7 @@ msgstr "Vous n'avez pas le droit de publier / annuler la publication"
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 #, python-format
 msgid "You don't have permissions to edit this record."
-msgstr ""
+msgstr "Vous n'êtes pas autorisé à modifier cet enregistrement."
 
 #. module: website
 #. odoo-javascript

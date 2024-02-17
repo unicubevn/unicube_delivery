@@ -343,7 +343,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         filter_by_price_enabled = website.is_view_active('website_sale.filter_products_price')
         if filter_by_price_enabled:
-            company_currency = website.company_id.currency_id
+            company_currency = website.company_id.sudo().currency_id
             conversion_rate = request.env['res.currency']._get_conversion_rate(
                 company_currency, website.currency_id, request.website.company_id, fields.Date.today())
         else:
@@ -1343,7 +1343,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'account_on_checkout': request.website.account_on_checkout,
             'is_public_user': is_public_user,
             'is_public_order': order._is_public_order(),
-            'use_same': is_public_user or ('use_same' in kw and str2bool(kw.get('use_same'))),
+            'use_same': is_public_user or ('use_same' in kw and str2bool(kw.get('use_same') or '0')),
         }
         render_values.update(self._get_country_related_render_values(kw, render_values))
         return request.render("website_sale.address", render_values)
@@ -1722,10 +1722,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :return: A list of errors (error_title, error_message)
         :rtype: list[tuple]
         """
-        has_storable_products = any(line.product_id.type in ['consu', 'product'] for line in order.order_line)
         errors = []
 
-        if not order._get_delivery_methods() and has_storable_products:
+        if not order.only_services and not order._get_delivery_methods():
             errors.append((
                 _('Sorry, we are unable to ship your order'),
                 _('No shipping method is available for your current order and shipping address. '
@@ -1746,7 +1745,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         """
         order = request.website.sale_get_order()
 
-        if order and (request.httprequest.method == 'POST' or not order.carrier_id):
+        if order and not order.only_services and (request.httprequest.method == 'POST' or not order.carrier_id):
             # Update order's carrier_id (will be the one of the partner if not defined)
             # If a carrier_id is (re)defined, redirect to "/shop/payment" (GET method to avoid infinite loop)
             carrier_id = post.get('carrier_id')

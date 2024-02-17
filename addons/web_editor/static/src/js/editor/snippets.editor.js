@@ -120,10 +120,8 @@ var SnippetEditor = Widget.extend({
                 // _initDragAndDrop function. So adding it here is probably
                 // useless. To check. The fact that that class is added in any
                 // case should probably reviewed in master anyway (TODO).
-                this.options.wysiwyg.odooEditor.observerUnactive('image_drag_and_drop');
                 this.$target[0].classList.add("o_draggable");
                 this.draggableComponentImgs = this._initDragAndDrop("img", ".o_draggable", this.$target[0]);
-                this.options.wysiwyg.odooEditor.observerActive('image_drag_and_drop');
             }
         } else {
             this.$('.o_overlay_move_options').addClass('d-none');
@@ -2559,7 +2557,7 @@ var SnippetsMenu = Widget.extend({
             // their descendant snippets.
             const rootInvisibleSnippetEls = [...$invisibleSnippets].filter(invisibleSnippetEl => {
                 const ancestorInvisibleEl = invisibleSnippetEl
-                                                 .parentElement.closest(".o_snippet_invisible");
+                                                 .parentElement.closest(invisibleSelector);
                 if (!ancestorInvisibleEl) {
                     return true;
                 }
@@ -3554,7 +3552,10 @@ var SnippetsMenu = Widget.extend({
      */
     _registerDefaultTexts: function ($in) {
         if ($in === undefined) {
-            $in = this.$snippets.find('.oe_snippet_body');
+            // By default, we don't want the `o_default_snippet_text` class on
+            // custom snippets. Those are most likely already ready, we don't
+            // really need the auto-selection by the editor.
+            $in = this.$snippets.find('.oe_snippet_body:not(.s_custom_snippet)');
         }
 
         $in.find('*').addBack()
@@ -4415,7 +4416,8 @@ var SnippetsMenu = Widget.extend({
         const customizeTableBlock = renderToElement('web_editor.toolbar.table-options');
         this.options.wysiwyg.odooEditor.bindExecCommand(customizeTableBlock);
         $(this.customizePanel).append(customizeTableBlock);
-        $title.append(this._toolbarWrapperEl.querySelector('#removeFormat'));
+        this._removeFormatButton = this._removeFormatButton || this._toolbarWrapperEl.querySelector('#removeFormat');
+        $title.append(this._removeFormatButton);
         this._$toolbarContainer.append(this._toolbarWrapperEl);
 
         this._checkEditorToolbarVisibility();
@@ -4437,7 +4439,7 @@ var SnippetsMenu = Widget.extend({
             return;
         }
         if (!range ||
-            !$currentSelectionTarget.parents('#wrapwrap, .iframe-editor-wrapper .o_editable').length ||
+            !$currentSelectionTarget.parents('#wrapwrap, .iframe-editor-wrapper').length ||
             closestElement(selection.anchorNode, '[data-oe-model]:not([data-oe-type="html"]):not([data-oe-field="arch"]):not([data-oe-translation-initial-sha])') ||
             closestElement(selection.focusNode, '[data-oe-model]:not([data-oe-type="html"]):not([data-oe-field="arch"]):not([data-oe-translation-initial-sha])') ||
             (e && $(e.target).closest('.fa, img').length ||

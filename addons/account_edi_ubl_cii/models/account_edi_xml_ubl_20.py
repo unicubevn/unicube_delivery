@@ -66,10 +66,11 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         }]
 
     def _get_partner_contact_vals(self, partner):
+        phone = partner.phone or partner.mobile
         return {
             'id': partner.id,
             'name': partner.name,
-            'telephone': partner.phone or partner.mobile,
+            'telephone': phone and phone.strip(),
             'electronic_mail': partner.email,
         }
 
@@ -600,7 +601,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         # ==== partner_id ====
 
         role = "Customer" if invoice.journal_id.type == 'sale' else "Supplier"
-        vat = self._find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:CompanyID', tree)
+        vat = self._find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:CompanyID[string-length(text()) > 5]', tree)
         phone = self._find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:Telephone', tree)
         mail = self._find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:ElectronicMail', tree)
         name = self._find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:Name', tree)
@@ -635,6 +636,14 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             if invoice_date_due_node is not None and invoice_date_due_node.text:
                 invoice.invoice_date_due = invoice_date_due_node.text
                 break
+
+        # ==== Bank Details ====
+
+        bank_detail_nodes = tree.findall('.//{*}PaymentMeans')
+        bank_details = [bank_detail_node.findtext('{*}PayeeFinancialAccount/{*}ID') for bank_detail_node in bank_detail_nodes]
+
+        if bank_details:
+            self._import_retrieve_and_fill_partner_bank_details(invoice, bank_details=bank_details)
 
         # ==== Reference ====
 

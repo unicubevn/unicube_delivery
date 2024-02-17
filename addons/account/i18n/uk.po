@@ -3,17 +3,17 @@
 # 	* account
 # 
 # Translators:
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
-# Wil Odoo, 2024
 # Martin Trigaux, 2024
+# Wil Odoo, 2024
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Martin Trigaux, 2024\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -256,7 +256,7 @@ msgstr ").<br/>"
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid "- %(name)s in %(company)s"
-msgstr ""
+msgstr "- %(name)s в %(company)s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1537,7 +1537,7 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "A temporary number can not be used in a real matching"
-msgstr ""
+msgstr "Тимчасовий номер не можна використовувати для справжнього узгодження"
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
@@ -4236,7 +4236,7 @@ msgstr "Компанія-власник цього журналу"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Complete the partner data with email"
-msgstr ""
+msgstr "Заповніть дані партнера з електронною поштою"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__use_sections
@@ -6088,7 +6088,7 @@ msgid ""
 "vendor bill/credit note."
 msgstr ""
 "Виявлено дублювання посилання постачальника. Ви, ймовірно, закодували двічі "
-"той же раханок постачальника/сторно."
+"той же рахунок постачальника/сторно."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_reports
@@ -6350,6 +6350,17 @@ msgstr "Необхідний Epd"
 #, python-format
 msgid "Equity"
 msgstr "Капітал"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"Error while loading the localization. You should probably update your "
+"localization app first."
+msgstr ""
+"Помилка під час завантаження локалізації. Ймовірно, вам слід спочатку "
+"оновити модуль локалізації."
 
 #. module: account
 #. odoo-python
@@ -7062,11 +7073,13 @@ msgid ""
 "Gaps due to canceled invoices, deleted entries or manual errors in open "
 "period."
 msgstr ""
+"Прогалини через скасовані рахунки-фактури, видалені записи або помилки "
+"вручну під час відкритого періоду."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Gaps in the sequence"
-msgstr ""
+msgstr "Прогалини в послідовності"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries_generate_entries
@@ -7994,6 +8007,13 @@ msgstr "Недійсний \"Zip Range\", будь-ласка, налаштуй�
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_report.py:0
+#, python-format
+msgid "Invalid domain for expression '%s' of line '%s': %s"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Invalid fiscal year last day"
@@ -8277,10 +8297,39 @@ msgstr "Статистика рахунків"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+#, python-format
+msgid "Invoices are being sent in the background."
+msgstr "Рахунки-фактури надсилаються у фоновому режимі."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Invoices in error"
+msgstr "Рахунки-фактури з помилкою"
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "Invoices owed to you"
 msgstr "Рахунки для вас"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Invoices sent"
+msgstr "Рахунки-фактури надіслано"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Invoices sent successfully."
+msgstr "Рахунки-фактури надіслано успішно."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -10207,7 +10256,7 @@ msgstr ""
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Once your invoice is ready, confirm it."
-msgstr ""
+msgstr "Коли ваш рахунок буде готовий, підтвердіть його."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -10215,6 +10264,13 @@ msgid "One or more Bank Accounts set on this partner are also used by other"
 msgstr ""
 "Один або кілька банківських рахунків, встановлених для цього партнера, також"
 " використовуються іншими"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "One or more invoices couldn't be processed."
+msgstr "Один або більше рахунків-фактур не можуть бути оброблені."
 
 #. module: account
 #: model:ir.ui.menu,name:account.root_payment_menu
@@ -10290,8 +10346,11 @@ msgid "Oops"
 msgstr "От халепа"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__state__posted
 #: model:ir.model.fields.selection,name:account.selection__account_journal__invoice_reference_type__none
+#, python-format
 msgid "Open"
 msgstr "Відкрито"
 
@@ -10790,13 +10849,15 @@ msgstr "Партнери"
 #, python-format
 msgid "Partners that are used in hashed entries cannot be merged."
 msgstr ""
+"Партнери, які використовуються в хешованих записах, не можуть бути "
+"об’єднані."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_move_send.py:0
 #, python-format
 msgid "Partners without email"
-msgstr ""
+msgstr "Партнери без електронної пошти"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11236,7 +11297,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_send_form
 msgid "Please specify an email address on the"
-msgstr ""
+msgstr "Будь ласка, вкажіть електронну адресу на"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -12716,9 +12777,23 @@ msgstr ""
 "ви можете активувати можливість надсилати гроші."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+#, python-format
+msgid "Sending invoices"
+msgstr "Надіслання рахунків-фактур"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Sent"
 msgstr "Надіслано"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Sent invoices"
+msgstr "Надіслані рахунки-фактури"
 
 #. module: account
 #: model:mail.template,description:account.mail_template_data_payment_receipt
@@ -14716,6 +14791,10 @@ msgid ""
 "The financial end year detected here is '%(year_end)s'.\n"
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
+"Послідовність перезапускатиметься з 1 на початку кожного фінансового року.\n"
+"Початок фінансового року визначено тут '%(year)s'.\n"
+"Кінець фінансового року визначено тут '%(year_end)s'.\n"
+"Зростаюче число в цьому випадку є '%(formatted_seq)s'."
 
 #. module: account
 #. odoo-python
@@ -16254,6 +16333,8 @@ msgid ""
 "We can't leave this document without any company. Please select a company "
 "for this document."
 msgstr ""
+"Ми не можемо залишити цей документ без компанії. Виберіть компанію для цього"
+" документа."
 
 #. module: account
 #. odoo-python
@@ -16938,20 +17019,19 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot import the \"openning_balance\" if the opening move (%s) is "
-"already posted.                         If you are absolutely sure you want "
-"to modify the opening balance of your accounts, reset the move to draft."
+"already posted. If you are absolutely sure you want to modify the opening "
+"balance of your accounts, reset the move to draft."
 msgstr ""
-"Ви не можете імпортувати \"openning_balance\" якщо проводка відкриття (%s) "
-"вже опублікована.                         Якщо ви абсолютно впевнені, що "
-"хочете змінити початковий баланс своїх рахунків, скиньте проводку до "
-"чернетки."
+"Ви не можете імпортувати \"openning_balance\", якщо початкова проводка (%s) "
+"вже опублікована. Якщо ви абсолютно впевнені, що хочете змінити початковий "
+"баланс своїх рахунків, скиньте проводку до чернетки."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "You cannot merge accounts."
-msgstr ""
+msgstr "Ви не можете об'єднати рахунки."
 
 #. module: account
 #. odoo-python
@@ -17441,7 +17521,7 @@ msgstr "напр. domain.com"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_send_form
 msgid "following partners."
-msgstr ""
+msgstr "наступні партнери."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -17503,6 +17583,13 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__payment_tolerance_type__percentage
 msgid "in percentage"
 msgstr "у відсотках"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_move_send.py:0
+#, python-format
+msgid "invoices"
+msgstr "рахунки-фактури"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account

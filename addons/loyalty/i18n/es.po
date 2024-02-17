@@ -464,7 +464,7 @@ msgstr ""
 "    <td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
 "        Usar el código de promoción\n"
 "        <t t-if=\"object.expiration_date\">\n"
-"            antes del <t t-out=\"object.expiration_date or ''\">2021-06-16</t>\n"
+"            antes del <t t-out=\"object.expiration_date or ''\">16-06-2021</t>\n"
 "        </t>\n"
 "        <p style=\"margin-top: 16px;\">\n"
 "            <strong style=\"padding: 16px 8px 16px 8px; border-radius: 3px; background-color: #F1F1F1;\" t-out=\"object.code or ''\">15637502648479132902</strong>\n"
@@ -1288,12 +1288,12 @@ msgstr "ID"
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_card__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Si está marcado hay nuevos mensajes que requieren su atención."
+msgstr "Si está marcada, hay nuevos mensajes que requieren su atención."
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_card__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Si se encuentra marcado, algunos mensajes tienen error de envío."
+msgstr "Si está marcada, algunos mensajes tienen error de envío."
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
@@ -1455,7 +1455,7 @@ msgstr "Si se usa un límite, el uso máximo debe ser estrictamente positivo."
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_has_error
 msgid "Message Delivery error"
-msgstr "Error de Envío de Mensaje"
+msgstr "Error de envío de mensaje"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_ids
@@ -1591,7 +1591,7 @@ msgstr "Portal visible"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__pricelist_ids
 msgid "Pricelist"
-msgstr "Tarifa"
+msgstr "Lista de precios"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_product_template
@@ -1738,7 +1738,7 @@ msgstr "Dominio del producto de recompensa"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_qty
 msgid "Reward Product Qty"
-msgstr "Cantidad de productos de recompensa"
+msgstr "Cant. de productos de recompensa"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_uom_id
@@ -1867,7 +1867,7 @@ msgstr "El descuento debe ser estrictamente positivo."
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__date_to
 msgid "The end date is included in the validity period of this program"
 msgstr ""
-"La fecha de finalización se incluye en el periodo de validez de este "
+"La fecha de finalización se incluye en el período de validez de este "
 "programa "
 
 #. module: loyalty
@@ -1903,7 +1903,7 @@ msgstr ""
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__date_from
 msgid "The start date is included in the validity period of this program"
 msgstr ""
-"La fecha de inicio está incluida en el periodo de validez de este programa"
+"La fecha de inicio está incluida en el período de validez de este programa"
 
 #. module: loyalty
 #. odoo-python
@@ -1912,7 +1912,7 @@ msgstr ""
 msgid ""
 "The validity period's start date must be anterior or equal to its end date."
 msgstr ""
-"La fecha de inicio del periodo de validez debe ser anterior o igual a la "
+"La fecha de inicio del período de validez debe ser anterior o igual a la "
 "fecha de finalización "
 
 #. module: loyalty

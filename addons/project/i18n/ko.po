@@ -3,17 +3,17 @@
 # 	* project
 # 
 # Translators:
-# Wil Odoo, 2023
 # Daye Jeong, 2023
 # Sarah Park, 2024
+# Wil Odoo, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Sarah Park, 2024\n"
+"Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -195,13 +195,14 @@ msgstr "카드를 <b>끌어서</b> 작업의 단계를 수정합니다."
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid ""
-"<b>Log notes</b> for internal communications <i>(the people following this task won't be notified \n"
-"    of the note you are logging unless you specifically tag them)</i>. Use @ <b>mentions</b> to ping a colleague \n"
-"    or # <b>mentions</b> to reach an entire team."
+"<b>Log notes</b> for internal communications <i>(the people following this "
+"task won't be notified of the note you are logging unless you specifically "
+"tag them)</i>. Use @ <b>mentions</b> to ping a colleague or # "
+"<b>mentions</b> to reach an entire team."
 msgstr ""
-"내부 커뮤니케이션을 위하여 <b>메모를 기록</b>합니다 <i>(이 작업을 팔로우하는 경우에는 특별히 태그를\n"
-"    지정하지 않는 한 메모에 대한 알림을 받지 않습니다)</i>. @로 <b>멘션</b>하여 동료에게 연락하거나\n"
-"    #로 <b>멘션</b>하여 전체 팀에게 전달할 수 있습니다."
+"<b>로그 메모</b>를 내부 커뮤니케이션용으로 기록합니다 <i>(특별히 태그를 지정하지 않는 한 작업 팔로워에게는 로그 메모에 대한 "
+"알림을 보내지 않습니다)</i>. @ 기호로 동료에게 <b>멘션</b>하거나 # 기호로 팀 전체에 <b>멘션</b>으로 전달할 수도 "
+"있습니다."
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -1237,11 +1238,11 @@ msgstr "변경 요청"
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid ""
-"Choose a <b>name</b> for your project. <i>It can be anything you want: the name of a customer,\n"
-"     of a product, of a team, of a construction site, etc.</i>"
+"Choose a <b>name</b> for your project. <i>It can be anything you want: the "
+"name of a customer, of a product, of a team, of a construction site, "
+"etc.</i>"
 msgstr ""
-"프로젝트의 <b>이름</b>을 선택하세요. <i>고객 이름이나, 품목명, 팀명, 건설 현장명 등\n"
-"      무엇이든 선택하실 수 있습니다.</i>"
+"프로젝트의 <b>이름</b>을 선택하세요. <i>고객 이름이나, 품목명, 팀명, 건설 현장명 등 무엇이든 선택하실 수 있습니다.</i>"
 
 #. module: project
 #. odoo-javascript
@@ -3260,6 +3261,11 @@ msgstr "월 1회"
 #, python-format
 msgid "Oops! Something went wrong. Try to reload the page and log in."
 msgstr "오, 이런! 뭔가 잘못됐어요. 페이지를 다시 불러오고 재접속하세요."
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__open_task_count
+msgid "Open Task Count"
+msgstr "미완결 작업 수"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened
@@ -5297,11 +5303,12 @@ msgstr "다음 내용을 사용"
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid ""
-"Use the chatter to <b>send emails</b> and communicate efficiently with your customers. \n"
-"    Add new people to the followers' list to make them aware of the main changes about this task."
+"Use the chatter to <b>send emails</b> and communicate efficiently with your "
+"customers. Add new people to the followers' list to make them aware of the "
+"main changes about this task."
 msgstr ""
-"메시지창을 통해 <b>이메일을 보내거나</b> 고객들과 효율적으로 소통할 수 있습니다.\n"
-"   팔로워 목록에 신규 사용자를 추가하여 작업의 주요 변경 내용을 알려줍니다."
+"메시지창을 통해 <b>이메일을 보내거나</b> 고객들과 효율적으로 소통할 수 있습니다. 팔로워 목록에 신규 사용자를 추가하여 작업의 주요"
+" 변경 내용을 알려줍니다."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__display_name

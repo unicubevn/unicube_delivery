@@ -74,9 +74,9 @@ class AccountEdiXmlUBLRO(models.AbstractModel):
 
     def _get_document_type_code_vals(self, invoice, invoice_data):
         # EXTENDS 'account_edi_ubl_cii
-        # http://www.datypic.com/sc/ubl20/e-cbc_DocumentTypeCode.html
         vals = super()._get_document_type_code_vals(invoice, invoice_data)
-        vals['value'] = "380" if invoice.move_type == 'out_invoice' else "381"
+        # [UBL-SR-43] DocumentTypeCode should only show up on a CreditNote XML with the value '50'
+        vals['value'] = '50' if invoice.move_type == 'out_refund' else False
         return vals
 
     def _export_invoice_constraints(self, invoice, vals):
@@ -96,11 +96,6 @@ class AccountEdiXmlUBLRO(models.AbstractModel):
                 constraints[f"ciusro_{partner_type}_tax_identifier_required"] = _(
                     "The following partner doesn't have a VAT nor Company ID: %s. "
                     "At least one of them is required. ",
-                    partner.name)
-
-            if partner.vat and not partner.vat.startswith(partner.country_code):
-                constraints[f"ciusro_{partner_type}_country_code_vat_required"] = _(
-                    "The following partner's doesn't have a country code prefix in their VAT: %s.",
                     partner.name)
 
             if (not partner.vat and partner.company_registry

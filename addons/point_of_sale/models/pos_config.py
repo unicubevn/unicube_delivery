@@ -86,7 +86,7 @@ class PosConfig(models.Model):
         domain=[('type', '=', 'sale')],
         help="Accounting journal used to create invoices.",
         default=_default_invoice_journal)
-    currency_id = fields.Many2one('res.currency', compute='_compute_currency', string="Currency")
+    currency_id = fields.Many2one('res.currency', compute='_compute_currency', compute_sudo=True, string="Currency")
     iface_cashdrawer = fields.Boolean(string='Cashdrawer', help="Automatically open the cashdrawer.")
     iface_electronic_scale = fields.Boolean(string='Electronic Scale', help="Enables Electronic Scale integration.")
     iface_customer_facing_display = fields.Boolean(compute='_compute_customer_facing_display')
@@ -203,9 +203,9 @@ class PosConfig(models.Model):
     def _compute_currency(self):
         for pos_config in self:
             if pos_config.journal_id:
-                pos_config.currency_id = pos_config.journal_id.currency_id.id or pos_config.journal_id.company_id.currency_id.id
+                pos_config.currency_id = pos_config.journal_id.currency_id.id or pos_config.journal_id.company_id.sudo().currency_id.id
             else:
-                pos_config.currency_id = pos_config.company_id.currency_id.id
+                pos_config.currency_id = pos_config.company_id.sudo().currency_id.id
 
     @api.depends('session_ids', 'session_ids.state')
     def _compute_current_session(self):
@@ -436,6 +436,7 @@ class PosConfig(models.Model):
                 ))
 
         self._preprocess_x2many_vals_from_settings_view(vals)
+        vals = self._keep_new_vals(vals)
         result = super(PosConfig, self).write(vals)
 
         self.sudo()._set_fiscal_position()
@@ -479,6 +480,23 @@ class PosConfig(models.Model):
                 unlink_commands = [Command.unlink(_id) for _id in linked_ids]
 
                 vals[x2many_field] = unlink_commands + vals[x2many_field]
+
+    def _keep_new_vals(self, vals):
+        """ Keep values in vals that are different than
+        self's values.
+        """
+        from_settings_view = self.env.context.get('from_settings_view')
+        if not from_settings_view:
+            return vals
+        new_vals = {}
+        for field, val in vals.items():
+            config_field = self._fields.get(field)
+            if config_field:
+                cache_value = config_field.convert_to_cache(val, self)
+                record_value = config_field.convert_to_record(cache_value, self)
+                if record_value != self[field]:
+                    new_vals[field] = val
+        return new_vals
 
     def _get_forbidden_change_fields(self):
         forbidden_keys = ['module_pos_hr', 'module_pos_restaurant', 'available_pricelist_ids',
@@ -720,23 +738,43 @@ class PosConfig(models.Model):
         if pms:
             self.payment_method_ids = [Command.link(pm.id) for pm in pms]
 
+    def _is_journal_exist(self, journal_code, name, company_id):
+        account_journal = self.env['account.journal']
+        existing_journal = account_journal.search([
+            ('name', '=', name),
+            ('code', '=', journal_code),
+            ('company_id', '=', company_id),
+        ], limit=1)
+
+        return existing_journal.id or account_journal.create({
+            'name': name,
+            'code': journal_code,
+            'type': 'cash',
+            'company_id': company_id,
+        }).id
+
+    def _is_pos_pm_exist(self, name, journal_id, company_id):
+        pos_payment = self.env['pos.payment.method']
+        existing_pos_cash_pm = pos_payment.search([
+            ('name', '=', name),
+            ('journal_id', '=', journal_id),
+            ('company_id', '=', company_id),
+        ], limit=1)
+
+        return existing_pos_cash_pm.id or pos_payment.create({
+            'name': name,
+            'journal_id': journal_id,
+            'company_id': company_id,
+        }).id
+
     def _ensure_cash_payment_method(self, journal_code, name):
         self.ensure_one()
         if not self.company_id.chart_template or self.payment_method_ids.filtered('is_cash_count'):
             return
         company_id = self.company_id.id
-        cash_journal = self.env['account.journal'].create({
-            'name': name,
-            'code': journal_code,
-            'type': 'cash',
-            'company_id': company_id,
-        })
-        cash_pm = self.env['pos.payment.method'].create({
-            'name': name,
-            'journal_id': cash_journal.id,
-            'company_id': company_id,
-        })
-        self.payment_method_ids = [Command.link(cash_pm.id)]
+        cash_journal_id = self._is_journal_exist(journal_code, name, company_id)
+        cash_pm_id = self._is_pos_pm_exist(name, cash_journal_id, company_id)
+        self.payment_method_ids = [Command.link(cash_pm_id)]
 
     def get_limited_products_loading(self, fields):
         tables, where_clause, params = self.env['product.product']._where_calc(
@@ -775,6 +813,10 @@ class PosConfig(models.Model):
             return int(config_param)
         except (TypeError, ValueError, OverflowError):
             return default_limit
+
+    def toggle_images(self, for_products, for_categories):
+        self.env['ir.config_parameter'].sudo().set_param('point_of_sale.show_product_images', for_products)
+        self.env['ir.config_parameter'].sudo().set_param('point_of_sale.show_category_images', for_categories)
 
     def get_limited_partners_loading(self):
         self.env.cr.execute("""

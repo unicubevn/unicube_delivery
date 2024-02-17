@@ -293,7 +293,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.module("KanbanView");
 
     QUnit.test("basic ungrouped rendering", async (assert) => {
-        assert.expect(6);
+        assert.expect(7);
 
         await makeView({
             type: "kanban",
@@ -320,6 +320,10 @@ QUnit.module("Views", (hooks) => {
 
         assert.hasClass(target.querySelector(".o_kanban_view"), "o_kanban_test");
         assert.hasClass(target.querySelector(".o_kanban_renderer"), "o_kanban_ungrouped");
+        assert.containsOnce(
+            target,
+            ".o_control_panel_main_buttons .d-none.d-xl-inline-flex button.o-kanban-button-new"
+        );
         assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 4);
         assert.containsN(target, ".o_kanban_ghost", 6);
         assert.containsOnce(target, ".o_kanban_record:contains(gnap)");
@@ -436,7 +440,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("basic grouped rendering", async (assert) => {
-        assert.expect(17);
+        assert.expect(18);
 
         patchWithCleanup(KanbanRenderer.prototype, {
             setup() {
@@ -473,6 +477,10 @@ QUnit.module("Views", (hooks) => {
         });
         assert.hasClass(target.querySelector(".o_kanban_view"), "o_kanban_test");
         assert.hasClass(target.querySelector(".o_kanban_renderer"), "o_kanban_grouped");
+        assert.containsOnce(
+            target,
+            ".o_control_panel_main_buttons .d-none.d-xl-inline-flex button.o-kanban-button-new"
+        );
         assert.containsN(target, ".o_kanban_group", 2);
         assert.containsOnce(target, ".o_kanban_group:first-child .o_kanban_record");
         assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 3);
@@ -4490,6 +4498,8 @@ QUnit.module("Views", (hooks) => {
 
         await editColumnName(target, "new column");
         await validateColumn(target);
+
+        await nextTick();
 
         assert.strictEqual(target.querySelector(".o_column_quick_create input").value, "");
         assert.containsN(target, ".o_kanban_group", 2);
@@ -9432,6 +9442,57 @@ QUnit.module("Views", (hooks) => {
         ]);
     });
 
+    QUnit.test("filter on progressbar in new groups", async (assert) => {
+        serverData.views = {
+            "partner,some_view_ref,form": `<form><field name="foo"/></form>`,
+        };
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban on_create="quick_create" quick_create_view="some_view_ref">
+                    <field name="bar"/>
+                    <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}'/>
+                    <templates><t t-name="kanban-box">
+                        <div><field name="foo"/></div>
+                    </t></templates>
+                </kanban>
+            `,
+            groupBy: ["product_id"],
+        });
+
+        assert.containsN(target, ".o_kanban_group", 2);
+
+        await createColumn(target);
+        await editColumnName(target, "new column 1");
+        await validateColumn(target);
+        await editColumnName(target, "new column 2");
+        await validateColumn(target);
+        assert.containsN(target, ".o_kanban_group", 4);
+        assert.containsNone(target.querySelectorAll(".o_kanban_group")[2], ".o_kanban_record");
+        assert.containsNone(target.querySelectorAll(".o_kanban_group")[3], ".o_kanban_record");
+
+        await quickCreateRecord(target, 2);
+        await editInput(target, ".o_field_widget[name=foo] input", "new record 1");
+        await validateRecord(target);
+        await quickCreateRecord(target, 3);
+        await editInput(target, ".o_field_widget[name=foo] input", "new record 2");
+        await validateRecord(target);
+        assert.containsOnce(target.querySelectorAll(".o_kanban_group")[2], ".o_kanban_record");
+        assert.containsOnce(target.querySelectorAll(".o_kanban_group")[3], ".o_kanban_record");
+
+        assert.containsNone(target, ".o_kanban_group_show_200");
+
+        await click(
+            target.querySelectorAll(".o_kanban_group")[2],
+            ".o_column_progress .progress-bar"
+        );
+        assert.containsOnce(target, ".o_kanban_group_show_200");
+        assert.hasClass(target.querySelectorAll(".o_kanban_group")[2], "o_kanban_group_show_200");
+    });
+
     QUnit.test('column progressbars: "false" bar is clickable', async (assert) => {
         serverData.models.partner.records.push({
             id: 5,
@@ -9939,8 +10000,11 @@ QUnit.module("Views", (hooks) => {
                 </kanban>
             `,
             groupBy: ["bar"],
-            async mockRPC(route, { method }) {
-                assert.step(method || route);
+            async mockRPC(route, args) {
+                assert.step(args.method || route);
+                if (args.method === "web_read_group") {
+                    assert.step(JSON.stringify(args.kwargs.domain));
+                }
             },
         });
 
@@ -9955,13 +10019,16 @@ QUnit.module("Views", (hooks) => {
             // initial load
             "get_views",
             "web_read_group",
+            "[]",
             "read_progress_bar",
             "web_search_read",
             "web_search_read",
             "web_read_group", // recomputes aggregates
+            '["&",["bar","=",true],["foo","=","yop"]]', // perform read_group only on second column (bar=true)
             "web_search_read",
             // activate filter
             "web_read_group", // recomputes aggregates
+            '["&",["bar","=",true],["foo","=","gnap"]]', // perform read_group only on second column (bar=true)
             "web_search_read",
             // activate another filter (switching)
             "web_search_read",
@@ -11041,7 +11108,7 @@ QUnit.module("Views", (hooks) => {
     );
 
     QUnit.test("set cover image", async (assert) => {
-        assert.expect(10);
+        assert.expect(11);
 
         serviceRegistry.add("dialog", dialogService, { force: true });
         serviceRegistry.add("http", {
@@ -11097,7 +11164,7 @@ QUnit.module("Views", (hooks) => {
         await click(document.body, ".modal .o_kanban_cover_image img", {
             skipVisibilityCheck: true,
         });
-        await click(document.body, ".modal .btn-primary:first-child");
+        await click(document.querySelector(".modal .btn-primary:first-child"));
 
         assert.containsOnce(target, 'img[data-src*="/web/image/1"]');
 
@@ -11109,6 +11176,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(document.body, ".modal .o_kanban_cover_image");
         assert.containsOnce(document.body, ".modal .btn:contains(Select)");
         assert.containsOnce(document.body, ".modal .btn:contains(Discard)");
+        assert.containsNone(document.body, ".modal .btn:contains(Remove Cover Image)");
 
         await triggerEvent(
             document.body,
@@ -11121,6 +11189,73 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, 'img[data-src*="/web/image/2"]');
 
         // await click(target, ".o_kanban_record:first-child .o_attachment_image"); //Not sure, to discuss
+
+        assert.verifySteps(["1", "2"], "should writes on both kanban records");
+    });
+
+    QUnit.test("unset cover image", async (assert) => {
+        serverData.models.partner.records[0].displayed_image_id = 1;
+        serverData.models.partner.records[1].displayed_image_id = 2;
+        serviceRegistry.add("dialog", dialogService, { force: true });
+        serviceRegistry.add("http", {
+            start: () => ({}),
+        });
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `<kanban>
+                    <templates>
+                        <t t-name="kanban-menu">
+                            <a type="set_cover" data-field="displayed_image_id" class="dropdown-item">Set Cover Image</a>
+                        </t>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <field name="name"/>
+                                <div>
+                                    <field name="displayed_image_id" widget="attachment_image"/>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            async mockRPC(_route, { model, method, args }) {
+                if (model === "partner" && method === "web_save") {
+                    assert.step(String(args[0][0]));
+                    assert.strictEqual(args[1].displayed_image_id, false);
+                }
+            },
+        });
+
+        await toggleRecordDropdown(target, 0);
+        await click(getCard(target, 0), ".oe_kanban_action");
+
+        assert.containsOnce(getCard(target, 0), 'img[data-src*="/web/image/1"]');
+        assert.containsOnce(getCard(target, 1), 'img[data-src*="/web/image/2"]');
+
+        assert.containsOnce(document.body, ".modal .o_kanban_cover_image");
+        assert.containsOnce(document.body, ".modal .btn:contains(Select)");
+        assert.containsOnce(document.body, ".modal .btn:contains(Discard)");
+        assert.containsOnce(document.body, ".modal .btn:contains(Remove Cover Image)");
+
+        await click(document.querySelector(".modal .modal-footer .btn-secondary")); // click on "Remove Cover Image" button
+
+        assert.containsNone(getCard(target, 0), "img", "The cover image should be removed.");
+
+        await toggleRecordDropdown(target, 1);
+        const coverButton = getCard(target, 1).querySelector("a");
+        assert.strictEqual(coverButton.innerText.trim(), "Set Cover Image");
+        await click(coverButton);
+
+        await triggerEvent(
+            document.body,
+            ".modal .o_kanban_cover_image img",
+            "dblclick",
+            { bubbles: true },
+            { skipVisibilityCheck: true }
+        );
+
+        assert.containsNone(getCard(target, 1), "img", "The cover image should be removed.");
 
         assert.verifySteps(["1", "2"], "should writes on both kanban records");
     });
@@ -14224,4 +14359,110 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_kanban_record:not(.o_kanban_ghost)");
         assert.containsNone(target, ".my_kanban_compiler");
     });
+
+    QUnit.test(
+        "Kanban grouped on field with readonly expression depending on context",
+        async (assert) => {
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: `<kanban>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div>
+                            <field name="product_id" readonly="context.get('abc')" />
+                        </div>
+                    </t>
+                </templates>
+            </kanban>`,
+                groupBy: ["product_id"],
+                context: { abc: true },
+            });
+
+            assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
+            assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 2);
+
+            await dragAndDrop(
+                ".o_kanban_group:first-child .o_kanban_record",
+                ".o_kanban_group:nth-child(2)"
+            );
+
+            assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
+            assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 2);
+        }
+    );
+
+    QUnit.test(
+        "Kanban grouped on field with readonly expression depending on fields",
+        async (assert) => {
+            // Fields are not available in the current context as the drag and drop must be enabled globally
+            // for the view, it's not a per record thing.
+            // So if the readonly expression contains fields, it will resolve to readonly === false and
+            // the drag and drop will be enabled.
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: `<kanban>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div>
+                            <field name="foo" />
+                            <field name="product_id" readonly="foo == 'yop'" />
+                        </div>
+                    </t>
+                </templates>
+            </kanban>`,
+                groupBy: ["product_id"],
+            });
+
+            assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 2);
+            assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 2);
+
+            await dragAndDrop(
+                ".o_kanban_group:first-child .o_kanban_record",
+                ".o_kanban_group:nth-child(2)"
+            );
+
+            assert.containsN(target, ".o_kanban_group:first-child .o_kanban_record", 1);
+            assert.containsN(target, ".o_kanban_group:nth-child(2) .o_kanban_record", 3);
+        }
+    );
+
+    QUnit.test(
+        "can quick create a column when pressing enter when input is focused",
+        async (assert) => {
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: `<kanban>
+                    <field name="product_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
+                groupBy: ["product_id"],
+            });
+
+            assert.containsN(target, ".o_kanban_group", 2);
+
+            await createColumn(target);
+
+            // We don't use the editInput helper as it would trigger a change event automatically.
+            // We need to wait for the enter key to trigger the event.
+            const input = target.querySelector(".o_column_quick_create input");
+            input.value = "New Column";
+            await triggerEvent(input, null, "input");
+
+            await triggerEvent(target, ".o_quick_create_unfolded input", "keydown", {
+                key: "Enter",
+            });
+
+            assert.containsN(target, ".o_kanban_group", 3);
+        }
+    );
 });

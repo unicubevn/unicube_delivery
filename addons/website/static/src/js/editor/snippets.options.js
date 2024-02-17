@@ -247,7 +247,7 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
             googleLocalFontsEls.forEach((el, index) => {
                 $(el).append(renderToFragment('website.delete_google_font_btn', {
                     index: index,
-                    local: true,
+                    local: "true",
                 }));
             });
         }
@@ -4029,15 +4029,7 @@ options.registry.GridImage = options.Class.extend({
      * @returns {?HTMLElement}
      */
     _getImageGridItem() {
-        let parentEl = this.$target[0].parentNode;
-        if (parentEl.matches("a")) {
-            // Case of an image link.
-            parentEl = parentEl.parentNode;
-        }
-        if (parentEl && parentEl.classList.contains('o_grid_item_image')) {
-            return parentEl;
-        }
-        return null;
+        return this.$target[0].closest(".o_grid_item_image");
     },
     /**
      * @override

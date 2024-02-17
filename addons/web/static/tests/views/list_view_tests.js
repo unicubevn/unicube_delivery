@@ -13997,6 +13997,38 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["[], 0", "[], 3", '[["bar","=",false]], 0']);
     });
 
+    QUnit.test("grouped list: have a group with pager, then apply filter", async (assert) => {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree limit="2"><field name="foo"/></tree>',
+            searchViewArch: `
+                <search>
+                    <filter name="Some Filter" domain="[('foo', '=', 'gnap')]"/>
+                </search>`,
+            groupBy: ["bar"],
+        });
+
+        assert.containsNone(target, ".o_data_row");
+        assert.containsN(target, ".o_group_header", 2);
+
+        await click(target.querySelectorAll(".o_group_header")[1]);
+        assert.containsN(target, ".o_data_row", 2);
+        assert.strictEqual(target.querySelector(".o_group_header .o_pager").innerText, "1-2 / 3");
+
+        await click(target.querySelector(".o_group_header .o_pager_next"));
+        assert.containsOnce(target, ".o_data_row");
+        assert.strictEqual(target.querySelector(".o_group_header .o_pager").innerText, "3-3 / 3");
+
+        await toggleSearchBarMenu(target);
+        await toggleMenuItem(target, "Some Filter");
+
+        assert.containsOnce(target, ".o_data_row");
+        assert.containsOnce(target, ".o_group_header");
+        assert.containsNone(target, ".o_group_header .o_pager");
+    });
+
     QUnit.test("editable grouped lists", async function (assert) {
         await makeView({
             type: "list",
@@ -18820,7 +18852,7 @@ QUnit.module("Views", (hooks) => {
         serverData.models.bar.records[0].definitions = [definition];
         for (const record of serverData.models.foo.records) {
             if (record.m2o === 1) {
-                record.properties = [{ ...definition, value: 123.45 }];
+                record.properties = [{ ...definition, value: record.id === 4 ? false : 123.45 }];
             }
         }
 
@@ -18859,8 +18891,8 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(target.querySelector(".o_field_cell.o_float_cell").textContent, "3.21");
         assert.strictEqual(
             target.querySelector(".o_list_footer .o_list_number").textContent,
-            "250.11",
-            "First property is 3.21, second is zero because it has a different parent and the 2 others are 123.45 so the total should be 3.21 + 123.45 * 2 = 250.11"
+            "126.66",
+            "First property is 3.21, second is zero because it has a different parent the other is 123.45 and the last one zero because it is false so the total should be 3.21 + 123.45 = 126.66"
         );
     });
 
@@ -19830,4 +19862,31 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_data_row");
         assert.containsOnce(target, ".o_data_row.o_selected_row");
     });
+
+    QUnit.test(
+        "Adding new record in list view with open form view button",
+        async function (assert) {
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                arch: '<tree editable="top" open_form_view="1"><field name="foo"/></tree>',
+                selectRecord: (resId, options) => {
+                    assert.step(`switch to form - resId: ${resId} activeIds: ${options.activeIds}`);
+                },
+            });
+
+            await clickAdd();
+            assert.containsN(
+                target,
+                "td.o_list_record_open_form_view",
+                5,
+                "button to open form view should be present on each row"
+            );
+
+            await editInput(target, ".o_field_widget[name=foo] input", "new");
+            await click(target.querySelector("td.o_list_record_open_form_view"));
+            assert.verifySteps(["switch to form - resId: 5 activeIds: 5,1,2,3,4"]);
+        }
+    );
 });

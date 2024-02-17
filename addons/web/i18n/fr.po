@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Wil Odoo, 2023
+# Damien Bouvy <dbo@odoo.com>, 2024
 # Jolien De Paepe, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:32+0000\n"
+"POT-Creation-Date: 2024-01-29 10:46+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
 "Last-Translator: Jolien De Paepe, 2024\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
@@ -1121,7 +1122,7 @@ msgstr "Amande"
 #: code:addons/web/static/src/views/fields/datetime/datetime_field.js:0
 #, python-format
 msgid "Always range"
-msgstr ""
+msgstr "Gamme toujours"
 
 #. module: web
 #. odoo-javascript
@@ -1491,6 +1492,17 @@ msgstr "Icône de booléen "
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/statusbar/statusbar_field.js:0
+#, python-format
+msgid ""
+"Boolean field from the model used in the relation, which indicates whether "
+"the state is folded or not."
+msgstr ""
+"Champ booléen du modèle utilisé dans la relation, qui indique si le statut "
+"est plié ou non."
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/views/fields/progress_bar/progress_bar_field.js:0
 #, python-format
 msgid ""
@@ -1552,7 +1564,7 @@ msgstr ""
 #: code:addons/web/static/src/views/list/list_controller.js:0
 #, python-format
 msgid "Bye-bye, record!"
-msgstr "Au revoir, l'enregistrement !"
+msgstr "Au revoir, les données!"
 
 #. module: web
 #. odoo-javascript
@@ -3124,7 +3136,7 @@ msgstr "Type de Champ"
 #: code:addons/web/static/src/core/expression_editor/expression_editor.js:0
 #, python-format
 msgid "Field properties not supported"
-msgstr ""
+msgstr "Les propriétés de champ ne sont pas prises en charge"
 
 #. module: web
 #. odoo-javascript
@@ -3429,6 +3441,20 @@ msgstr "Gérer"
 #: model:ir.model.fields,help:web.field_base_document_layout__company_details
 msgid "Header text displayed at the top of all reports."
 msgstr "Texte d'en-tête affiché en haut de tous les rapports."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/model/relational_model/record.js:0
+#, python-format
+msgid ""
+"Heads up! Your recent changes are too large to save automatically. Please "
+"click the <i class=\"fa fa-cloud-upload fa-fw\"></i> button now to ensure "
+"your work is saved before you exit this tab."
+msgstr ""
+"Attention ! Vos changements récents sont trop volumineux pour s'enregistrer "
+"automatiquement. Cliquez sur le bouton <i class=\"fa fa-cloud-upload fa-"
+"fw\"></i> pour vous assurer que votre travail est enregistré avant que vous "
+"ne quittiez cet onglet."
 
 #. module: web
 #. odoo-javascript
@@ -4437,7 +4463,7 @@ msgstr "Mesures"
 #: code:addons/web/static/src/views/fields/signature/signature_field.js:0
 #, python-format
 msgid "Medium"
-msgstr "Moyenne"
+msgstr "Médium"
 
 #. module: web
 #. odoo-javascript
@@ -5929,18 +5955,14 @@ msgstr "Lecture seule :"
 #, python-format
 msgid ""
 "Ready to make your record disappear into thin air? Are you sure?\n"
-"\n"
 "It will be gone forever!\n"
-"\n"
 "\n"
 "Think twice before you click that 'Delete' button!"
 msgstr ""
-"Prêt à faire disparaître votre enregistrement ? Vous êtes sur ?\n"
+"Prêt à faire disparaître vos données? Vous êtes sûr?\n"
+"Elles disparaîtront à jamais!\n"
 "\n"
-"Il disparaît à jamais !\n"
-"\n"
-"\n"
-"Réfléchissez à deux fois avant de cliquer sur le bouton 'Supprimer' !"
+"Réfléchissez-y à deux fois avant de cliquer sur le bouton 'Supprimer'!"
 
 #. module: web
 #. odoo-javascript
@@ -6607,6 +6629,8 @@ msgid ""
 "Set to true the full range input has to be display by default, even if "
 "empty."
 msgstr ""
+"Avec la valeur vraie, l'entrée de la gamme complète doit être affichée par "
+"défaut, même si elle est vide."
 
 #. module: web
 #. odoo-javascript
@@ -7062,6 +7086,20 @@ msgstr "Le champ sélectionné sera utilisé pour préremplir la signature"
 msgid "The selected file (%sB) is over the maximum allowed file size (%sB)."
 msgstr ""
 "Le fichier sélectionné (%sB) dépasse la taille maximale autorisée (%sB)."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/core/errors/scss_error_dialog.js:0
+#, python-format
+msgid ""
+"The style compilation failed. This is an administrator or developer error "
+"that must be fixed for the entire database before continuing working. See "
+"browser console or server logs for details."
+msgstr ""
+"Le compilation du style a échoué. Il s'agit d'une erreur administrateur ou "
+"développeur qui doit être corrigée pour l'ensemble de la base de données "
+"avant de continuer à travailler. Consultez les journaux du serveur ou la "
+"console du navigateur pour obtenir plus de détails."
 
 #. module: web
 #. odoo-javascript
@@ -7774,7 +7812,7 @@ msgstr "Vidéo"
 #: code:addons/web/static/src/views/list/list_renderer.xml:0
 #, python-format
 msgid "View"
-msgstr "Vue"
+msgstr "Ouvrir"
 
 #. module: web
 #. odoo-javascript
@@ -8463,7 +8501,7 @@ msgstr "montre de l'espace"
 #: code:addons/web/static/src/core/tree_editor/tree_editor.xml:0
 #, python-format
 msgid "all"
-msgstr "tous"
+msgstr "toutes les"
 
 #. module: web
 #. odoo-javascript
@@ -8678,7 +8716,7 @@ msgstr "visage anxieux avec goutte de sueur"
 #: code:addons/web/static/src/core/tree_editor/tree_editor.xml:0
 #, python-format
 msgid "any"
-msgstr "quelque"
+msgstr "une des"
 
 #. module: web
 #. odoo-javascript
@@ -23192,7 +23230,7 @@ msgstr "oden"
 #: code:addons/web/static/src/core/tree_editor/tree_editor.xml:0
 #, python-format
 msgid "of the following rules:"
-msgstr "des règles suivantes :"
+msgstr "règles suivantes :"
 
 #. module: web
 #. odoo-javascript

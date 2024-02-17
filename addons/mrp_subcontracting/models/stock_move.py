@@ -276,8 +276,18 @@ class StockMove(models.Model):
 
     def _prepare_move_split_vals(self, qty):
         vals = super(StockMove, self)._prepare_move_split_vals(qty)
+        if self.is_subcontract:
+            vals['move_orig_ids'] = [] if not self.move_orig_ids else [(4, self.move_orig_ids[-1].id)]
         vals['location_id'] = self.location_id.id
         return vals
+
+    def _split(self, qty, restrict_partner_id=False):
+        self.ensure_one()
+        new_move_vals = super()._split(qty=qty, restrict_partner_id=restrict_partner_id)
+        # Update the origin moves to remove the split one
+        if self.move_orig_ids and self.is_subcontract:
+            self.move_orig_ids = (self.move_orig_ids - self.move_orig_ids[-1]).ids
+        return new_move_vals
 
     def _should_bypass_reservation(self, forced_location=False):
         """ If the move is subcontracted then ignore the reservation. """
@@ -320,3 +330,12 @@ class StockMove(models.Model):
         if self.env.user.has_group('base.group_portal') and not self.env.su:
             if vals.get('state') == 'done':
                 raise AccessError(_("Portal users cannot create a stock move with a state 'Done' or change the current state to 'Done'."))
+
+    def _is_subcontract_return(self):
+        self.ensure_one()
+        subcontracting_location = self.picking_id.partner_id.with_company(self.company_id).property_stock_subcontractor
+        return (
+                not self.is_subcontract
+                and self.origin_returned_move_id.is_subcontract
+                and self.location_dest_id.id == subcontracting_location.id
+        )

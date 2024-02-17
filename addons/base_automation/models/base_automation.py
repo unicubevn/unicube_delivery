@@ -816,7 +816,7 @@ class BaseAutomation(models.Model):
             """ Patch method `name` on `model`, unless it has been patched already. """
             if model not in patched_models[name]:
                 patched_models[name].add(model)
-                ModelClass = type(model)
+                ModelClass = model.env.registry[model._name]
                 method.origin = getattr(ModelClass, name)
                 setattr(ModelClass, name, method)
 
@@ -828,8 +828,8 @@ class BaseAutomation(models.Model):
             if Model is None:
                 _logger.warning(
                     "Automation rule with name '%s' (ID %d) depends on model %s (ID: %d)",
-                    automation_rule.id,
                     automation_rule.name,
+                    automation_rule.id,
                     automation_rule.model_name,
                     automation_rule.model_id.id)
                 continue
@@ -849,6 +849,8 @@ class BaseAutomation(models.Model):
                 method = make_onchange(automation_rule.id)
                 for field in automation_rule.on_change_field_ids:
                     Model._onchange_methods[field.name].append(method)
+                if automation_rule.on_change_field_ids:
+                    self.env.registry.clear_cache('templates')
 
             if automation_rule.model_id.is_mail_thread and automation_rule.trigger in MAIL_TRIGGERS:
                 def _message_post(self, *args, **kwargs):

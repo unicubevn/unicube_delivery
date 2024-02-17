@@ -3,16 +3,16 @@
 # 	* hr_skills
 # 
 # Translators:
-# Rasareeyar Lappiam, 2024
 # Wil Odoo, 2024
+# Rasareeyar Lappiam, 2024
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 12:31+0000\n"
+"POT-Creation-Date: 2024-01-29 10:44+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: Wil Odoo, 2024\n"
+"Last-Translator: Rasareeyar Lappiam, 2024\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -221,6 +221,13 @@ msgstr "Craigmore South Junior Primary School"
 #, python-format
 msgid "Create a new entry"
 msgstr "สร้างรายการใหม่"
+
+#. module: hr_skills
+#. odoo-javascript
+#: code:addons/hr_skills/static/src/fields/resume_one2many/resume_one2many.js:0
+#, python-format
+msgid "Create a resume line"
+msgstr ""
 
 #. module: hr_skills
 #. odoo-javascript
@@ -683,7 +690,7 @@ msgstr ""
 "ตำแหน่งงาน : หัวหน้าทีมนักพัฒนา\n"
 "- ช่วยเหลือด้านการดำเนินการทางเทคนิคพร้อมการตรวจสอบและแก้ไขปัญหาการสนับสนุนการผลิตที่หลากหลาย (Java, Perl, Shell scripts, SQL)\n"
 "- เป็นผู้นำด้านการวางแผนการประกันคุณภาพสำหรับหลายโปรเจ็กต์ที่เกิดขึ้นพร้อมกันโดยสัมพันธ์กับสถาปัตยกรรมระบบโดยรวม หรือการเปลี่ยนแปลงระบบการซื้อขาย/การพัฒนาใหม่\n"
-"- กำหนดค่าและเผยแพร่โมเดลอัลฟ่าและความเสี่ยงที่สำคัญทางธุรกิจโดยใช้ MATLAB และ SQL พร้อมอินพุตจากผู้จัดการพอร์ตโฟลิโอ\n"
+"- กำหนดค่าและเผยแพร่โมเดลอัลฟ่าและความเสี่ยงที่สำคัญทางธุรกิจโดยใช้ MATLAB และ SQL พร้อมป้อนข้อมูลจากผู้จัดการพอร์ตโฟลิโอ\n"
 "    "
 
 #. module: hr_skills
