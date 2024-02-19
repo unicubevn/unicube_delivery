@@ -48,12 +48,16 @@ This module modifies the web addon to provide a new design and responsiveness.
         'web.assets_backend': [
             'bean_core/static/src/webclient/**/*.scss',
             'bean_core/static/src/views/**/*.scss',
+            'bean_core/static/src/web_refesher/**/*.scss',
 
             'bean_core/static/src/core/**/*',
             'bean_core/static/src/webclient/**/*.js',
             'bean_core/static/src/webclient/**/*.xml',
             'bean_core/static/src/views/**/*.js',
             'bean_core/static/src/views/**/*.xml',
+            'bean_core/static/src/web_refesher/**/*.xml',
+            'bean_core/static/src/web_refesher/**/*.js',
+
 
             # Don't include dark mode files in light mode
             ('remove', 'bean_core/static/src/**/*.dark.scss'),

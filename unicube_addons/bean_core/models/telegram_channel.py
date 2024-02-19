@@ -36,11 +36,14 @@ class TelegramChannel(models.Model):
 
     @api.depends('name', 'chatID', 'bot_name')
     def _calc_python_code(self):
+        print(self)
         for record in self:
+            print(record)
             if not record.name:
-                record.python_code = "pleas put a name"
+                record.python_code = "please put a name"
             elif not record.test_message:
                 record.test_message = "test"
+                record.python_code = "please put a name"
             else:
                 record.python_code = "self.env['telegram.channel'].search([('name', '=', '" + record.name + "')])[0].send_to_telegram('" + record.test_message + "')"
 

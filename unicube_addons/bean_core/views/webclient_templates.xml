@@ -11,5 +11,8 @@
         <xpath expr="//meta[@name='theme-color']" position="replace">
             <meta name="theme-color" t-att-content="'#242733' if request.httprequest.cookies.get('color_scheme') == 'dark' else '#714B67'"/>
         </xpath>
+        <xpath expr="//link[@rel='apple-touch-icon']" position="replace">
+            <link rel="apple-touch-icon" href="/unicubevn_pwa/img/icon-192x192.png"/>
+        </xpath>
     </template>
 </odoo>
