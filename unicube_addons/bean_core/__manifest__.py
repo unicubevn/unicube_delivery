@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
-#   Copyright (c) by The Bean Family, 2023.
-#   License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
-#   These code are maintained by The Bean Family.
 
 {
+
     'name': 'Bean Core',
     'category': 'UniCube/Hidden',
     'author': "The Bean Family",
@@ -15,23 +13,28 @@
 Bean Core Web Client.
 ===========================
 
-This module modifies the web addon to provide a new design and responsiveness.
+This module modifies the web addon to provide the design and responsiveness.
         """,
-    'depends': ['web', 'base_setup', 'mail'],
+    'depends': ['web', 'base_setup', 'mail','portal','digest'],
     'auto_install': ['web'],
     'data': [
         'security/ir.model.access.csv',
         'data/res_partner_data.xml',
+        'data/debrand/mail_templates_email_layouts.xml',
+        'data/debrand/mail_template_data.xml',
         'reports/bizzi_view.xml',
         'views/res_config.xml',
         'views/telegram_channel_view.xml',
         'views/webclient_templates.xml',
+        'views/debrand/auth_signup_templates_email.xml',
     ],
     'assets': {
         'web._assets_primary_variables': [
             ('after', 'web/static/src/scss/primary_variables.scss', 'bean_core/static/src/**/*.variables.scss'),
             (
-            'before', 'web/static/src/scss/primary_variables.scss', 'bean_core/static/src/scss/primary_variables.scss'),
+                'before', 'web/static/src/scss/primary_variables.scss',
+                'bean_core/static/src/scss/primary_variables.scss'),
+            'bean_core/static/src/scss/bean_variables.scss'
         ],
         'web._assets_secondary_variables': [
             ('before', 'web/static/src/scss/secondary_variables.scss',
@@ -48,16 +51,17 @@ This module modifies the web addon to provide a new design and responsiveness.
         'web.assets_backend': [
             'bean_core/static/src/webclient/**/*.scss',
             'bean_core/static/src/views/**/*.scss',
-            'bean_core/static/src/web_refesher/**/*.scss',
 
             'bean_core/static/src/core/**/*',
             'bean_core/static/src/webclient/**/*.js',
             'bean_core/static/src/webclient/**/*.xml',
             'bean_core/static/src/views/**/*.js',
             'bean_core/static/src/views/**/*.xml',
+
+            # Add refresher
+            'bean_core/static/src/web_refesher/**/*.scss',
             'bean_core/static/src/web_refesher/**/*.xml',
             'bean_core/static/src/web_refesher/**/*.js',
-
 
             # Don't include dark mode files in light mode
             ('remove', 'bean_core/static/src/**/*.dark.scss'),

@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import {hasTouch, isIosApp, isMacOS} from "@web/core/browser/feature_detection";
-import {useHotkey} from "@web/core/hotkeys/hotkey_hook";
-import {useService} from "@web/core/utils/hooks";
-import {useSortable} from "@web/core/utils/sortable_owl";
-import {reorderApps} from "@web/webclient/menus/menu_helpers";
+import { hasTouch, isIosApp, isMacOS } from "@web/core/browser/feature_detection";
+import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { useService } from "@web/core/utils/hooks";
+import { useSortable } from "@web/core/utils/sortable_owl";
+import { reorderApps } from "@web/webclient/menus/menu_helpers";
 
 import {
     Component,
@@ -21,13 +21,11 @@ class FooterComponent extends Component {
         this.controlKey = isMacOS() ? "COMMAND" : "CONTROL";
     }
 }
-
 FooterComponent.template = "bean_core.HomeMenu.CommandPalette.Footer";
 FooterComponent.props = {
     //prop added by the command palette
-    switchNamespace: {type: Function, optional: true},
+    switchNamespace: { type: Function, optional: true },
 };
-
 /**
  * Home menu
  *
@@ -99,7 +97,7 @@ export class HomeMenu extends Component {
                 // When TAB is managed externally the class o_focused disappears.
                 if (selectedItem) {
                     // Center window on the focused item
-                    selectedItem.scrollIntoView({block: "center"});
+                    selectedItem.scrollIntoView({ block: "center" });
                 }
             }
         });
@@ -218,7 +216,7 @@ export class HomeMenu extends Component {
 
     _focusInput() {
         if (!this.env.isSmall && this.inputRef.el) {
-            this.inputRef.el.focus({preventScroll: true});
+            this.inputRef.el.focus({ preventScroll: true });
         }
     }
 
@@ -235,7 +233,7 @@ export class HomeMenu extends Component {
      * @param {HTMLElement} params.element
      * @param {HTMLElement} params.previous
      */
-    _sortAppDrop({element, previous}) {
+    _sortAppDrop({ element, previous }) {
         const order = this.props.apps.map((app) => app.xmlid);
         const elementId = element.children[0].dataset.menuXmlid;
         const elementIndex = order.indexOf(elementId);
@@ -258,7 +256,7 @@ export class HomeMenu extends Component {
      * @param {Object} params
      * @param {HTMLElement} params.element
      */
-    _sortStart({element, addClass}) {
+    _sortStart({ element, addClass }) {
         addClass(element.children[0], "o_dragged_app");
     }
 
@@ -317,7 +315,7 @@ export class HomeMenu extends Component {
         };
         const searchValue = this.compositionStart ? "/" : `/${this.inputRef.el.value.trim()}`;
         this.compositionStart = false;
-        this.command.openMainPalette({searchValue, FooterComponent}, onClose);
+        this.command.openMainPalette({ searchValue, FooterComponent }, onClose);
     }
 
     _onInputBlur() {
@@ -336,9 +334,7 @@ export class HomeMenu extends Component {
     _onCompositionStart() {
         this.compositionStart = true;
     }
-}
-
-HomeMenu.components = {};
+};
 HomeMenu.props = {
     apps: {
         type: Array,
@@ -366,7 +362,7 @@ HomeMenu.props = {
                     ],
                     optional: true,
                 },
-                webIconData: {type: String, optional: 1},
+                webIconData: { type: String, optional: 1 },
                 xmlid: String,
             },
         },

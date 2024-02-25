@@ -39,26 +39,27 @@
         </xpath>
     </template>
 
-<!--    <template id="brand_promotion" inherit_id="web.brand_promotion">-->
-        <!--        <xpath expr="//t[@t-set='odoo_logo']" position="replace">-->
-<!--        <xpath expr="//div[hasclass('o_brand_promotion')]" position="replace">-->
-<!--            <t t-set="unicube_logo">-->
-<!--                <a target="_blank"-->
-<!--                   t-attf-href="https://unicube.vn?utm_source=db&amp;utm_medium=#{_utm_medium}"-->
-<!--                   class="badge text-bg-light" style="margin: 0 0.5rem;">-->
-<!--                    <img alt="UniCube"-->
-<!--                         src="/bean_core/static/img/unicube_logo_tiny.png"-->
-<!--                         width="32" height="32"-->
-<!--                         style="width: 24px; height: 24px"/>-->
-<!--                </a>-->
-<!--                <span>-</span>-->
-<!--                <a href="http://online.gov.vn/Home/WebDetails/105749" style="margin-left: 0.5rem;">-->
-<!--                    <img alt="" title="" src="https://bucket.thebeanfamily.org/beanlegal/logoSaleNoti.png"-->
-<!--                         style="width: 96px;" loading="lazy"/>-->
-<!--                </a>-->
-<!--            </t>-->
-<!--            <t t-set="final_message">Supported by %s%s</t>-->
-<!--            <t t-out="final_message % (unicube_logo, _message and ('- ' + _message) or '')"/>-->
-<!--        </xpath>-->
-<!--    </template>-->
+    <!--    <template id="brand_promotion" inherit_id="web.brand_promotion">-->
+    <!--        <xpath expr="//t[@t-set='odoo_logo']" position="replace">-->
+    <!--        <xpath expr="//div[hasclass('o_brand_promotion')]" position="replace">-->
+    <!--            <t t-set="unicube_logo">-->
+    <!--                <a target="_blank"-->
+    <!--                   t-attf-href="https://unicube.vn?utm_source=db&amp;utm_medium=#{_utm_medium}"-->
+    <!--                   class="badge text-bg-light" style="margin: 0 0.5rem;">-->
+    <!--                    <img alt="UniCube"-->
+    <!--                         src="/bean_core/static/img/unicube_logo_tiny.png"-->
+    <!--                         width="32" height="32"-->
+    <!--                         style="width: 24px; height: 24px"/>-->
+    <!--                </a>-->
+    <!--                <span>-</span>-->
+    <!--                <a href="http://online.gov.vn/Home/WebDetails/105749" style="margin-left: 0.5rem;">-->
+    <!--                    <img alt="" title="" src="https://bucket.thebeanfamily.org/beanlegal/logoSaleNoti.png"-->
+    <!--                         style="width: 96px;" loading="lazy"/>-->
+    <!--                </a>-->
+    <!--            </t>-->
+    <!--            <t t-set="final_message">Supported by %s%s</t>-->
+    <!--            <t t-out="final_message % (unicube_logo, _message and ('- ' + _message) or '')"/>-->
+    <!--        </xpath>-->
+    <!--    </template>-->
+
 </odoo>

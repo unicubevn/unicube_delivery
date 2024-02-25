@@ -226,8 +226,8 @@ msgstr "Odoo"
 #. odoo-javascript
 #: code:addons/bean_core/static/src/webclient/settings_form_view/res_config_edition.xml:0
 #, python-format
-msgid "Odoo Enterprise Edition License V1.0"
-msgstr "Odoo Enterprise Edition License V1.0"
+msgid "Bean Core Edition License V1.0"
+msgstr "Bean Core Edition License V1.0"
 
 #. module: bean_core
 #. odoo-javascript

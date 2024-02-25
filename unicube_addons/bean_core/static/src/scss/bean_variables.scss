@@ -1,0 +1,25 @@
+/*!
+ * #  Copyright (c) by The UniCube, 2023.
+ * #  License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+ * #  These code are maintained by The UniCube.
+ */
+html {
+
+}
+
+body {
+  @media only screen and (max-width: 600px) {
+    /* For mobile phones: */
+    height: 100svh !important;
+  }
+  height: 100vh !important;
+
+
+}
+
+.o-mail-ChatWindow {
+  &.o-mobile {
+    height: 100svh !important;
+    top: 0 !important;
+  }
+}

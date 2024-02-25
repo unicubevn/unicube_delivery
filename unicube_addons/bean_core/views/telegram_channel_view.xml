@@ -33,7 +33,7 @@
                             <field name="bot_name"/>
                             <!--                            <field name="code_name"/>-->
                             <field name="chatID"/>
-                            <button name="paste_chat_id" type="object" icon="fa-paste"/>
+                            <button name="paste_chat_id" type="object" icon="fa-paste" string="Paste"/>
                         </group>
                     </sheet>
                 </form>

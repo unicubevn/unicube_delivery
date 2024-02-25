@@ -67,14 +67,14 @@ msgstr "ระบบอัตโนมัติ"
 #: code:addons/bean_core/static/src/webclient/promote_studio_dialog/promote_studio_dialog.xml:0
 #, python-format
 msgid "Build new apps from scratch"
-msgstr ""
+msgstr "สร้างแอปใหม่ตั้งแต่ต้น"
 
 #. module: bean_core
 #. odoo-javascript
 #: code:addons/bean_core/static/src/webclient/promote_studio_dialog/promote_studio_dialog.xml:0
 #, python-format
 msgid "Build new reports"
-msgstr ""
+msgstr "สร้างรายงานใหม่"
 
 #. module: bean_core
 #. odoo-javascript
@@ -99,34 +99,36 @@ msgid ""
 "Contact your sales representative to help you to unlink your previous "
 "database"
 msgstr ""
+"ติดต่อตัวแทนฝ่ายขายของคุณ "
+"เพื่อช่วยคุณยกเลิกการเชื่อมโยงฐานข้อมูลก่อนหน้าของคุณ"
 
 #. module: bean_core
 #. odoo-javascript
 #: code:addons/bean_core/static/src/webclient/promote_studio_dialog/promote_studio_dialog.xml:0
 #, python-format
 msgid "Create automation rules"
-msgstr ""
+msgstr "สร้างกฎอัตโนมัติ"
 
 #. module: bean_core
 #. odoo-javascript
 #: code:addons/bean_core/static/src/webclient/promote_studio_dialog/promote_studio_dialog.xml:0
 #, python-format
 msgid "Customize Reports"
-msgstr ""
+msgstr "ปรับแต่งรายงาน"
 
 #. module: bean_core
 #. odoo-javascript
 #: code:addons/bean_core/static/src/webclient/promote_studio_dialog/promote_studio_dialog.xml:0
 #, python-format
 msgid "Customize any screen"
-msgstr ""
+msgstr "ปรับแต่งหน้าจอใดก็ได้"
 
 #. module: bean_core
 #. odoo-javascript
 #: code:addons/bean_core/static/src/webclient/color_scheme/color_scheme_menu_items.js:0
 #, python-format
 msgid "Dark Mode"
-msgstr ""
+msgstr "โหมดมืด"
 
 #. module: bean_core
 #. odoo-javascript
@@ -140,7 +142,7 @@ msgstr "วันหมดอายุฐานข้อมูล:"
 #: code:addons/bean_core/static/src/webclient/promote_studio_dialog/promote_studio_dialog.xml:0
 #, python-format
 msgid "Define webhooks"
-msgstr ""
+msgstr "กำหนดเว็บฮุค"
 
 #. module: bean_core
 #. odoo-javascript
@@ -171,14 +173,14 @@ msgstr "การกำหนด HTTP"
 #. module: bean_core
 #: model:ir.model.fields,field_description:bean_core.field_res_users_settings__homemenu_config
 msgid "Home Menu Configuration"
-msgstr ""
+msgstr "การกำหนดค่าเมนูหน้าแรก"
 
 #. module: bean_core
 #. odoo-javascript
 #: code:addons/bean_core/static/src/webclient/navbar/navbar.js:0
 #, python-format
 msgid "Home menu"
-msgstr ""
+msgstr "เมนูหลัก"
 
 #. module: bean_core
 #. odoo-javascript
@@ -226,8 +228,8 @@ msgstr "Odoo"
 #. odoo-javascript
 #: code:addons/bean_core/static/src/webclient/settings_form_view/res_config_edition.xml:0
 #, python-format
-msgid "Odoo Enterprise Edition License V1.0"
-msgstr "สิทธิ์การใช้งาน Odoo Enterprise Edition V1.0"
+msgid "Bean Core Edition License V1.0"
+msgstr "สิทธิ์การใช้งาน Bean Core Edition V1.0"
 
 #. module: bean_core
 #. odoo-javascript
@@ -263,7 +265,7 @@ msgstr "วางโค้ดที่นี่"
 #: code:addons/bean_core/static/src/webclient/navbar/navbar.js:0
 #, python-format
 msgid "Previous view"
-msgstr ""
+msgstr "มุมมองก่อนหน้า"
 
 #. module: bean_core
 #. odoo-javascript
@@ -324,7 +326,7 @@ msgstr "แชร์"
 #: code:addons/bean_core/static/src/webclient/share_url/burger_menu.xml:0
 #, python-format
 msgid "Share URL"
-msgstr ""
+msgstr "แชร์ URL"
 
 #. module: bean_core
 #. odoo-javascript
@@ -371,7 +373,7 @@ msgstr "ขอบคุณ การลงทะเบียนของคุ�
 msgid ""
 "Thank you, your registration was successful! Your database is valid until "
 "%s."
-msgstr ""
+msgstr "ขอขอบคุณ การลงทะเบียนของคุณสำเร็จแล้ว! ฐานข้อมูลของคุณใช้ได้จนถึง %s"
 
 #. module: bean_core
 #. odoo-javascript
@@ -387,21 +389,21 @@ msgstr "ได้ส่งคำแนะนำในการยกเลิก
 #: code:addons/bean_core/static/src/webclient/home_menu/expiration_panel.js:0
 #, python-format
 msgid "This database has expired. "
-msgstr ""
+msgstr "ฐานข้อมูลนี้หมดอายุแล้ว"
 
 #. module: bean_core
 #. odoo-javascript
 #: code:addons/bean_core/static/src/webclient/home_menu/expiration_panel.js:0
 #, python-format
 msgid "This database will expire in %s. "
-msgstr ""
+msgstr "ฐานข้อมูลนี้จะหมดอายุใน %s"
 
 #. module: bean_core
 #. odoo-javascript
 #: code:addons/bean_core/static/src/webclient/home_menu/expiration_panel.js:0
 #, python-format
 msgid "This demo database will expire in %s. "
-msgstr ""
+msgstr "ฐานข้อมูลสาธิตนี้จะหมดอายุใน %s"
 
 #. module: bean_core
 #. odoo-javascript
@@ -486,7 +488,7 @@ msgstr "การสมัครของคุณได้รับการอ
 #: code:addons/bean_core/static/src/webclient/promote_studio_dialog/promote_studio_dialog.xml:0
 #, python-format
 msgid "and more!"
-msgstr ""
+msgstr "และอีกมากมาย!"
 
 #. module: bean_core
 #. odoo-javascript
@@ -514,4 +516,4 @@ msgstr "ถึงเจ้าของการสมัครสมาชิก
 #: code:addons/bean_core/static/src/webclient/home_menu/home_menu.xml:0
 #, python-format
 msgid "— open me anywhere with"
-msgstr ""
+msgstr "— เปิดฉันที่ไหนก็ได้ ด้วย"

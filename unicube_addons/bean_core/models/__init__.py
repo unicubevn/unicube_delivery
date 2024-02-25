@@ -7,3 +7,4 @@ from . import res_users
 from . import res_users_settings
 from . import web_title
 from . import telegram_channel
+
