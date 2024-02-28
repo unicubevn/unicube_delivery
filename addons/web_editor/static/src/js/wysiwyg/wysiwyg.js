@@ -1683,8 +1683,8 @@ export class Wysiwyg extends Component {
                     const rangePosition = getRangePosition(popover, this.options.document, options);
                     popover.style.top = rangePosition.top + 'px';
                     popover.style.left = rangePosition.left + 'px';
-                    const oInputBox = popover.getElementsByClassName('o_input')[0];
-                    oInputBox.focus();
+                    const oInputBox = popover.querySelector('input');
+                    oInputBox?.focus();
                 },
             },
         );
@@ -2161,6 +2161,7 @@ export class Wysiwyg extends Component {
             '#list',
             '#colorInputButtonGroup',
             '#media-insert', // "Insert media" should be replaced with "Replace media".
+            '#chatgpt', // Chatgpt should be removed when media is in selection.
         ].join(','))){
             el.classList.toggle('d-none', isInMedia);
         }

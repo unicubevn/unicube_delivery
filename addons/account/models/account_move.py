@@ -1196,7 +1196,7 @@ class AccountMove(models.Model):
                     reconciled_vals.append({
                         'name': counterpart_line.name,
                         'journal_name': counterpart_line.journal_id.name,
-                        'company_name': counterpart_line.journal_id.company_id.name if counterpart_line.journal_id.company_id != move.company_id else None,
+                        'company_name': counterpart_line.journal_id.company_id.name if counterpart_line.journal_id.company_id != move.company_id else False,
                         'amount': reconciled_partial['amount'],
                         'currency_id': move.company_id.currency_id.id if reconciled_partial['is_exchange'] else reconciled_partial['currency'].id,
                         'date': counterpart_line.date,
@@ -1968,12 +1968,10 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
     def _is_eligible_for_early_payment_discount(self, currency, reference_date):
         self.ensure_one()
-        if not reference_date:
-            return True
         return self.currency_id == currency \
             and self.move_type in ('out_invoice', 'out_receipt', 'in_invoice', 'in_receipt') \
             and self.invoice_payment_term_id.early_discount \
-            and reference_date <= self.invoice_payment_term_id._get_last_discount_date(self.invoice_date)\
+            and (not reference_date or reference_date <= self.invoice_payment_term_id._get_last_discount_date(self.invoice_date)) \
             and self.payment_state == 'not_paid'
 
     # -------------------------------------------------------------------------

@@ -650,7 +650,7 @@ class AccountReportExpression(models.Model):
             other_expression_using_tag = self.env['account.report.expression'].sudo().search([
                 ('engine', '=', 'tax_tags'),
                 ('formula', '=', tag.name[1:]),  # we escape the +/- sign
-                ('report_line_id.report_id.country_id.id', '=', tag.country_id.id),
+                ('report_line_id.report_id.country_id', '=', tag.country_id.id),
                 ('id', 'not in', self.ids),
             ], limit=1)
             if not other_expression_using_tag:
@@ -833,7 +833,7 @@ class AccountReportExternalValue(models.Model):
     text_value = fields.Char(string="Text Value")
     date = fields.Date(required=True)
 
-    target_report_expression_id = fields.Many2one(string="Target Expression", comodel_name="account.report.expression", required=True)
+    target_report_expression_id = fields.Many2one(string="Target Expression", comodel_name="account.report.expression", required=True, ondelete="cascade")
     target_report_line_id = fields.Many2one(string="Target Line", related="target_report_expression_id.report_line_id")
     target_report_expression_label = fields.Char(string="Target Expression Label", related="target_report_expression_id.label")
     report_country_id = fields.Many2one(string="Country", related='target_report_line_id.report_id.country_id')

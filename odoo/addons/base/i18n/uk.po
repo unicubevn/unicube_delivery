@@ -5356,7 +5356,7 @@ msgstr ""
 "Арабська локалізація Odoo для більшості Саудівської Аравії.\n"
 
 #. module: base
-#: model:ir.module.module,description:base.module_bean_core
+#: model:ir.module.module,description:base.module_web_enterprise
 msgid ""
 "\n"
 "Odoo Enterprise Web Client.\n"
@@ -32303,6 +32303,15 @@ msgid ""
 "- 'Send Webhook Notification': send a POST request to an external system, also known as a Webhook\n"
 "- 'Execute Existing Actions': define an action that triggers several other server actions\n"
 msgstr ""
+"Тип дії на сервері. Доступні наступні значення:\n"
+"- 'Оновити запис': оновити значення запису\n"
+"- 'Створити дію': створити дію (Обговорення)\n"
+"- 'Надіслати Email': опублікувати повідомлення, примітку або надіслати email (Обговорення)\n"
+"- 'Надіслати SMS': надіслати SMS, записати їх на документі (SMS)- 'Додати/Вилучити підписників': додати або вилучити підписників на записі (Обговорення)\n"
+"- 'Створити запис': створити новий запис з новими значеннями\n"
+"- 'Виконати код': блок коду Python, що буде виконано\n"
+"- 'Надіслати сповіщення Webhook': надіслати запит POST до зовнішньої системи, також відомий як Webhook\n"
+"- 'Виконати існуючі дії': визначити дію, що запускає дію, що запускає декілька інших дій на сервері\n"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint__type
@@ -33559,7 +33568,7 @@ msgid "Web Editor"
 msgstr "Web редактор"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_bean_core
+#: model:ir.module.module,shortdesc:base.module_web_enterprise
 msgid "Web Enterprise"
 msgstr "Web Enterprise"
 
