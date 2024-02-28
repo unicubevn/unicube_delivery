@@ -20,7 +20,6 @@ _logger = logging.getLogger(__name__)
 
 
 class FastapiEndpoint(models.Model):
-
     _name = "fastapi.endpoint"
     _inherit = "endpoint.route.sync.mixin"
     _description = "FastAPI Endpoint"
@@ -135,9 +134,8 @@ class FastapiEndpoint(models.Model):
             self._reset_app()
         if "user_id" in vals:
             # self.get_uid.clear_cache()
-            self.env['fastapi.endpoint'].clear_caches()
+            self.env.registry.clear_cache()
         return False
-
 
     @api.model
     def _fastapi_app_fields(self) -> List[str]:
@@ -189,7 +187,8 @@ class FastapiEndpoint(models.Model):
         return f"{self._name}:{self.id}:{path}"
 
     def _reset_app(self):
-        self.get_app.clear_cache(self)
+        # self.get_app.clear_cache(self)
+        self.env.registry.clear_cache()
 
     @api.model
     @tools.ormcache("root_path")
@@ -229,7 +228,7 @@ class FastapiEndpoint(models.Model):
         }
 
     def _get_app_exception_handlers(
-        self,
+            self,
     ) -> Dict[
         Union[int, Type[Exception]],
         Callable[[Request, Exception], Union[Response, Awaitable[Response]]],

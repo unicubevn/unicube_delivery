@@ -227,6 +227,7 @@ class AuthJwtValidator(models.Model):
 
     def _get_partner_id(self, payload):
         # override for additional strategies
+        print("original '_get_partner_id' is running ...")
         if self.partner_id_strategy == "email":
             email = payload.get("email")
             if not email:
@@ -240,6 +241,7 @@ class AuthJwtValidator(models.Model):
 
     def _get_and_check_partner_id(self, payload):
         partner_id = self._get_partner_id(payload)
+        print("Got partner_id in '_get_and_check_partner_id' function: ", partner_id)
         if not partner_id and self.partner_id_required:
             raise UnauthorizedPartnerNotFound()
         return partner_id

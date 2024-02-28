@@ -19,7 +19,7 @@ Long description of module's purpose
     "installable": True,
 
     # any module necessary for this one to work correctly
-    "depends": ["fastapi","fastapi_auth_jwt","auth_jwt_demo"],
+    "depends": ["base","fastapi", "auth_jwt"],
 
     # always loaded
     "data": [
@@ -29,8 +29,8 @@ Long description of module's purpose
         "views/templates.xml",
     ],
     # only loaded in demonstration mode
-    "demo": [
-        "demo/demo.xml",
-    ],
+    # "demo": [
+    #     "demo/demo.xml",
+    # ],
 }
 
