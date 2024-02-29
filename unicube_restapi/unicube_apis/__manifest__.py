@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 {
-    "name": "unicube_apis",
+    "name": "UniCube OpenApi",
 
-    "summary": "Short (1 phrase/line) summary of the module's purpose",
+    "summary": "UniCube OpenApi for Delivery System",
 
     "description": """
 Long description of module's purpose
