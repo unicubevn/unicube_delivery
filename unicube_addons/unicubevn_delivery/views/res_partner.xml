@@ -23,6 +23,10 @@
                     <field string="User" name="user_ids" widget="statinfo"/>
                 </button>
             </xpath>
+
+            <xpath expr="//field[@name='vat']" position="after">
+                <field string="Type" name="account_type" />
+            </xpath>
         </field>
     </record>
 </odoo>
