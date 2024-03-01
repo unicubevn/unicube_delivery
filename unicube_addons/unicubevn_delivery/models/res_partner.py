@@ -8,6 +8,7 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     store_id = fields.Many2one('res.partner', string='Store ID', required=True)
+    account_type = fields.Selection([ ('1', 'Store'),('2', 'Customer'),], string='Type', default='1')
 
     def action_create_user(self):
         """ create a new user for wizard_user.partner_id
