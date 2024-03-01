@@ -11,8 +11,8 @@
     'version': '17.0.0.1',
     'website': "https://unicube.vn",
     'support': 'community@unicube.vn',
-    "application": False,
-    "installable": False,
+    # "application": False,
+    # "installable": False,
     "depends": ["web"],
     # 'data': [
     #     'views/webclient_templates.xml',
