@@ -23,8 +23,8 @@ class ResPartner(models.Model):
                 "target": "new",
             }
 
-            if not self.mobile:
-                print(self.env.user.partner_id)
+        if not self.mobile:
+            print(self.env.user.partner_id)
             return self.env['bus.bus']._sendone(self.env.user.partner_id, 'simple_notification', {
                 'type': 'danger',
                 'title': _("Warning"),
@@ -33,8 +33,8 @@ class ResPartner(models.Model):
 
         return self.env['res.users'].with_context(no_reset_password=True)._create_user_from_template({
             'email': self.email,
-            'login': self.mobile,
-            'password': "1234567",
+            'login': self.mobile.replace("+84", "0"),
+            'password': "12345678",
             'partner_id': self.id,
             'company_id': self.env.company.id,
             'company_ids': [(6, 0, self.env.company.ids)],
