@@ -8,7 +8,8 @@
     'version': '17.0.0.1',
     'website': "https://unicube.vn",
     'support': 'community@unicube.vn',
-    "depends": ["base","sale"],
+    "depends": ["base", "sale", "stock", "account", "l10n_vn", "unicubevn_bank", "unicubevn_address", "unicubevn_ipn"],
+    "auto_install": ['base'],
     "data": [
         "views/res_partner.xml",
         "views/res_users.xml",
