@@ -876,13 +876,14 @@ class PosOrder(models.Model):
             order.write({'account_move': new_move.id, 'state': 'invoiced'})
             new_move.sudo().with_company(order.company_id).with_context(skip_invoice_sync=True)._post()
 
+            moves += new_move
+            payment_moves = order._apply_invoice_payments()
+
             # Send and Print
             if self.env.context.get('generate_pdf', True):
                 template = self.env.ref(new_move._get_mail_template())
                 new_move.with_context(skip_invoice_sync=True)._generate_pdf_and_send_invoice(template)
 
-            moves += new_move
-            payment_moves = order._apply_invoice_payments()
 
             if order.session_id.state == 'closed':  # If the session isn't closed this isn't needed.
                 # If a client requires the invoice later, we need to revers the amount from the closing entry, by making a new entry for that.
@@ -969,8 +970,8 @@ class PosOrder(models.Model):
         if len(data['lines']) != len(existing_order.lines):
             return False
 
-        received_lines = sorted([(l[2]['product_id'], l[2]['qty'], l[2]['price_unit']) for l in data['lines']])
-        existing_lines = sorted([(l.product_id.id, l.qty, l.price_unit) for l in existing_order.lines])
+        received_lines = sorted([(l[2]['product_id'], l[2]['price_unit']) for l in data['lines']])
+        existing_lines = sorted([(l.product_id.id, l.price_unit) for l in existing_order.lines])
 
         if received_lines != existing_lines:
             return False
