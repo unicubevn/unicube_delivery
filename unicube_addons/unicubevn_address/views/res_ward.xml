@@ -1,9 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ #  Copyright (c) by The UniCube, 2023.
   ~ #  License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
   ~ #  These code are maintained by The UniCubey.
   -->
-
 <odoo>
     <!-- Ward Tree view and action-->
     <record id="view_ward_tree" model="ir.ui.view">

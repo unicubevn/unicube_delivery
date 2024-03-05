@@ -9,6 +9,7 @@ from odoo import models, fields
 class IpnLog(models.Model):
     _name = "ipn.log"
     _order = "id desc"
+    _description = "IPN Log"
 
     name = fields.Char("Provider Code")
     data = fields.Char("Callback Data")

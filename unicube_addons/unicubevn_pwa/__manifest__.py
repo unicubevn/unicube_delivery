@@ -1,5 +1,5 @@
 {
-    'name': "Utilities: Config PWA",
+    'name': "UniCube PWA with push notifications (via Firebase)",
 
     'summary': """
         This is the custom module for configuring builtin Odoo PWA.
@@ -9,13 +9,14 @@
         This is the custom module for configuring builtin Odoo PWA, including:
             - Change PWA icon
             - Add custom path
+            - Add push notification (via firebase)
     """,
 
     'author': "UniCube",
     "license": "LGPL-3",
-    'category': 'UniCube/Localization',
+    'category': 'UniCube/Utilities',
     "sequence": 200,
-    'version': '17.0.0.1',
+    'version': '17.0.0.2',
     'website': "https://unicube.vn",
     'support': 'community@unicube.vn',
     "application": True,
@@ -23,7 +24,6 @@
 
     # any module necessary for this one to work correctly
     'depends': ['base', 'web', 'mail'],
-    "auto_install": True,
 
     "images": ["static/description/image.jpg"],
 
@@ -38,13 +38,8 @@
         'web.assets_backend': [
             "unicubevn_pwa/static/src/js/firebase-app.js",
             "unicubevn_pwa/static/src/js/firebase-messaging.js",
-            "unicubevn_pwa/static/src/js/backend_firebase.js",
+            "unicubevn_pwa/static/src/js/firebase.js"
         ],
-        'web.assets_frontend': [
-            "unicubevn_pwa/static/src/js/firebase-app.js",
-            "unicubevn_pwa/static/src/js/firebase-messaging.js",
-            "unicubevn_pwa/static/src/js/frontend_firebase.js",
-        ]
     },
     "external_dependencies": {"python": ["pyfcm"]},
 }

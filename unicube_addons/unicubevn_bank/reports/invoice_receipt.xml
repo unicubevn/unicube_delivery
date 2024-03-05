@@ -2,6 +2,7 @@
 <odoo>
     <data>
         <template id="receipt_document">
+            <button class="print_button btn btn-primary" onclick="print_receipt()">Direct Print Receipt</button>
             <div class="bean_receipt">
                 <t t-call="web.basic_layout">
                     <t t-set="o" t-value="o.with_context(lang=lang)"/>
@@ -106,11 +107,11 @@
                                     </div>
                                     <div class="col-9 ">
                                         <p class="m-0">
-                                            <span t-field="o.partner_id.street"/>
+                                            <span t-field="o.partner_shipping_id.street"/>
                                             ,
-                                            <span t-field="o.partner_id.street2"/>
+                                            <span t-field="o.partner_shipping_id.street2"/>
                                             ,
-                                            <span t-field="o.partner_id.city"/>
+                                            <span t-field="o.partner_shipping_id.city"/>
                                         </p>
                                     </div>
                                 </div>

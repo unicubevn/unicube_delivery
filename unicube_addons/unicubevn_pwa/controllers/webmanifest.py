@@ -14,45 +14,36 @@ from odoo.tools import ustr, file_open
 
 
 class WebManifest(http.Controller):
-    @staticmethod
-    def _icon_path():
-        return 'unicubevn_pwa/static/img/icon-192x192.png'
 
-    @staticmethod
-    def _get_shortcuts(scope_path):
-        """
-        Build shortcuts for PWA based on scope_path
-        :param scope_path:
-        """
+    def _get_shortcuts(self):
+        module_names = ['sales', 'point_of_sale', 'mail', 'crm', 'project', 'project_todo']
+        try:
+            module_ids = request.env['ir.module.module'].search([('state', '=', 'installed'), ('name', 'in', module_names)]) \
+                                                        .sorted(key=lambda r: module_names.index(r["name"]))
+        except AccessError:
+            return []
+        menu_roots = request.env['ir.ui.menu'].get_user_roots()
+        datas = request.env['ir.model.data'].sudo().search([('model', '=', 'ir.ui.menu'),
+                                                         ('res_id', 'in', menu_roots.ids),
+                                                         ('module', 'in', module_names)])
         shortcuts = []
-        if scope_path == '/web':
-            module_names = ['sales', 'point_of_sale', 'mail', 'crm', 'project', 'project_todo']
-            try:
-                module_ids = request.env['ir.module.module'].search(
-                    [('state', '=', 'installed'), ('name', 'in', module_names)]) \
-                    .sorted(key=lambda r: module_names.index(r["name"]))
-            except AccessError:
-                return []
-            menu_roots = request.env['ir.ui.menu'].get_user_roots()
-            datas = request.env['ir.model.data'].sudo().search([('model', '=', 'ir.ui.menu'),
-                                                                ('res_id', 'in', menu_roots.ids),
-                                                                ('module', 'in', module_names)])
-            for module in module_ids:
-                data = datas.filtered(lambda res: res.module == module.name)
-                if data:
-                    shortcuts.append({
-                        'name': module.display_name,
-                        'url': '/web#menu_id=%s' % data.mapped('res_id')[0],
-                        'description': module.summary,
-                        'icons': [{
-                            'sizes': '100x100',
-                            'src': module.icon,
-                            'type': mimetypes.guess_type(module.icon)[0] or 'image/png'
-                        }]
-                    })
+        for module in module_ids:
+            data = datas.filtered(lambda res: res.module == module.name)
+            if data:
+                shortcuts.append({
+                    'name': module.display_name,
+                    'url': '/web#menu_id=%s' % data.mapped('res_id')[0],
+                    'description': module.summary,
+                    'icons': [{
+                        'sizes': '100x100',
+                        'src': module.icon,
+                        'type': mimetypes.guess_type(module.icon)[0] or 'image/png'
+                    }]
+                })
         return shortcuts
 
-    def _make_web_manifest(self, scope_path='/web'):
+    @http.route('/web/manifest.webmanifest', type='http', auth='public', methods=['GET'])
+    def webmanifest(self):
         """ Returns a WebManifest describing the metadata associated with a web application.
         Using this metadata, user agents can provide developers with means to create user
         experiences that are more comparable to that of a native application.
@@ -64,23 +55,19 @@ class WebManifest(http.Controller):
         existing_attachment = (
             request.env["ir.attachment"].sudo().search([("url", "like", "/unicubevn_pwa/img/")])
         )
+        print (existing_attachment)
         manifest = {
             "$schema": "https://json.schemastore.org/web-manifest-combined.json",
             'name': web_app_name,
             'short_name': web_app_shortname,
-            'scope': scope_path,
-            'start_url': scope_path,
+            'scope': '/web',
+            'start_url': '/web',
             'background_color': background_color,
             'theme_color': theme_color,
-            "id": "Bean_PWA",
-            "lang": "vi",
-            "dir": "auto",
             "orientation": "any",
             "display": "fullscreen",
             "display_override": [
-                "window-controls-overlay",
-                "standalone",
-                "fullscreen"
+                "fullscreen", "standalone"
             ],
             'prefer_related_applications': False,
             "categories": [
@@ -92,13 +79,13 @@ class WebManifest(http.Controller):
             "iarc_rating_id": "a",
             "screenshots": [
                 {
-                    "src": '/unicubevn_pwa/static/img/icon-512x512.png',
+                    "src": '/unicubevn_pwa/img/icon-512x512.png',
                     "sizes": "512x512",
                     "type": "image/png",
                     "form_factor": "wide"
                 },
                 {
-                    "src": '/unicubevn_pwa/static/img/icon-512x512.png',
+                    "src": '/unicubevn_pwa/img/icon-512x512.png',
                     "sizes": "512x512",
                     "type": "image/png",
                 }
@@ -114,92 +101,50 @@ class WebManifest(http.Controller):
         #     "mimetype": mimetype,
         # }
         if existing_attachment:
-            for attachment in existing_attachment:
-                print(f'{attachment.url} - {attachment.mimetype}')
-                print(f"{attachment.name}")
-            manifest['icons'] = [{
-                'src': f'{attachment.url}',
-                'sizes': f"{attachment.name}",
-                'type': f'{attachment.mimetype}',
-            } for attachment in existing_attachment if attachment.name != 'default']
+                for attachment in existing_attachment:
+                    print(f'{attachment.url} - {attachment.mimetype}')
+                    print(f"{attachment.name}")
+                manifest['icons'] = [{
+                    'src': f'{attachment.url}',
+                    'sizes': f"{attachment.name}",
+                    'type': f'{attachment.mimetype}',
+                } for attachment in existing_attachment if attachment.name != 'default']
         else:
             icon_sizes = ['192x192', '512x512']
             # icon_path =
             manifest['icons'] = [{
-                'src': '/unicubevn_pwa/static/img/icon-%s.png' % size,
+                'src': '/unicubevn_pwa/img/icon-%s.png' % size,
                 'sizes': size,
                 'type': 'image/png',
             } for size in icon_sizes]
-        manifest['shortcuts'] = self._get_shortcuts(scope_path=scope_path)
+        manifest['shortcuts'] = self._get_shortcuts()
         body = json.dumps(manifest, default=ustr)
         response = request.make_response(body, [
             ('Content-Type', 'application/manifest+json'),
         ])
         return response
 
-    def _get_service_worker_content(self, scope_path='/'):
-        """ Returns a ServiceWorker javascript file scoped  (aka. '/web')
-        """
-        print('scope_path: ', scope_path)
-        if scope_path == '/web':
-            with file_open('unicubevn_pwa/static/src/js/backend_service_worker.js') as f:
-                body = f.read()
-                print('SW Body:', body)
-                return body
-        else:
-            with file_open('unicubevn_pwa/static/src/js/frontend_service_worker.js') as f:
-                body = f.read()
-                print('SW Body Root path:', body)
-                return body
-
-    @http.route('/manifest.webmanifest', type='http', auth='public', methods=['GET'])
-    def root_web_manifest(self):
-        """ Returns a WebManifest describing the metadata associated with a web application.
-        Using this metadata, user agents can provide developers with means to create user
-        experiences that are more comparable to that of a native application.
-        This path is used for Ecommerce site
-        """
-        print("root_web_manifest is running ...")
-        return self._make_web_manifest(scope_path="/")
-
-    @http.route('/web/manifest.webmanifest', type='http', auth='public', methods=['GET'])
-    def web_manifest(self):
-        """ Returns a WebManifest describing the metadata associated with a web application.
-        Using this metadata, user agents can provide developers with means to create user
-        experiences that are more comparable to that of a native application.
-        This path is used for backend site
-        """
-        return self._make_web_manifest(scope_path="/web")
-
-    @http.route('/service-worker.js', type='http', auth='public', methods=['GET'])
-    def service_worker(self):
-        """
-            Returns ServiceWorker metadata associated for Ecommerce site
-        """
-        print("path: '/service-worker.js'")
-        response = request.make_response(
-            self._get_service_worker_content(scope_path="/"),
-            [
-                ('Content-Type', 'text/javascript'),
-                ('Service-Worker-Allowed', '/'),
-            ]
-        )
-        return response
-
     @http.route('/web/service-worker.js', type='http', auth='public', methods=['GET'])
-    def web_service_worker(self):
-        """
-            Returns ServiceWorker metadata associated for backend site
-        """
-        print("path: '/web/service-worker.js'")
+    def service_worker(self):
         response = request.make_response(
-            self._get_service_worker_content(scope_path="/web"),
+            self._get_service_worker_content(),
             [
                 ('Content-Type', 'text/javascript'),
                 ('Service-Worker-Allowed', '/web'),
             ]
         )
         return response
+
+    def _get_service_worker_content(self):
+        """ Returns a ServiceWorker javascript file scoped for the backend (aka. '/web')
+        """
+
+        with file_open('web/static/src/service_worker.js') as f:
+            body = f.read()
+            return body
+
+    def _icon_path(self):
+        return 'unicubevn_pwa/img/icon-192x192.png'
 
     @http.route('/web/offline', type='http', auth='public', methods=['GET'])
     def offline(self):

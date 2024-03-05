@@ -25,28 +25,31 @@
     "images": ["static/description/image.png"],
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'l10n_vn', 'account_qr_code_emv',"base_vat"],
+    'depends': ['base', 'l10n_vn', 'account_qr_code_emv', "base_vat"],
 
     # always loaded
     'data': [
         'security/ir.model.access.csv',
         'data/res.bank.csv',
+        'data/res_config_settings.xml',
         'reports/paper_format.xml',
         'reports/invoice_receipt.xml',
         'views/account_move.xml',
         'views/ipn_log.xml',
         'views/res_bank_account.xml',
         'views/res_company_info.xml',
-        'menus/bank_menu.xml',
         'data/res_partner_bank.xml',
-        # 'data/account_journal.xml',
+        'data/res_company.xml',
+        'menus/bank_menu.xml',
     ],
     'assets': {
         'web.report_assets_common': [
-            "unicubevn_bank/static/src/scss/report.scss"
+            "unicubevn_bank/static/src/scss/report.scss",
+            "unicubevn_bank/static/src/js/print.js"
         ],
         'web.assets_backend': [
             "unicubevn_bank/static/src/json_field/**/*",
+
         ],
     }
 

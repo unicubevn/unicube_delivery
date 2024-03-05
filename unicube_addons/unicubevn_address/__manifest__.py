@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 {
     'name': "Utilities: Vietnamese Address based on Circular No 124/2004/QĐ-TTg issued by Viet Nam Government (for backend sites only)",
 
