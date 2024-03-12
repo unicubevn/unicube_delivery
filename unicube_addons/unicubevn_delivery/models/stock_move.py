@@ -8,3 +8,4 @@ class StockMove(models.Model):
     _inherit = "stock.move"
 
     product_value = fields.Float(string="Product Value")
+    contact_address = fields.Char('address', related="partner_id.contact_address_complete")

@@ -21,6 +21,7 @@
                                     <field name="location_id" column_invisible="false"/>
                                     <field name="location_dest_id" column_invisible="false"/>
                                     <field name="partner_id" column_invisible="True" readonly="state == 'done'"/>
+                                    <field name="contact_address" column_invisible="false"/>
                                     <field name="scrapped" column_invisible="True"/>
                                     <field name="picking_code" column_invisible="false"/>
                                     <field name="product_type" column_invisible="True"/>
@@ -78,5 +79,22 @@
             </xpath>
         </field>
 
+    </record>
+
+    <record id="unicube_vpicktree" model="ir.ui.view">
+        <field name="name">stock.picking.tree</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='scheduled_date']" position="after">
+                <field name="total_order" />
+            </xpath>
+            <xpath expr="//field[@name='scheduled_date']" position="after">
+                <field name="total_amount" />
+            </xpath>
+            <xpath expr="//field[@name='scheduled_date']" position="after">
+                <field name="total_fee" />
+            </xpath>
+        </field>
     </record>
 </odoo>

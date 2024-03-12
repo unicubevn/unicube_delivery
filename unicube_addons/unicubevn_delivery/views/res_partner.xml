@@ -24,8 +24,11 @@
                 </button>
             </xpath>
 
-            <xpath expr="//field[@name='vat']" position="after">
-                <field string="Type" name="account_type" />
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="account_type" />
+            </xpath>
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="store_id" />
             </xpath>
         </field>
     </record>

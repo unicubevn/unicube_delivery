@@ -14,6 +14,7 @@
         "views/res_partner.xml",
         "views/res_users.xml",
         'views/stock_picking_views.xml',
+        'views/stock_lot.xml'
     ],
     "images": ["static/description/image.jpeg"],
     'installable': True,
