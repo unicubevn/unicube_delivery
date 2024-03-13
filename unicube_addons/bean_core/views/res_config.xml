@@ -21,6 +21,15 @@
 
                 </xpath>
 
+                <!-- Change content of 'pwa_settings' section  -->
+                <xpath expr="//*[@id='pwa_settings']" position="replace">
+                    <block title="Progressive Web App" id="pwa_settings" groups="base.group_no_one">
+                        <setting
+                                help="This name will be used for the application when Bean System is installed through the browser.">
+                            <field name="web_app_name" placeholder="Bean"/>
+                        </setting>
+                    </block>
+                </xpath>
 
                 <!--                -->
 <!--                <xpath expr="//*[@id='about']" position="replace">-->
