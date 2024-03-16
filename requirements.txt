@@ -74,3 +74,4 @@ pydantic==2.6.1
 jose==1.0.0
 orjson==3.9.14
 python-dotenv==1.0.1
+redis==5.0.2
