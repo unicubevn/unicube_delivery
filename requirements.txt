@@ -1,85 +1,76 @@
-a2wsgi==1.10.0
-annotated-types==0.6.0
-anyio==4.2.0
-async-timeout==4.0.3
-attrs==23.2.0
-Babel==2.9.1
-beautifulsoup4==4.12.2
-cached-property==1.5.2
-certifi==2023.11.17
-cffi==1.16.0
+# The officially supported versions of the following packages are their
+# python3-* equivalent distributed in Ubuntu 22.04 and Debian 11
+Babel==2.9.1 ; python_version <= '3.10'  # min version = 2.6.0 (Focal with security backports)
+Babel==2.14.0 ; python_version > '3.10'
 chardet==4.0.0
-clipboard==0.0.4
 cryptography==3.4.8
 decorator==4.4.2
-docopt==0.6.2
 docutils==0.17
 ebaysdk==2.1.5
-ecdsa==0.18.0
-exceptiongroup==1.2.0
-fastapi==0.109.0
 freezegun==1.1.0
 geoip2==2.9.0
-gevent==21.8.0
-greenlet==1.1.2
-idna==2.10
-isodate==0.6.1
-Jinja2==3.0.3
-jose==1.0.0
-libsass==0.20.1
-lxml==4.8.0
-MarkupSafe==2.0.1
-maxminddb==2.5.2
+gevent==21.8.0 ; python_version == '3.10'  # (Jammy)
+gevent==22.10.2; python_version > '3.10'
+greenlet==1.1.2 ; python_version == '3.10'  # (Jammy)
+greenlet==2.0.2 ; python_version > '3.10'
+idna==2.10  # requests 2.25.1 depends on idna<3 and >=2.5
+Jinja2==3.0.3 ; python_version <= '3.10'
+Jinja2==3.1.2 ; python_version > '3.10'
+libsass== 0.23.0
+lxml==4.8.0 ; python_version <= '3.10'
+lxml==4.9.2 ; python_version > '3.10'
+MarkupSafe==2.0.1 ; python_version <= '3.10'
+MarkupSafe==2.1.2 ; python_version > '3.10'
 num2words==0.5.10
 ofxparse==0.21
-parse-accept-language==0.1.2
-passlib==1.7.4
-Pillow==9.0.1
-platformdirs==4.1.0
+passlib==1.7.4 # min version = 1.7.2 (Focal with security backports)
+Pillow==9.0.1 ; python_version <= '3.10'  # min version = 7.0.0 (Focal with security backports)
+Pillow==10.2.0 ; python_version > '3.10'
+pycairo== 1.25.1 ; python_version > '3.10'
+rlPyCairo==0.3.0 ; python_version > '3.10'
 polib==1.1.1
-psutil==5.9.0
-psycopg2==2.9.2
-pyasn1==0.5.1
-pyasn1-modules==0.3.0
-pycparser==2.21
-pydantic==2.6.0
-pydantic_core==2.16.1
+psutil==5.9.0 ; python_version <= '3.10'
+psutil==5.9.4 ; python_version > '3.10'
+psycopg2==2.9.2 ; sys_platform != 'win32' and python_version <= '3.10'
+psycopg2==2.9.5 ; python_version > '3.10' or sys_platform == 'win32'
 pydot==1.4.2
-pyfcm==1.5.4
-PyJWT==2.8.0
-pyOpenSSL==21.0.0
-pyparsing==3.1.1
-PyPDF2==1.26.0
-pyperclip==1.8.2
+pyopenssl==21.0.0
+PyPDF2==1.26.0 ; python_version <= '3.10'
+PyPDF2==2.12.1 ; python_version > '3.10'
+pypiwin32 ; sys_platform == 'win32'
 pyserial==3.5
 python-dateutil==2.8.1
-python-dotenv==1.0.1
-python-jose==3.3.0
-python-ldap==3.4.0
-python-multipart==0.0.6
+python-ldap==3.4.0 ; sys_platform != 'win32'  # min version = 3.2.0 (Focal with security backports)
 python-stdnum==1.17
-pytz==2023.3.post1
+pytz  # no version pinning to avoid OS perturbations
 pyusb==1.2.1
 qrcode==7.3.1
-redis==5.0.2
-reportlab==3.6.8
-requests==2.25.1
-requests-file==1.5.1
-requests-toolbelt==1.0.0
+reportlab==3.6.8 ; python_version <= '3.10'
+reportlab==4.0.9 ; python_version > '3.10'
+requests==2.25.1 ; python_version <= '3.10' # versions < 2.25 aren't compatible w/ urllib3 1.26. Bullseye = 2.25.1. min version = 2.22.0 (Focal)
+requests==2.31.0 ; python_version > '3.10'
 rjsmin==1.1.0
-rsa==4.9
-six==1.16.0
-sniffio==1.3.0
-soupsieve==2.5
-starlette==0.35.1
-typing_extensions==4.9.0
-ujson==5.9.0
-urllib3==1.26.5
+urllib3==1.26.5 ; python_version <= '3.10' # indirect / min version = 1.25.8 (Focal with security backports)
+urllib3==2.2.0 ; python_version > '3.10'
 vobject==0.9.6.1
-Werkzeug==2.0.2
+Werkzeug==2.2.3
 xlrd==1.2.0
 XlsxWriter==3.0.2
-xlwt==1.3.0
+xlwt==1.3.*
 zeep==4.1.0
-zope.event==5.0
-zope.interface==6.1
+pdfminer.six==20201018
+
+# Fastapi
+a2wsgi == 1.10.0
+contextvars == 2.4
+fastapi == 0.109.2
+parse-accept-language == 0.1.2
+pyjwt == 2.8.0
+python-multipart == 0.0.7
+ujson == 5.9.0
+passlib[bcrypt]
+python-jose[cryptography]==3.3.0
+pydantic==2.6.1
+jose==1.0.0
+orjson==3.9.14
+python-dotenv==1.0.1

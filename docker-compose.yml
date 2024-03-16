@@ -1,7 +1,7 @@
 version: '3.1'
 services:
-  :
-    image: registry.unicube.vn/vnat17:dev_v1_0_0_11feb2024
+  web_dev:
+    image: registry.unicube.vn/unicube_delivery_stag:latest
     ports:
       - "8070:8070"
       - "8071:8071"

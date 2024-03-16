@@ -31,6 +31,8 @@ RUN apt-get update && \
         libharfbuzz-dev \
         libfribidi-dev \
         libxcb1-dev \
+        libcairo2 \
+        libcairo2-dev \
         xfonts-75dpi \
         node-less \
         npm \
