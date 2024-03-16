@@ -7189,7 +7189,7 @@ msgstr ""
 "الأقلمة العربية لأودو، لمعظم المملكة العربية السعودية.\n"
 
 #. module: base
-#: model:ir.module.module,description:base.module_bean_core
+#: model:ir.module.module,description:base.module_web_enterprise
 msgid ""
 "\n"
 "Odoo Enterprise Web Client.\n"
@@ -37650,7 +37650,7 @@ msgid "Web Editor"
 msgstr "محرر الويب"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_bean_core
+#: model:ir.module.module,shortdesc:base.module_web_enterprise
 msgid "Web Enterprise"
 msgstr "ويب المؤسسات "
 

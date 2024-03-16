@@ -20,7 +20,7 @@ DEFAULT_EXCLUDE = [
     "upgrades/**/*",
 ]
 
-STANDARD_MODULES = ['web', 'bean_core', 'theme_common', 'base']
+STANDARD_MODULES = ['web', 'web_enterprise', 'theme_common', 'base']
 MAX_FILE_SIZE = 25 * 2**20 # 25 MB
 MAX_LINE_SIZE = 100000
 VALID_EXTENSION = ['.py', '.js', '.xml', '.css', '.scss']
