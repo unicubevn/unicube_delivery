@@ -5340,7 +5340,7 @@ msgstr ""
 "Localització àrab Odoo per a la majoria de l'Aràbia Saudita.\n"
 
 #. module: base
-#: model:ir.module.module,description:base.module_bean_core
+#: model:ir.module.module,description:base.module_web_enterprise
 msgid ""
 "\n"
 "Odoo Enterprise Web Client.\n"
@@ -33829,7 +33829,7 @@ msgid "Web Editor"
 msgstr "Editor Web"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_bean_core
+#: model:ir.module.module,shortdesc:base.module_web_enterprise
 msgid "Web Enterprise"
 msgstr "Web Enterprise"
 

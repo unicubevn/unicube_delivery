@@ -13,7 +13,7 @@ from odoo.http import request, content_disposition
 
 class Partner(http.Controller):
 
-    @http.route(['/bean_core/partner/<model("res.partner"):partner>/vcard',
+    @http.route(['/web_enterprise/partner/<model("res.partner"):partner>/vcard',
                  '/web/partner/vcard'], type='http', auth="user")
     def download_vcard(self, partner_ids=None, partner=None, **kwargs):
         if importlib.util.find_spec('vobject') is None:

@@ -592,7 +592,7 @@ class PosOrder(models.Model):
                             })
 
                     else:
-                        self.env['account.move.line'].with_context(skip_invoice_sync=True).create({
+                        self.env['account.move.line'].sudo().with_context(skip_invoice_sync=True).create({
                             'balance': -rounding_applied,
                             'quantity': 1.0,
                             'partner_id': new_move.partner_id.id,
@@ -984,7 +984,7 @@ class PosOrder(models.Model):
     def _create_order_picking(self):
         self.ensure_one()
         if self.shipping_date:
-            self.lines._launch_stock_rule_from_pos_order_lines()
+            self.sudo().lines._launch_stock_rule_from_pos_order_lines()
         else:
             if self._should_create_picking_real_time():
                 picking_type = self.config_id.picking_type_id
@@ -1418,7 +1418,13 @@ class PosOrderLine(models.Model):
         self.ensure_one()
         # Use the delivery date if there is else use date_order and lead time
         if self.order_id.shipping_date:
-            date_deadline = self.order_id.shipping_date
+            # get timezone from user
+            # and convert to UTC to avoid any timezone issue
+            # because shipping_date is date and date_planned is datetime
+            from_zone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
+            shipping_date = fields.Datetime.to_datetime(self.order_id.shipping_date)
+            shipping_date = from_zone.localize(shipping_date)
+            date_deadline = shipping_date.astimezone(pytz.UTC).replace(tzinfo=None)
         else:
             date_deadline = self.order_id.date_order
 
