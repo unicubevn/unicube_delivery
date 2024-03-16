@@ -31,7 +31,6 @@ lxml==4.8.0
 MarkupSafe==2.0.1
 maxminddb==2.5.2
 num2words==0.5.10
--e git+https://github.com/unicubevn/unicube_delivery.git@836f7dcb7d1e935c8881d87af492677cafda80b5#egg=odoo
 ofxparse==0.21
 parse-accept-language==0.1.2
 passlib==1.7.4

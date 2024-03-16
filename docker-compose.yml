@@ -1,0 +1,38 @@
+version: '3.1'
+services:
+  :
+    image: registry.unicube.vn/vnat17:dev_v1_0_0_11feb2024
+    ports:
+      - "8070:8070"
+      - "8071:8071"
+      - "8072:8072"
+    volumes:
+      - ./entrypoint.sh:/entrypoint.sh
+      - ./local_dev:/var/lib/odoo
+      - ./system_setup/odoo.conf:/etc/odoo/odoo.conf
+      - ./biz_addons:/mnt/extra-addons
+    
+    # environment:
+    #   - PASSWORD_FILE=/run/secrets/postgresql_password
+    # secrets:
+    #   - postgresql_password
+
+  # web_prod:
+  #   image: registry.unicube.vn/vnat17:dev_v1_0_0_11feb2024
+  #   ports:
+  #     - "8060:8060"
+  #     - "8061:8061"
+  #     - "8062:8062"
+  #   volumes:
+  #     - ./entrypoint.sh:/entrypoint.sh
+  #     - ./local:/var/lib/odoo
+  #     - ./system_setup/prod.conf:/etc/odoo/odoo.conf
+  #     - ./biz_addons:/mnt/extra-addons
+  #   environment:
+  #     - PASSWORD_FILE=/run/secrets/postgresql_password
+  #   secrets:
+  #     - postgresql_password
+
+# secrets:
+#   postgresql_password:
+#     file: odoo_pg_pass
