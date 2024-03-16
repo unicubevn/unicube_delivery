@@ -1,6 +1,7 @@
 # sphinx build directories
 _build/
 /local_dev
+build_*
 
 # dotfiles
 .*
