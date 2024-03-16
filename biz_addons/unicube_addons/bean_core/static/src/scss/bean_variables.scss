@@ -1,8 +1,20 @@
 /*!
- * #  Copyright (c) by The UniCube, 2023.
+ * #  Copyright (c) by The Bean Family, 2023.
  * #  License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
- * #  These code are maintained by The UniCube.
+ * #  These code are maintained by The Bean Family.
  */
+
+@media (max-width: 360px) {
+  .o-form-buttonbox {
+    flex-wrap: wrap;
+  }
+  // Fix .position-sticky
+  .position-sticky {
+    position: sticky !important;
+    overflow-x: auto !important;
+  }
+}
+
 html {
 
 }
@@ -10,7 +22,9 @@ html {
 body {
   @media only screen and (max-width: 600px) {
     /* For mobile phones: */
+    height: 100vh !important;
     height: 100svh !important;
+
   }
   height: 100vh !important;
 
@@ -19,6 +33,7 @@ body {
 
 .o-mail-ChatWindow {
   &.o-mobile {
+    height: 100vh !important;
     height: 100svh !important;
     top: 0 !important;
   }
