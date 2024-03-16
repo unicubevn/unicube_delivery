@@ -9,7 +9,7 @@ services:
     volumes:
       - ./entrypoint.sh:/entrypoint.sh
       - ./local_dev:/var/lib/odoo
-      - ./system_setup/odoo.conf:/etc/odoo/odoo.conf
+      - ./system_setup/odoo-stag.conf:/etc/odoo/odoo.conf
       - ./biz_addons:/mnt/extra-addons
     
     # environment:
