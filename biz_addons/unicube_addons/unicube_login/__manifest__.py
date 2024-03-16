@@ -3,7 +3,7 @@
     'name': 'UniCube JSC Customize Login',
     'summary': 'Customize Web Login Screen',
     'version': '17.0.0.1',
-    'category': 'website',
+    'category': 'Website/login',
     'summary': """
     You can customised login page like add background image, menu component or color and change position of login form.
     """,
@@ -13,12 +13,11 @@
     'website': 'https://unicube.vn',
     'license': 'LGPL-3',
     'depends': ['base', 'base_setup', 'web', 'auth_signup', 'bean_core'],
-    'auto_install': ['bean_core'],
     'data': [
         'security/ir.model.access.csv',
         'data/login.image.csv',
-        'data/ir.config_parameter.csv',
         'data/login_image.xml',
+        'data/ir_config_parameter.xml',
         'data/res_config_settings.xml',
         'views/res_config_settings_views.xml',
         'views/login_image.xml',

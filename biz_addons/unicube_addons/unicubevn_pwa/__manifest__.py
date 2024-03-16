@@ -36,8 +36,8 @@
     ],
     'assets': {
         'web.assets_backend': [
-            "unicubevn_pwa/static/src/js/firebase-app.js",
-            "unicubevn_pwa/static/src/js/firebase-messaging.js",
+            "unicubevn_pwa/static/src/lib/firebase-app.js",
+            "unicubevn_pwa/static/src/lib/firebase-messaging.js",
             "unicubevn_pwa/static/src/js/firebase.js"
         ],
     },

@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_unicubevn_payment_unicube_unicubevn_payment_unicube,unicubevn_payment_unicube.unicubevn_payment_unicube,model_unicubevn_payment_unicube_unicubevn_payment_unicube,base.group_user,1,1,1,1

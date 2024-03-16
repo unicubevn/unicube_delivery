@@ -6,11 +6,6 @@ self.addEventListener("install", (event) => {
     event.waitUntil(caches.open(cacheName).then((cache) => cache.addAll(cachedRequests)));
 });
 
-self.addEventListener("message", (event) => {
-  if (event.data && event.data.type === "SKIP_WAITING") {
-    self.skipWaiting();
-  }
-});
 const navigateOrDisplayOfflinePage = async (request) => {
     try {
         return await fetch(request);

@@ -5,13 +5,13 @@
   ~ #  These code are maintained by The UniCube.
   -->
 
-<odoo noupdate="1">
+<odoo noupdate="0">
 
     <record id="payment_method_timo" model="payment.method">
         <field name="name">UniCube VietQR (timo)</field>
         <field name="code">cube-timo</field>
         <field name="sequence">1000</field>
-        <field name="image" type="base64" file="unicubevn_ipn/static/img/vietqr.png"/>
+        <field name="image" type="base64" file="unicubevn_ipn/static/img/timo.svg"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_refund">partial</field>
@@ -20,7 +20,7 @@
         <field name="name">UniCube VietQR (atom)</field>
         <field name="code">cube-atom</field>
         <field name="sequence">1000</field>
-        <field name="image" type="base64" file="unicubevn_ipn/static/img/vietqr.png"/>
+        <field name="image" type="base64" file="unicubevn_ipn/static/img/unicube.png"/>
         <field name="support_tokenization">False</field>
         <field name="support_express_checkout">False</field>
         <field name="support_refund">partial</field>

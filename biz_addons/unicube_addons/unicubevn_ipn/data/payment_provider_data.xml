@@ -12,10 +12,9 @@
         <field name="code">unicube</field>
         <field name="state">enabled</field>
         <field name="is_published">True</field>
-<!--        <field name="redirect_form_view_id" ref="redirect_form"/>-->
         <field name="image_128" type="base64" file="unicubevn_ipn/static/img/unicube.png"/>
         <!-- Clear the default value before recomputing the pending_msg -->
-        <field name="pending_msg">Your payment has been successfully processed but is waiting for approval.
+        <field name="pending_msg">Your payment has been successfully processed and is waiting for your payment.
         </field>
         <field name="qr_code">True</field>
         <field name="custom_mode">unicube_emv_qr</field>
@@ -27,8 +26,6 @@
                          ref('unicubevn_ipn.payment_method_atom'),
                      ])]"
         />
-        <!--        <field name="journal_id" eval="ref('base.timo_journal')"/>-->
-
     </record>
 
 

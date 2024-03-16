@@ -26,11 +26,16 @@ class ResPartnerBank(models.Model):
     def get_currency_code(self, currency_name=False):
         return CURRENCY_MAPPING[currency_name if currency_name else 'VND']
 
+    @api.depends('acc_number', 'bank_id')
+    def _compute_display_name(self):
+        for acc in self:
+            acc.display_name = f"{acc.acc_number}-{acc.bank_id.name}-{acc.bank_bic}{('-'+acc.proxy_value) if acc.proxy_value else '' }" if acc.bank_id else acc.acc_number
+
     def name_get(self):
         res = []
         for item in self:
-            name = "%s-%s-%s" % (
-                item.acc_number, item.bank_id.name, item.acc_holder_name if (not item.acc_holder_name) else "No name")
+            name = "%s-%s-%s-%s" % (
+                item.acc_number, item.bank_id.name,item.bank_id.bank_bic, item.acc_holder_name if (not item.acc_holder_name) else "No name")
             res.append((item.id, name))
 
         return res
@@ -51,16 +56,16 @@ class ResPartnerBank(models.Model):
                              bank_name=acc.bank_id.full_name, ))
                 else:
                     acc.acc_object = False
-                print(f"acc.proxy_type {acc.proxy_type} - ")
+                _logger.info(f"acc.proxy_type {acc.proxy_type} - ")
 
-                print(f"acc.proxy_value: {acc.proxy_value} - {acc.acc_number}")
+                _logger.info(f"acc.proxy_value: {acc.proxy_value} - {acc.acc_number}")
                 if not acc.proxy_value:
                     acc.proxy_value = acc.acc_number
-                print(f"acc.proxy_value: {acc.proxy_value}")
+                _logger.info(f"acc.proxy_value: {acc.proxy_value}")
                 acc.proxy_type = "bank_acc" if (not acc.acc_number or "9704" not in acc.acc_number) else "atm_card"
 
                 if not acc.currency_id:
-                    print(self.env.company)
+                    _logger.info(self.env.company)
                     acc.currency_id = self.env.company.currency_id.id
                     acc.include_reference = True
 
@@ -68,7 +73,7 @@ class ResPartnerBank(models.Model):
 
     # def _add_partner_name(self):
     #     for acc in self:
-    #         print(f"acc.partner_id{ acc.partner_id}")
+    #         _logger.info(f"acc.partner_id{ acc.partner_id}")
     #         if acc.partner_id:
     #             acc.acc_holder_name = acc.partner_id.name
 
@@ -97,8 +102,8 @@ class ResPartnerBank(models.Model):
         return rslt
 
     def get_qr(self, amount=0, content=""):
-        print(f"Res_partner_bank - Get QR : currency {self.currency_id} - partner: {self.partner_id}")
-        print(f"Res_partner_bank - Get QR - content : {content}")
+        _logger.info(f"Res_partner_bank - Get QR : currency {self.currency_id} - partner: {self.partner_id}")
+        _logger.info(f"Res_partner_bank - Get QR - content : {content}")
 
         result = self._get_qr_vals('emv_qr', amount, self.currency_id, self.partner_id, content, content)
         # self._get_qr_vals(qr_method='emv_qr', amount=amount, currency=self.currency_id,
@@ -107,22 +112,22 @@ class ResPartnerBank(models.Model):
         #                        structured_communication=content))
         # _get_qr_vals(self, qr_method, amount, currency, debtor_partner, free_communication,
         #                  structured_communication):
-        print(f"result {result}")
+        _logger.info(f"result {result}")
         return result
 
     # Override the old _get_qr_code_vals_list() function to fixed check value type error
     def _get_qr_code_vals_list(self, qr_method, amount, currency, debtor_partner, free_communication,
                                structured_communication):
         tag, merchant_account_info = self._get_merchant_account_info()
-        print(f"_get_qr_code_vals_list : {currency}")
+        _logger.info(f"_get_qr_code_vals_list : {currency}")
         currency_code = self.get_currency_code(currency.name)
-        # print (f"type = {amount} - {type(amount)}")
+        # _logger.info (f"type = {amount} - {type(amount)}")
         amount = isinstance(amount, (int)) and int(amount) or amount
         merchant_name = self.partner_id.name and self._remove_accents(self.partner_id.name)[:25] or 'NA'
-        merchant_city = self.partner_id.city and self._remove_accents(self.partner_id.city)[:15] or ''
+        merchant_city = self.partner_id.city and self._remove_accents(self.partner_id.city)[:15] or 'HCM'
         comment = structured_communication or free_communication or ''
         comment = re.sub(r'/[^ A-Za-z0-9_@.\/#&+-]+/g', '', remove_accents(comment))
-        # print(f'comment {comment}')
+        # _logger.info(f'comment {comment}')
         additional_data_field = self._get_additional_data_field(comment) if self.include_reference else None
         return [
             (0, '01'),  # Payload Format Indicator

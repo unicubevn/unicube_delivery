@@ -136,8 +136,10 @@ class UniCubeBankController(UniCubeBankController):
 
         # ===== Handle TIMO's transaction
         if provider == "timo":
+            _logger.info(f"TIMO path ...")
             self._timo_provider_handler(provider, data, txn_code, hash_id)
         if provider == "atom":
+            _logger.info(f"ATOM path ...")
             self._atom_provider_handler(provider, data, txn_code, hash_id)
         return super(UniCubeBankController, self).invoice_handling(provider, data)
 
@@ -156,7 +158,8 @@ class UniCubeBankController(UniCubeBankController):
             'amount': re.sub("[^0-9]", "", data["amount"]),
             'payment_type': payment_type,
             'partner_type': partner_type,
-            'communication': f"{data['txnID']}-{data['narrative']}"
+            'communication': f"{data['txnID']}-{data['narrative']}",
+            'txnID': data['txnID'],
         }
 
         # ===== Search Bank Account and Mapping =====
@@ -244,10 +247,13 @@ class UniCubeBankController(UniCubeBankController):
         self._invoice_handler(provider, data, txn_code, hash_id, payment_obj)
 
     def _invoice_handler(self, provider, data, txn_code, hash_id, payment_obj):
+        _logger.info(f"_invoice_handler is processing ...")
         # Handling for website and pos transaction
         if txn_code == "W":
+            _logger.info(f"This website payment ...")
             return self.website_invoice_handling(provider, data, txn_code, hash_id, payment_obj)
         if txn_code == "P":
+            _logger.info(f"This POS payment ...")
             return self.pos_invoice_handling(provider, data, txn_code, hash_id, payment_obj)
         # payment_obj['ref'] = f"{data['txnID']}-{data['narrative']}"
         # ===== Search and handle Invoice =====

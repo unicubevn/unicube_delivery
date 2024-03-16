@@ -1,14 +1,11 @@
 from werkzeug.urls import url_join
 
-# from odoo.addons.unicubevn_payment.controllers.main import UnicubeCheckout
+from odoo.addons.unicubevn_payment.controllers.main import UnicubeCheckout
 from odoo import _, api, fields, models
-from unicube_addons.unicubevn_ipn.controllers.main import UniCubeBankController
 
 
 class PaymentProvider(models.Model):
     _inherit = 'payment.provider'
-
-
 
     code = fields.Selection(
         selection_add=[('unicube', "UniCube")], ondelete={'unicube': 'set default'}
@@ -21,30 +18,21 @@ class PaymentProvider(models.Model):
                                       string="Bank Account",
                                       readonly=True,
                                       check_company=True,
-                                      related="company_id.default_bank_acc", store=False)
-    bank_id = fields.Many2one('res.bank', related='bank_account_id.bank_id', readonly=True, store=False)
-    # ipn_url = fields.Char('IPN Url', compute="_get_ipn")
+                                      related="journal_id.bank_account_id", store=False)
+    bank_account_name = fields.Char(string="Bank Account",related="journal_id.bank_account_id.acc_number", store=False)
+    bank_id = fields.Many2one('res.bank', related='journal_id.bank_id', readonly=True, store=False)
+    ipn_url = fields.Char('IPN Url', compute="_get_ipn")
 
     _sql_constraints = [(
         'custom_providers_setup',
-        "CHECK(custom_mode IS NULL OR (code in ['custom','unicube'] AND custom_mode IS NOT NULL))",
-        "Only custom providers should have a custom mode."
+        "CHECK(custom_mode IS NULL OR ((code = 'custom' or code = 'unicube') AND custom_mode IS NOT NULL))",
+        "Only custom/unicube providers should have a custom mode."
     )]
 
-    # @api.model
-    # def _get_ipn(self):
-    #     if self.name
-    #     self.ipn_url = url_join(self.get_base_url(), UniCubeBankController._ipn_url)
-
-    # === COMPUTE METHODS ===#
-
-    def _compute_feature_support_fields(self):
-        """ Override of `payment` to enable additional features. """
-        super()._compute_feature_support_fields()
-        self.filtered(lambda p: p.code == 'unicube').update(
-            {'support_express_checkout': False, 'support_manual_capture': 'partial', 'support_refund': 'partial',
-             'support_tokenization': False, })
-
+    # === ULTILITIES METHODS ===#
+    @api.model
+    def _get_ipn(self):
+        self.ipn_url = url_join(self.get_base_url(), UnicubeCheckout._ipn_url)
 
     def send_to_timo(self):
         self.env['bus.bus']._sendone(self.env.user.partner_id, "simple_notification",
@@ -52,12 +40,17 @@ class PaymentProvider(models.Model):
                                       'title': _("Notification"),
                                       'message': _('Send register data to TIMO.')
                                       })
+    # === COMPUTE METHODS ===#
 
-    @api.model_create_multi
-    def create(self, values_list):
-        providers = super().create(values_list)
-        providers.filtered(lambda p: p.custom_mode == 'unicube_emv_qr').pending_msg = None
-        return providers
+    def _compute_feature_support_fields(self):
+        """ Override of `payment` to enable additional features. """
+        super()._compute_feature_support_fields()
+        self.filtered(lambda p: p.code == 'unicube').update(
+            {'support_express_checkout': False,
+             'support_manual_capture': 'partial',
+             'support_refund': 'partial',
+             'support_tokenization': False,
+             })
 
     @api.depends('code')
     def _compute_view_configuration_fields(self):
@@ -68,10 +61,18 @@ class PaymentProvider(models.Model):
         super()._compute_view_configuration_fields()
         self.filtered(lambda p: p.code == 'unicube').update({
             'show_credentials_page': False,
-            'show_pre_msg': False,
-            'show_done_msg': False,
-            'show_cancel_msg': False,
+            'show_pre_msg': True,
+            'show_done_msg': True,
+            'show_cancel_msg': True,
         })
+
+    @api.model_create_multi
+    def create(self, values_list):
+        providers = super().create(values_list)
+        providers.filtered(lambda p: p.custom_mode == 'unicube_emv_qr').pending_msg = None
+        return providers
+
+
 
     def action_recompute_pending_msg(self):
         """ Recompute the pending message to include the existing bank accounts. """

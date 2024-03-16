@@ -10,4 +10,3 @@ class ResCompany(models.Model):
 
     default_bank_acc = fields.Many2one(comodel_name='res.partner.bank', string='Default Bank Account',
                                        domain="[('partner_id','=', partner_id)]")
-    qr_code = fields.Boolean(string='Display QR-code on invoices', default=True)

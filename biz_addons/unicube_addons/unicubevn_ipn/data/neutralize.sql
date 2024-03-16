@@ -1,4 +1,4 @@
--- disable momo payment provider
+-- disable unicube payment provider
 UPDATE payment_provider
    SET code = NULL,
        custom_mode = NULL,
