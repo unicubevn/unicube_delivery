@@ -24,3 +24,14 @@ from ..schemas.receipt import ReceiptSchema
 from .handlerespon import make_response
 
 router = APIRouter()
+
+
+# version: "3"
+# services:
+#     gw-security:
+#     image: docker.io/library/gw-security:prod-v3
+#     ports:
+#         - 8899:8899
+#     logging:
+#         options:
+#             tag:"{{.Name}}"

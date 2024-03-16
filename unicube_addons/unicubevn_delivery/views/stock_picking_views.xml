@@ -90,10 +90,10 @@
                 <field name="total_order" />
             </xpath>
             <xpath expr="//field[@name='scheduled_date']" position="after">
-                <field name="total_amount" />
+                <field name="total_package_price" />
             </xpath>
             <xpath expr="//field[@name='scheduled_date']" position="after">
-                <field name="total_fee" />
+                <field name="total_price" />
             </xpath>
         </field>
     </record>

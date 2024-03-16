@@ -65,7 +65,6 @@ def gen_decorator(key: str, obj_type: str, is_required: bool = True):
             # auth_info = verify_token_request(obj_type)
             # print('----auth info----', auth_info)
             return f(*args, **kwargs)
-
         return wrapper
     return decorator
 

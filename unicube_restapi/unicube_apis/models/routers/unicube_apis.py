@@ -22,6 +22,11 @@ from .unicube_redis import redis_single, gen_auth_key
 from ..schemas.order import OrderSchema, ConfirmPickingSchema
 from ..schemas.receipt import ReceiptSchema
 from .handlerespon import make_response
+from odoo import api, fields, models, _
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
 
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
 ALGORITHM = "HS256"
@@ -61,6 +66,17 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl='token')
 
 # -> list[PartnerInfo]:
 
+product_list = [
+        {
+            'id': 2,
+            'name': 'Fast Delivery Pack'
+        },
+        {
+            'id': 1,
+            'name': 'Normal Delivery Pack'
+        }
+    ]
+
 @router.get("/partners", response_model=list[PartnerInfo])
 def get_partners(current_user: Annotated[dict, Depends(get_current_active_user)], env: Annotated[Environment, Depends(odoo_env)]): 
     print('------current user------', current_user)
@@ -90,13 +106,14 @@ def create_access_token(payload: dict, expires_delta: timedelta | None = None):
 async def login_for_access_token(env: Annotated[Environment, Depends(odoo_env)], token_data: TokenData ):
 
     print('-----token data-----', token_data)
-    url = 'http://localhost:8070'
+    url = os.getenv('BASE_URL')
+
     session_url = f'{url}/web/session/authenticate'
     data = {
         'jsonrpc': '2.0',
         'method': 'call',
         'params': {
-            'db': 'delivery_db',
+            'db': os.getenv('BASE_DB_NAME'),
             'login': token_data.phone,
             'password': token_data.password,
         }
@@ -149,21 +166,10 @@ async def create_receipt(env: Annotated[Environment, Depends(odoo_env)], receipt
         'scheduled_date': _data.get('scheduled_date')
     })
 
-    _product_list = [
-        {
-            'id': 2,
-            'name': 'Fast Delivery Pack'
-        },
-        {
-            'id': 3,
-            'name': 'Normal Delivery Pack'
-        }
-    ]
-
     if not new_picking.id:
         return 'create receipt failed'
 
-    for item in _product_list:
+    for item in product_list:
         new_stock_move = env['stock.move'].sudo().create({
             'partner_id': _data.get('store_id'),
             'product_id': item.get('id'),
@@ -191,23 +197,43 @@ async def create_order(env: Annotated[Environment, Depends(odoo_env)], order_sch
     
     _model_dump = order_schema.model_dump()
     print('-----_model_dump-----', _model_dump)
-    print('---dummy prod----', _model_dump.get('product_items'))
-    _product_list = _model_dump.get('product_items')
-    _sum_item = len(_product_list)
-    _total_amount = 0
-    _total_fee = 0
+    print('---package_items----', _model_dump.get('package_items'))
+    _package_items = _model_dump.get('package_items')
+    _sum_item = len(_package_items)
+
+    _sum_item_normal = 0
+    _sum_item_fast = 0
+
+    _total_package_price = 0
+    _total_price = 0
+
+    _normal_price_total = 0
+    _normal_package_price_total = 0
+
+    _fast_price_total = 0
+    _fast_package_price_total = 0
     
-    for item in _product_list:
-        _product_id = 3 if item.get('type') == 0 else 2
-        _total_amount += item.get('price')
-        _total_fee += item.get('fee')
+    for item in _package_items:
+        _product_id = 1 if item.get('type') == 0 else 2
+        _total_package_price += item.get('package_price')
+        _total_price += item.get('price')
+
+        if _product_id == 1:
+            _normal_price_total += item.get('price')
+            _normal_package_price_total += item.get('package_price')
+            _sum_item_normal += 1
+        elif _product_id == 2:
+            _fast_price_total += item.get('price')
+            _fast_package_price_total += item.get('package_price')
+            _sum_item_fast += 1
 
         _stock_lot = env["stock.lot"].sudo().create({
             'store_id': _model_dump.get('store_id'),
             'product_id': _product_id,
             'last_delivery_partner_id': item.get('contact_id'),
-            'price': item.get('price'),
+            'package_price': item.get('package_price'),
 
+            'price': item.get('price'),
             'picking_id': _model_dump.get('picking_id'),
             'type': item.get('type'),
             'description': item.get('desc')
@@ -219,7 +245,6 @@ async def create_order(env: Annotated[Environment, Depends(odoo_env)], order_sch
         _stock_move_id = env['stock.move'].sudo().search([
             ('picking_id','=',_model_dump.get('picking_id')), ('product_id','=',_product_id)
         ])
-        print('---- _stock_move_id -----', _stock_move_id)
 
         try:
             _stock_move_line = env['stock.move.line'].sudo().create({
@@ -238,26 +263,79 @@ async def create_order(env: Annotated[Environment, Depends(odoo_env)], order_sch
             return make_response(msg='failed', status=0, error_code=e)
 
     # update Demand
+    _result = await update_stock_move(
+            env,
+            picking_id=_model_dump.get('picking_id'),
+            sum_item_normal=_sum_item_normal,
+            sum_item_fast=_sum_item_fast,
+            normal_price_total=_normal_price_total,
+            normal_package_price_total= _normal_package_price_total,
+            fast_price_total=_fast_price_total,
+            fast_package_price_total=_fast_package_price_total
+        )
+    
     env['stock.picking'].sudo().search([('id','=',_model_dump.get('picking_id'))]).write({
         'total_order': _sum_item,
-        'total_amount': _total_amount,
-        'total_fee': _total_fee
+        'total_package_price': _total_package_price,
+        'total_price': _total_price
     })
     
     return make_response(msg='success')
 
 
+async def update_stock_move(
+        env,
+        picking_id,
+        sum_item_normal,
+        sum_item_fast,
+        normal_price_total,
+        normal_package_price_total,
+        fast_price_total,
+        fast_package_price_total
+    ):
+
+    for product in product_list:
+        # print('-------product-------', product)
+        # print('-------env-------', env)
+        # print('-------picking_id-------', picking_id)
+        # print('-------sum_item_normal-------', sum_item_normal)
+        # print('-------sum_item_fast-------', sum_item_fast)
+        # print('-------normal_price_total-------', normal_price_total)
+        # print('-------normal_package_price_total-------', normal_package_price_total)
+        # print('-------fast_price_total-------', fast_price_total)
+        # print('-------fast_package_price_total-------', fast_package_price_total)
+
+        if product.get('id') == 3:
+            _stock_move = env['stock.move'].sudo().search([
+                ('picking_id','=',picking_id), ('product_id','=',product.get('id'))
+            ]).write({
+                'total_price': normal_price_total,
+                'total_package_price': normal_package_price_total,
+                'product_uom_qty': sum_item_normal,
+                'state': 'draft'
+        
+            })
+        elif product.get('id') == 2:
+            _stock_move = env['stock.move'].sudo().search([
+                ('picking_id','=',picking_id), ('product_id','=',product.get('id'))
+            ]).write({
+                'total_price': fast_price_total,
+                'total_package_price': fast_package_price_total,
+                'product_uom_qty': sum_item_fast,
+                'state': 'draft'
+            })
+
+    return True
+
+
 @router.post("/confirm-picking")
 async def create_order(env: Annotated[Environment, Depends(odoo_env)], confirm_picking: ConfirmPickingSchema):
-    _data = confirm_picking.model_dump
-    print('----confirm---_data-----', _data)
+    _data = confirm_picking.model_dump()
     try:
-        _result = env['stock.picking'].sudo().search([('id','=',_data.get('picking_id'))]).write({
-            'state': _data.get('state')
-        })
-        if not _result:
-            return make_response(msg='update state err', status=0)
 
+        _stock_picking = env['stock.picking'].sudo().search([('id','=',_data.get('picking_id'))])
+        _stock_picking.action_confirm()
+        
     except Exception as e:
         make_response(
             msg=e,
@@ -338,3 +416,5 @@ async def create_receipt(env: Annotated[Environment, Depends(odoo_env)], page: i
 # dummy variables
 # _name = 'stock.lot'
 # picking_type_code = self.env.context.get('restricted_picking_type_code')   --- keywork find stock.picking
+
+# _name = 'account.move' search account move
