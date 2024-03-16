@@ -1429,6 +1429,36 @@ QUnit.module("View Editors", (hooks) => {
         );
     });
 
+    QUnit.test("notebook with empty page and fields inside the element", async (assert) => {
+        await createViewEditor({
+            serverData,
+            type: "form",
+            resModel: "coucou",
+            arch: `<form>
+                        <sheet>
+                            <notebook>
+                                <page string="Page"></page>
+                                <field name='id' invisible='1'/>
+                                <page string="Empty"></page>
+                            </notebook>
+                        </sheet>
+                    </form>`,
+        });
+
+        await click(target.querySelector(".o_web_studio_view_renderer .o_notebook li"));
+        assert.strictEqual(
+            target.querySelector(".o_form_sheet .o_notebook_headers li:nth-child(2)").dataset
+                .studioXpath,
+            "/form[1]/sheet[1]/notebook[1]/page[2]"
+        );
+        await click(target, ".o_form_sheet .o_notebook_headers li:nth-child(2) a", true);
+        assert.strictEqual(
+            target.querySelectorAll(".o_web_studio_property input")[1].value,
+            "Empty",
+            "the page label is correctly set"
+        );
+    });
+
     QUnit.test("invisible notebook page in form", async function (assert) {
         assert.expect(9);
 
@@ -3460,6 +3490,43 @@ QUnit.module("View Editors", (hooks) => {
         await nextTick();
         assert.containsOnce(target, ".o-form-buttonbox");
         assert.containsOnce(target, ".o-form-buttonbox button[name='some_action']");
+    });
+
+    QUnit.test("cannot add a related properties field", async (assert) => {
+        serverData.models.coucou.fields.m2o = {
+            type: "many2one",
+            relation: "product",
+            string: "m2o to product",
+        };
+        serverData.models.product.fields = {
+            id: { type: "integer", string: "IDCusto" },
+            properties: { type: "properties", string: "Product Properties" },
+            some_test_field: { type: "char", string: "SomeTestField" },
+        };
+        serverData.models.product.records = [];
+        await createViewEditor({
+            serverData,
+            type: "form",
+            arch: '<form><group><field name="display_name" /></group></form>',
+            resModel: "coucou",
+        });
+        disableHookAnimation(target);
+        await dragAndDrop(
+            ".o_web_studio_new_fields .o_web_studio_field_related",
+            ".o_web_studio_form_view_editor .o_web_studio_hook"
+        );
+        assert.containsOnce(target, ".modal .o_model_field_selector");
+
+        await click(target, ".modal .o_model_field_selector");
+        await click(target, ".o_popover .o_model_field_selector_popover_item_relation");
+        assert.deepEqual(
+            [
+                ...target.querySelectorAll(
+                    ".o_popover .o_model_field_selector_popover_page .o_model_field_selector_popover_item"
+                ),
+            ].map((el) => el.textContent.trim()),
+            ["Display Name", "IDCusto", "Last Modified on", "Name", "SomeTestField"]
+        );
     });
 });
 
