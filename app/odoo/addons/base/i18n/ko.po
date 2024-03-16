@@ -7175,7 +7175,7 @@ msgstr ""
 "대부분의 사우디아라비아 국가에 적용 가능한 Odoo 아랍어 현지화.\n"
 
 #. module: base
-#: model:ir.module.module,description:base.module_web_enterprise
+#: model:ir.module.module,description:base.module_bean_core
 msgid ""
 "\n"
 "Odoo Enterprise Web Client.\n"
@@ -37239,7 +37239,7 @@ msgid "Web Editor"
 msgstr "웹 편집기"
 
 #. module: base
-#: model:ir.module.module,shortdesc:base.module_web_enterprise
+#: model:ir.module.module,shortdesc:base.module_bean_core
 msgid "Web Enterprise"
 msgstr "웹 유료버전"
 
