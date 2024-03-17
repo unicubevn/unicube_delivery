@@ -57,10 +57,15 @@ class UnicubeModel(BaseModel):
     status: int | None = 1
     time: float | None = ""
     version: str | None = "v1"
+    
 
-class Token(UnicubeModel):
+class Token(BaseModel):
     token: str
     token_type: str
+
+class Token1(UnicubeModel):
+    data: Token
+
 
 
 router = APIRouter()
@@ -149,9 +154,8 @@ async def login_for_access_token(env: Annotated[Environment, Depends(odoo_env)],
         expires_delta=access_token_expires
     )
 
-    return {
-        "data": Token(token=access_token, token_type="bearer")
-    }
+    return Token1(data=Token(token=access_token, token_type="bearer"))
+    
 
 @router.post("/create-receipt")
 async def create_receipt(env: Annotated[Environment, Depends(odoo_env)], receipt_schema:ReceiptSchema):
