@@ -50,10 +50,6 @@ class TokenData(BaseModel):
     phone: str | None = None
     password: str | None = None
 
-class Token(BaseModel):
-    token: str
-    token_type: str
-
 class UnicubeModel(BaseModel):
     error_code: str | None = ""
     errors: str | None = ""
@@ -61,6 +57,10 @@ class UnicubeModel(BaseModel):
     status: int | None = 1
     time: float | None = ""
     version: str | None = "v1"
+
+class Token(UnicubeModel):
+    token: str
+    token_type: str
 
 
 router = APIRouter()
@@ -150,8 +150,7 @@ async def login_for_access_token(env: Annotated[Environment, Depends(odoo_env)],
     )
 
     return {
-        "data": Token(token=access_token, token_type="bearer"),
-        "base": UnicubeModel()
+        "data": Token(token=access_token, token_type="bearer")
     }
 
 @router.post("/create-receipt")
