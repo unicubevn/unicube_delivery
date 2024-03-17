@@ -303,17 +303,8 @@ async def update_stock_move(
     ):
 
     for product in product_list:
-        # print('-------product-------', product)
-        # print('-------env-------', env)
-        # print('-------picking_id-------', picking_id)
-        # print('-------sum_item_normal-------', sum_item_normal)
-        # print('-------sum_item_fast-------', sum_item_fast)
-        # print('-------normal_price_total-------', normal_price_total)
-        # print('-------normal_package_price_total-------', normal_package_price_total)
-        # print('-------fast_price_total-------', fast_price_total)
-        # print('-------fast_package_price_total-------', fast_package_price_total)
-
-        if product.get('id') == 3:
+        
+        if product.get('id') == 1:
             _stock_move = env['stock.move'].sudo().search([
                 ('picking_id','=',picking_id), ('product_id','=',product.get('id'))
             ]).write({
