@@ -59,6 +59,7 @@ XlsxWriter==3.0.2
 xlwt==1.3.*
 zeep==4.1.0
 pdfminer.six==20201018
+clipboard==0.0.4
 
 # Fastapi
 a2wsgi == 1.10.0
