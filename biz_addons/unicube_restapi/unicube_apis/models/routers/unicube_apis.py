@@ -110,7 +110,7 @@ def create_access_token(payload: dict, expires_delta: timedelta | None = None):
     return encoded_jwt
 
 
-@router.post("/token")
+@router.post("/login")
 async def login_for_access_token(env: Annotated[Environment, Depends(odoo_env)], token_data: TokenData ):
 
     print('-----token data-----', token_data)
@@ -161,10 +161,21 @@ async def login_for_access_token(env: Annotated[Environment, Depends(odoo_env)],
 async def create_receipt(env: Annotated[Environment, Depends(odoo_env)], receipt_schema:ReceiptSchema):
 
     _data = receipt_schema.model_dump()
-    print('------data-------', _data)
     # print('---time now---', Datetime.now())
-    new_picking = env["stock.picking"].sudo().create({
 
+    match _data.get('type'):
+        case 0:
+            print('----vao case 0-----')
+            _attibute_value = 'normal'
+            # _product_id = 2
+            _product_id = 8
+        case 1:
+            _attibute_value = 'fast'
+            # _product_id = 3
+            _product_id = 7
+
+
+    new_picking = env["stock.picking"].sudo().create({
         'partner_id': _data.get('store_id'),
         'company_id': 1,
         'user_id': 2,
@@ -177,25 +188,25 @@ async def create_receipt(env: Annotated[Environment, Depends(odoo_env)], receipt
     if not new_picking.id:
         return 'create receipt failed'
 
-    for item in product_list:
-        new_stock_move = env['stock.move'].sudo().create({
-            'partner_id': _data.get('store_id'),
-            'product_id': item.get('id'),
-            'picking_id': new_picking.id,
-            'company_id': 1,
+    new_stock_move = env['stock.move'].sudo().create({
+        'partner_id': _data.get('store_id'),
+        'product_id': _product_id,
+        'picking_id': new_picking.id,
+        'company_id': 1,
 
-            'location_id': 4,
-            'location_dest_id': 8,
-            'picking_type_id': 1,
-            'name': item.get('name'),
-            'description_picking': item.get('name')
-        })
-        if not new_stock_move:
-            return "create stock move failed"                
+        'location_id': 4,
+        'location_dest_id': 8,
+        'picking_type_id': 1,
+        'name': f'Delivery Pack {_attibute_value}',
+        'description_picking': f'Delivery Pack {_attibute_value}'
+    })
+    if not new_stock_move:
+        return "create stock move failed"                
 
     return make_response(
         data={
-            'picking_id': new_picking.id
+            'picking_id': new_picking.id,
+            'type': _data.get('type')
         },
         msg='success'
     )
@@ -204,46 +215,36 @@ async def create_receipt(env: Annotated[Environment, Depends(odoo_env)], receipt
 async def create_order(env: Annotated[Environment, Depends(odoo_env)], order_schema: OrderSchema):
     
     _model_dump = order_schema.model_dump()
-    print('-----_model_dump-----', _model_dump)
-    print('---package_items----', _model_dump.get('package_items'))
     _package_items = _model_dump.get('package_items')
     _sum_item = len(_package_items)
-
-    _sum_item_normal = 0
-    _sum_item_fast = 0
 
     _total_package_price = 0
     _total_price = 0
 
-    _normal_price_total = 0
-    _normal_package_price_total = 0
-
-    _fast_price_total = 0
-    _fast_package_price_total = 0
+    match _model_dump.get('type'):
+        case 0:
+            _attibute_value = 'normal'
+            # _product_id = 2
+            _product_id = 8
+        case 1:
+            _attibute_value = 'fast'
+            # _product_id = 3
+            _product_id = 7
     
     for item in _package_items:
-        _product_id = 1 if item.get('type') == 0 else 2
+       
         _total_package_price += item.get('package_price')
         _total_price += item.get('price')
-
-        if _product_id == 1:
-            _normal_price_total += item.get('price')
-            _normal_package_price_total += item.get('package_price')
-            _sum_item_normal += 1
-        elif _product_id == 2:
-            _fast_price_total += item.get('price')
-            _fast_package_price_total += item.get('package_price')
-            _sum_item_fast += 1
 
         _stock_lot = env["stock.lot"].sudo().create({
             'store_id': _model_dump.get('store_id'),
             'product_id': _product_id,
-            'last_delivery_partner_id': item.get('contact_id'),
+            'last_delivery_partner_id': _model_dump.get('contact_id'),
             'package_price': item.get('package_price'),
 
             'price': item.get('price'),
             'picking_id': _model_dump.get('picking_id'),
-            'type': item.get('type'),
+            'type': _model_dump.get('type'),
             'description': item.get('desc')
         })
 
@@ -274,15 +275,13 @@ async def create_order(env: Annotated[Environment, Depends(odoo_env)], order_sch
     _result = await update_stock_move(
             env,
             picking_id=_model_dump.get('picking_id'),
-            sum_item_normal=_sum_item_normal,
-            sum_item_fast=_sum_item_fast,
-            normal_price_total=_normal_price_total,
-            normal_package_price_total= _normal_package_price_total,
-            fast_price_total=_fast_price_total,
-            fast_package_price_total=_fast_package_price_total
+            product_id=_product_id,
+            total_price=_total_price,
+            total_package_price=_total_package_price
         )
     
     env['stock.picking'].sudo().search([('id','=',_model_dump.get('picking_id'))]).write({
+        'owner_id': _model_dump.get('contact_id'),
         'total_order': _sum_item,
         'total_package_price': _total_package_price,
         'total_price': _total_price
@@ -294,35 +293,17 @@ async def create_order(env: Annotated[Environment, Depends(odoo_env)], order_sch
 async def update_stock_move(
         env,
         picking_id,
-        sum_item_normal,
-        sum_item_fast,
-        normal_price_total,
-        normal_package_price_total,
-        fast_price_total,
-        fast_package_price_total
+        product_id,
+        total_price,
+        total_package_price
     ):
 
-    for product in product_list:
-        
-        if product.get('id') == 1:
-            _stock_move = env['stock.move'].sudo().search([
-                ('picking_id','=',picking_id), ('product_id','=',product.get('id'))
-            ]).write({
-                'total_price': normal_price_total,
-                'total_package_price': normal_package_price_total,
-                'product_uom_qty': sum_item_normal,
-                'state': 'draft'
-        
-            })
-        elif product.get('id') == 2:
-            _stock_move = env['stock.move'].sudo().search([
-                ('picking_id','=',picking_id), ('product_id','=',product.get('id'))
-            ]).write({
-                'total_price': fast_price_total,
-                'total_package_price': fast_package_price_total,
-                'product_uom_qty': sum_item_fast,
-                'state': 'draft'
-            })
+    _stock_move = env['stock.move'].sudo().search([
+        ('picking_id','=',picking_id), ('product_id','=',product_id)
+    ]).write({
+        'product_value': total_price,
+        'total_package_price': total_package_price
+    })
 
     return True
 
