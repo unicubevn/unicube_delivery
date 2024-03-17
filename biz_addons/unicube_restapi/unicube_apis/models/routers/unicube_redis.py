@@ -3,7 +3,7 @@
 # Author Khanh
 
 import redis
-from app.odoo import tools
+from odoo import tools
 
 # load_dotenv()
 

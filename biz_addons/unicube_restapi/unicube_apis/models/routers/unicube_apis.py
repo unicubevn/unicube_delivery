@@ -15,7 +15,7 @@ from odoo.fields import Datetime
 from pydantic import BaseModel
 from jose import JWTError, jwt
 
-from app.odoo import tools
+from odoo import tools
 from odoo.addons.fastapi.dependencies import odoo_env
 from odoo.api import Environment
 from .decorators import auth_user, get_current_active_user
