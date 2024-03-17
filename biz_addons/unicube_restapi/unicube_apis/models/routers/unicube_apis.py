@@ -114,7 +114,6 @@ def create_access_token(payload: dict, expires_delta: timedelta | None = None):
 @router.post("/login")
 async def login_for_access_token(env: Annotated[Environment, Depends(odoo_env)], token_data: TokenData ):
 
-    print('-----token data-----', token_data)
     url = env['ir.config_parameter'].sudo().get_param('web.base.url')
 
     session_url = f'{url}/web/session/authenticate'
@@ -365,10 +364,11 @@ async def get_order_by_store(env: Annotated[Environment, Depends(odoo_env)], pag
     )
 
 @router.get("/get-picking")
-async def create_receipt(env: Annotated[Environment, Depends(odoo_env)], page: int = 1):
+async def get_receipt(env: Annotated[Environment, Depends(odoo_env)], page: int = 1):
     _store_id = 7
     try:
         picking_model = env['stock.picking'].sudo().search([('partner_id','=',_store_id)], offset=(page - 1) * 10, limit=10)
+
         picking_data = []
         for item in picking_model:
             picking_data.append({
@@ -379,18 +379,20 @@ async def create_receipt(env: Annotated[Environment, Depends(odoo_env)], page: i
                 'location_dest': item.location_dest_id.name,
                 'scheduled_date': item.scheduled_date,
 
-                'total_fee': item.total_fee,
-                'total_amount': item.total_amount,
+                'total_price': item.total_price,
+                'total_package_price': item.total_package_price,
                 'total_order': item.total_order,
                 'state': item.state
             })
+
     except Exception as e:
-        return make_response(msg=e, status=0)
+        _logger(e)
     
     return make_response(
         data=picking_data,
         msg='success'
     )
+    
 
 @router.get("/get-country-state")
 async def country_state(env: Annotated[Environment, Depends(odoo_env)], country_id: int = 241):
