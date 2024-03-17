@@ -27,7 +27,7 @@ from ..schemas.address import CountrySchema
 from ..schemas.contact import ContactSchema
 from .handlerespon import make_response
 from .address import get_country_state, get_country_district, get_country_ward
-from .contact import handle_create_conract
+from .contact import handle_create_conract, handle_get_contact
 
 
 _logger = logging.getLogger(__name__)
@@ -419,6 +419,14 @@ async def country_ward(env: Annotated[Environment, Depends(odoo_env)], district_
         data=_result
     )
 
+
+@router.get("/get-contact-by-phone")
+async def get_contact(env: Annotated[Environment, Depends(odoo_env)], store_id: int, phone: str):
+    _contact_data = handle_get_contact(env, store_id=store_id, phone=phone)
+    
+    return make_response(
+        data=_contact_data
+    )
 
 @router.post("/create-contact")
 async def create_contact(env: Annotated[Environment, Depends(odoo_env)], contact_schema:ContactSchema):

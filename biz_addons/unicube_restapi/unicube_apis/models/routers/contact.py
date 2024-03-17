@@ -33,4 +33,16 @@ def handle_create_conract(env, contact_info):
     
     except Exception as e:
         _logger(e)
-    
+
+def handle_get_contact(env, store_id, phone):
+    contact_info = env['res.partner'].sudo().search([
+        ('store_id','=',store_id),('phone','=',phone)
+    ])
+    if not contact_info:
+        return {}
+    return {
+        'id': contact_info.id,
+        'name': contact_info.name,
+        'phone': contact_info.phone,
+        'contact_address_complete': contact_info.contact_address_complete
+    }
