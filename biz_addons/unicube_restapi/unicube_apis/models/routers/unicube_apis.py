@@ -4,6 +4,7 @@
 
 from datetime import datetime, timedelta, timezone
 from http.client import HTTPException
+import logging
 import statistics
 from typing import Annotated, Union
 
@@ -28,6 +29,7 @@ import os
 from dotenv import load_dotenv
 # load_dotenv()
 
+_logger = logging.getLogger(__name__)
 
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
 ALGORITHM = "HS256"
@@ -110,6 +112,7 @@ async def login_for_access_token(env: Annotated[Environment, Depends(odoo_env)],
     url = env['ir.config_parameter'].sudo().get_param('web.base.url')
 
     session_url = f'{url}/web/session/authenticate'
+    _logger.info('-----session_url----', session_url)
     data = {
         'jsonrpc': '2.0',
         'method': 'call',
@@ -120,8 +123,9 @@ async def login_for_access_token(env: Annotated[Environment, Depends(odoo_env)],
         }
     }
     session_response = requests.post(session_url, json=data)
+    _logger.info('-----session_response----', session_response)
     session_data = session_response.json()
-
+    _logger.info('-----session_data----', session_data)
     user = session_data.get('result')
 
     # user = None
