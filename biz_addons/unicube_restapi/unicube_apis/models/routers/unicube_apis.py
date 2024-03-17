@@ -15,6 +15,7 @@ from odoo.fields import Datetime
 from pydantic import BaseModel
 from jose import JWTError, jwt
 
+from app.odoo import tools
 from odoo.addons.fastapi.dependencies import odoo_env
 from odoo.api import Environment
 from .decorators import auth_user, get_current_active_user
@@ -25,7 +26,7 @@ from .handlerespon import make_response
 from odoo import api, fields, models, _
 import os
 from dotenv import load_dotenv
-load_dotenv()
+# load_dotenv()
 
 
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
@@ -106,14 +107,14 @@ def create_access_token(payload: dict, expires_delta: timedelta | None = None):
 async def login_for_access_token(env: Annotated[Environment, Depends(odoo_env)], token_data: TokenData ):
 
     print('-----token data-----', token_data)
-    url = os.getenv('BASE_URL')
+    url = env['ir.config_parameter'].sudo().get_param('web.base.url')
 
     session_url = f'{url}/web/session/authenticate'
     data = {
         'jsonrpc': '2.0',
         'method': 'call',
         'params': {
-            'db': os.getenv('BASE_DB_NAME'),
+            'db': tools.config.get('db_name'),
             'login': token_data.phone,
             'password': token_data.password,
         }
