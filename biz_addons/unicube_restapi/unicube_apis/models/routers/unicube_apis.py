@@ -23,11 +23,12 @@ from .decorators import auth_user, get_current_active_user
 from .unicube_redis import redis_single, gen_auth_key
 from ..schemas.order import OrderSchema, ConfirmPickingSchema
 from ..schemas.receipt import ReceiptSchema
+from ..schemas.address import CountrySchema
+from ..schemas.contact import ContactSchema
 from .handlerespon import make_response
-from odoo import api, fields, models, _
-import os
-from dotenv import load_dotenv
-# load_dotenv()
+from .address import get_country_state, get_country_district, get_country_ward
+from .contact import handle_create_conract
+
 
 _logger = logging.getLogger(__name__)
 
@@ -161,11 +162,9 @@ async def login_for_access_token(env: Annotated[Environment, Depends(odoo_env)],
 async def create_receipt(env: Annotated[Environment, Depends(odoo_env)], receipt_schema:ReceiptSchema):
 
     _data = receipt_schema.model_dump()
-    # print('---time now---', Datetime.now())
 
     match _data.get('type'):
         case 0:
-            print('----vao case 0-----')
             _attibute_value = 'normal'
             # _product_id = 2
             _product_id = 8
@@ -392,6 +391,45 @@ async def create_receipt(env: Annotated[Environment, Depends(odoo_env)], page: i
         data=picking_data,
         msg='success'
     )
+
+@router.get("/get-country-state")
+async def country_state(env: Annotated[Environment, Depends(odoo_env)], country_id: int = 241):
+
+    _result = get_country_state(env=env, country_id=country_id )
+
+    return make_response(
+        data=_result
+    )
+
+@router.get("/get-country-district")
+async def country_district(env: Annotated[Environment, Depends(odoo_env)], state_id: int):
+
+    _result = get_country_district(env=env, state_id=state_id )
+
+    return make_response(
+        data=_result
+    )
+
+@router.get("/get-country-ward")
+async def country_ward(env: Annotated[Environment, Depends(odoo_env)], district_id: int):
+
+    _result = get_country_ward(env=env, district_id=district_id )
+
+    return make_response(
+        data=_result
+    )
+
+
+@router.post("/create-contact")
+async def create_contact(env: Annotated[Environment, Depends(odoo_env)], contact_schema:ContactSchema):
+    
+    _data = contact_schema.model_dump()
+    result = handle_create_conract(env=env, contact_info=_data)
+    if result == False:
+        return make_response(msg='create customer failure!', status=0)
+
+    return make_response(msg='success')
+
 
 # dummy variables
 # _name = 'stock.lot'

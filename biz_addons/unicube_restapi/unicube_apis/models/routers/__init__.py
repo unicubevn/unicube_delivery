@@ -5,3 +5,5 @@ from . import unicube_redis
 from . import decorators
 from . import handlerespon
 from . import exceptions
+from . import address
+from . import contact
