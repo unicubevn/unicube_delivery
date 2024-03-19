@@ -7,8 +7,8 @@ from odoo import models, fields, _
 class StockLot(models.Model):
     _inherit = 'stock.lot'
 
-    price = fields.Monetary(string='Price', currency_field='currency_id', digits=(16, 2))
-    package_price = fields.Monetary(string='Fee', currency_field='currency_id', digits=(16, 2))
+    price = fields.Monetary(string='Price', currency_field='currency_id')
+    package_price = fields.Monetary(string='Fee', currency_field='currency_id')
 
     description = fields.Char(string='Description')
     address = fields.Char(string='Address')
