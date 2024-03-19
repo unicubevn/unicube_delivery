@@ -28,7 +28,7 @@ This module enables the barcode scanning feature for the warehouse management sy
     ],
     'installable': True,
     'application': True,
-    'license': 'OEEL-1',
+    'license': 'LGPL-3',
     'assets': {
         'web.assets_backend': [
             'stock_barcode/static/src/**/*.js',
