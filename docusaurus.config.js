@@ -26,8 +26,9 @@ const config = {
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'TeShip', // Usually your GitHub org/user name.
-  projectName: 'Delivery System', // Usually your repo name.
+  organizationName: 'unicubevn', // Usually your GitHub org/user name.
+  projectName: 'unicube_delivery', // Usually your repo name.
+  deploymentBranch:'documentation',
 
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',

@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkunicube_delivery=self.webpackChunkunicube_delivery||[]).push([[6334],{1794:e=>{e.exports=JSON.parse('{"label":"facebook","permalink":"/blog/tags/facebook","allTagsPath":"/blog/tags","count":1,"unlisted":false}')}}]);
