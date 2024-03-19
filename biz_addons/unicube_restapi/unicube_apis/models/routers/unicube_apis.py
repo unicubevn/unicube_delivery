@@ -98,6 +98,7 @@ def get_partners(current_user: Annotated[dict, Depends(get_current_active_user)]
 def create_access_token(payload: dict, expires_delta: timedelta | None = None):
 
     to_encode = payload.copy()
+    print('------to_encode---', to_encode)
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta
     else: 
@@ -142,13 +143,14 @@ async def login_for_access_token(env: Annotated[Environment, Depends(odoo_env)],
         )
     
     res_partner = env["res.partner"].sudo().search([('id', 'like', user.get('partner_id'))])
+    print('----res_partner------', res_partner.contact_address_complete)
 
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
         payload={
             'phone': user.get('username'),
             'email': res_partner.email,
-            'store_id': res_partner.store_id,
+            'store_id': res_partner.store_id.id,
             'account_type': res_partner.account_type,
             'address': res_partner.contact_address_complete,
             'name': user.get('name')
@@ -328,7 +330,7 @@ async def create_order(env: Annotated[Environment, Depends(odoo_env)], confirm_p
 
 
 @router.get("/get-orders")
-async def get_order_by_store(env: Annotated[Environment, Depends(odoo_env)], page: int = 1):
+async def get_order_by_store(env: Annotated[Environment, Depends(odoo_env)],page: int = 1):
     _store_id = 7
 
     try:
@@ -366,7 +368,7 @@ async def get_order_by_store(env: Annotated[Environment, Depends(odoo_env)], pag
     )
 
 @router.get("/get-picking")
-async def get_receipt(env: Annotated[Environment, Depends(odoo_env)], page: int = 1):
+async def get_receipt(env: Annotated[Environment, Depends(odoo_env)],store_id: int, page: int = 1):
     _store_id = 7
     try:
         picking_model = env['stock.picking'].sudo().search([('partner_id','=',_store_id)], offset=(page - 1) * 10, limit=10)
@@ -384,7 +386,7 @@ async def get_receipt(env: Annotated[Environment, Depends(odoo_env)], page: int 
                 'total_price': item.total_price,
                 'total_package_price': item.total_package_price,
                 'total_order': item.total_order,
-                'state': item.state
+                'state': item.state,
             })
 
     except Exception as e:
