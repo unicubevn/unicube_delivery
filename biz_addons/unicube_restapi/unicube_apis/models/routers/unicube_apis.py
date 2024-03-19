@@ -148,7 +148,9 @@ async def login_for_access_token(env: Annotated[Environment, Depends(odoo_env)],
         payload={
             'phone': user.get('username'),
             'email': res_partner.email,
-            # 'store_id': user.get('user_companies').get('current_company'),
+            'store_id': res_partner.store_id,
+            'account_type': res_partner.account_type,
+            'address': res_partner.contact_address_complete,
             'name': user.get('name')
         },
         expires_delta=access_token_expires
