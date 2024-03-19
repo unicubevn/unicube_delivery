@@ -387,6 +387,9 @@ async def get_receipt(env: Annotated[Environment, Depends(odoo_env)],store_id: i
                 'total_package_price': item.total_package_price,
                 'total_order': item.total_order,
                 'state': item.state,
+
+                'create_date': item.create_date,
+                
             })
 
     except Exception as e:
