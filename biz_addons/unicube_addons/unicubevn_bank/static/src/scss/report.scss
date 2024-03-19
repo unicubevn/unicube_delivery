@@ -1,4 +1,10 @@
 // css for sale receipt
+@media print {
+    .no-print {
+        display: none;
+    }
+}
+
 .bean_receipt {
   background: #eeeeee;
   display: flex;
