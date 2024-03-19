@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkunicube_delivery=self.webpackChunkunicube_delivery||[]).push([[8009],{2632:e=>{e.exports=JSON.parse('{"label":"docusaurus","permalink":"/unicube_delivery/blog/tags/docusaurus","allTagsPath":"/unicube_delivery/blog/tags","count":4,"unlisted":false}')}}]);

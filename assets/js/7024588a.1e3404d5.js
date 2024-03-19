@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkunicube_delivery=self.webpackChunkunicube_delivery||[]).push([[514],{5197:e=>{e.exports=JSON.parse('{"label":"hola","permalink":"/unicube_delivery/blog/tags/hola","allTagsPath":"/unicube_delivery/blog/tags","count":1,"unlisted":false}')}}]);
