@@ -376,6 +376,7 @@ async def get_receipt(env: Annotated[Environment, Depends(odoo_env)],store_id: i
         picking_data = []
         for item in picking_model:
             picking_data.append({
+                'id': item.id,
                 'name': item.name,
                 'location_id': item.location_id.id,
                 'location': item.location_id.name,
