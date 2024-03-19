@@ -389,6 +389,10 @@ async def get_receipt(env: Annotated[Environment, Depends(odoo_env)],store_id: i
                 'total_order': item.total_order,
                 'state': item.state,
 
+                'store_phone': item.partner_id.id,
+                'store_name': item.partner_id.name,
+                'phone': item.owner_id.phone,
+                'address': item.owner_id.contact_address_complete,
                 'create_date': item.create_date.timestamp(),
             })
 
