@@ -15,6 +15,7 @@ import requests
 from odoo.fields import Datetime
 from pydantic import BaseModel
 from jose import JWTError, jwt
+import json
 
 from odoo import tools
 from odoo.addons.fastapi.dependencies import odoo_env
@@ -375,6 +376,17 @@ async def get_receipt(env: Annotated[Environment, Depends(odoo_env)],store_id: i
 
         picking_data = []
         for item in picking_model:
+            _stock_lot_data = []
+            _stock_lot = env['stock.lot'].sudo().search([('picking_id','=',item.id)])
+            
+            for stock_item in _stock_lot:
+                _stock_lot_data.append({
+                    'serial_number': stock_item.name,
+                    'desc': stock_item.description,
+                    'price': stock_item.price,
+                    'package_price': stock_item.package_price,
+                })
+
             picking_data.append({
                 'id': item.id,
                 'name': item.name,
@@ -393,6 +405,8 @@ async def get_receipt(env: Annotated[Environment, Depends(odoo_env)],store_id: i
                 'store_name': item.partner_id.name,
                 'phone': item.owner_id.phone,
                 'address': item.owner_id.contact_address_complete,
+
+                'item': _stock_lot_data,
                 'create_date': item.create_date.timestamp(),
             })
 
