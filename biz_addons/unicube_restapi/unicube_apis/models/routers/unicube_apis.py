@@ -372,7 +372,7 @@ async def get_order_by_store(env: Annotated[Environment, Depends(odoo_env)],page
 async def get_receipt(env: Annotated[Environment, Depends(odoo_env)],store_id: int, pageIndex: int = 1, pageSize: int = 10):
     _store_id = 7
     try:
-        picking_model = env['stock.picking'].sudo().search([('partner_id','=',_store_id)], offset=(pageIndex - 1) * 10, limit=pageSize)
+        picking_model = env['stock.picking'].sudo().search([('partner_id','=',_store_id)], offset=(pageIndex - 1) * pageSize, limit=pageSize)
 
         picking_data = []
         for item in picking_model:
