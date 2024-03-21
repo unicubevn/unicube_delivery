@@ -20,7 +20,7 @@ import json
 from odoo import tools
 from odoo.addons.fastapi.dependencies import odoo_env
 from odoo.api import Environment
-from .decorators import auth_user, get_current_active_user
+from .decorators import auth_user, get_current_active_user, convert_timestamp_to_datetime
 from .unicube_redis import redis_single, gen_auth_key
 from ..schemas.order import OrderSchema, ConfirmPickingSchema
 from ..schemas.receipt import ReceiptSchema
@@ -167,16 +167,17 @@ async def create_receipt(env: Annotated[Environment, Depends(odoo_env)], receipt
 
     _data = receipt_schema.model_dump()
 
+    _time_data = convert_timestamp_to_datetime(_data.get('scheduled_date'))
+
     match _data.get('type'):
         case 0:
             _attibute_value = 'normal'
-            # _product_id = 2
-            _product_id = 8
+            _product_id = 2
+            # _product_id = 8
         case 1:
             _attibute_value = 'fast'
-            # _product_id = 3
-            _product_id = 7
-
+            _product_id = 3
+            # _product_id = 7
 
     new_picking = env["stock.picking"].sudo().create({
         'partner_id': _data.get('store_id'),
@@ -185,7 +186,7 @@ async def create_receipt(env: Annotated[Environment, Depends(odoo_env)], receipt
         'location_id': 4,
         'location_dest_id': 8,
         'picking_type_id': 1,
-        'scheduled_date': _data.get('scheduled_date')
+        'scheduled_date': _time_data
     })
 
     if not new_picking.id:
@@ -227,12 +228,12 @@ async def create_order(env: Annotated[Environment, Depends(odoo_env)], order_sch
     match _model_dump.get('type'):
         case 0:
             _attibute_value = 'normal'
-            # _product_id = 2
-            _product_id = 8
+            _product_id = 2
+            # _product_id = 8
         case 1:
             _attibute_value = 'fast'
-            # _product_id = 3
-            _product_id = 7
+            _product_id = 3
+            # _product_id = 7
     
     for item in _package_items:
        

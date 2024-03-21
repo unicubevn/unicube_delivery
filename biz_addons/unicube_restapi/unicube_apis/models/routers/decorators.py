@@ -6,6 +6,9 @@ from jose import JWTError, jwt
 
 from .exceptions import RequiredAuth
 from .unicube_redis import redis_single
+from datetime import datetime
+import time
+
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='token')
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
@@ -73,3 +76,9 @@ def auth_user():
         - Decorator check and get user info form user token, Return
     """
     return gen_decorator(key='user', obj_type='user_account', is_required=False)
+
+
+def convert_timestamp_to_datetime(float_time):
+
+    timestamp_datetime = datetime.utcfromtimestamp(float_time)
+    return timestamp_datetime
