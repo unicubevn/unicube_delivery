@@ -317,7 +317,7 @@ async def create_order(env: Annotated[Environment, Depends(odoo_env)], confirm_p
     _data = confirm_picking.model_dump()
     try:
 
-        _stock_picking = env['stock.picking'].sudo().search([('id','=',_data.get('picking_id'))])
+        _stock_picking = env['stock.picking'].sudo().search([('id','=',_data.get('picking_id')), ('partner_id','=',_data.get('store_id'))])
         _stock_picking.action_confirm()
         
     except Exception as e:
@@ -418,7 +418,57 @@ async def get_receipt(env: Annotated[Environment, Depends(odoo_env)],store_id: i
         data=picking_data,
         msg='success'
     )
+
+@router.get("/get-picking-by-id")
+async def get_receipt_by_id(env: Annotated[Environment, Depends(odoo_env)],store_id: int, id: int):
+    try:
+        picking_model = env['stock.picking'].sudo().search([('id','=',id), ('partner_id','=',store_id)],limit=1)
+
+        picking_data = []
+        for item in picking_model:
+            _stock_lot_data = []
+            _stock_lot = env['stock.lot'].sudo().search([('picking_id','=',item.id)])
+            
+            for stock_item in _stock_lot:
+                _stock_lot_data.append({
+                    'stock_lot_id': stock_item.id,
+                    'serial_number': stock_item.name,
+                    'desc': stock_item.description,
+                    'price': stock_item.price,
+                    'package_price': stock_item.package_price,
+                })
+
+            picking_data.append({
+                'id': item.id,
+                'name': item.name,
+                'location_id': item.location_id.id,
+                'location': item.location_id.name,
+                'location_dest_id': item.location_dest_id.id,
+                'location_dest': item.location_dest_id.name,
+                'scheduled_date': item.scheduled_date,
+
+                'total_price': item.total_price,
+                'total_package_price': item.total_package_price,
+                'total_order': item.total_order,
+                'state': item.state,
+
+                'store_phone': item.partner_id.id,
+                'store_name': item.partner_id.name,
+                'phone': item.owner_id.phone,
+                'address': item.owner_id.contact_address_complete,
+
+                'item': _stock_lot_data,
+                'create_date': item.create_date.timestamp(),
+            })
+
+    except Exception as e:
+        _logger(e)
     
+    return make_response(
+        data=picking_data,
+        msg='success'
+    )
+
 
 @router.get("/get-country-state")
 async def country_state(env: Annotated[Environment, Depends(odoo_env)], country_id: int = 241):
