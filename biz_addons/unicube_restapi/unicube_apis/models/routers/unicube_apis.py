@@ -185,6 +185,7 @@ async def create_receipt(env: Annotated[Environment, Depends(odoo_env)], receipt
         'contact_phone': _data.get('contact_phone'),
         'contact_address': _data.get('contact_address'),
         'company_id': 1,
+        'type': _data.get('type'),
 
         'user_id': 2,
         'location_id': 4,
