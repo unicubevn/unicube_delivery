@@ -424,7 +424,7 @@ async def get_receipt_by_id(env: Annotated[Environment, Depends(odoo_env)],store
     try:
         picking_model = env['stock.picking'].sudo().search([('id','=',id), ('partner_id','=',store_id)],limit=1)
 
-        picking_data = []
+        
         for item in picking_model:
             _stock_lot_data = []
             _stock_lot = env['stock.lot'].sudo().search([('picking_id','=',item.id)])
@@ -438,7 +438,7 @@ async def get_receipt_by_id(env: Annotated[Environment, Depends(odoo_env)],store
                     'package_price': stock_item.package_price,
                 })
 
-            picking_data.append({
+            picking_data = {
                 'id': item.id,
                 'name': item.name,
                 'location_id': item.location_id.id,
@@ -459,7 +459,7 @@ async def get_receipt_by_id(env: Annotated[Environment, Depends(odoo_env)],store
 
                 'item': _stock_lot_data,
                 'create_date': item.create_date.timestamp(),
-            })
+            }
 
     except Exception as e:
         _logger(e)
