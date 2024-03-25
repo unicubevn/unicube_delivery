@@ -6,4 +6,7 @@ class ReceiptSchema(BaseModel):
     store_id: int
     type: int # 0:normal or 1:fast
     scheduled_date: int
-    # scheduled_date: datetime
+
+    contact_id: int
+    contact_phone: str
+    contact_address: str

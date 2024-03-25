@@ -181,7 +181,11 @@ async def create_receipt(env: Annotated[Environment, Depends(odoo_env)], receipt
 
     new_picking = env["stock.picking"].sudo().create({
         'partner_id': _data.get('store_id'),
+        'owner_id': _data.get('contact_id'),
+        'contact_phone': _data.get('contact_phone'),
+        'contact_address': _data.get('contact_address'),
         'company_id': 1,
+
         'user_id': 2,
         'location_id': 4,
         'location_dest_id': 8,
@@ -285,7 +289,7 @@ async def create_order(env: Annotated[Environment, Depends(odoo_env)], order_sch
         )
     
     env['stock.picking'].sudo().search([('id','=',_model_dump.get('picking_id'))]).write({
-        'owner_id': _model_dump.get('contact_id'),
+        # 'owner_id': _model_dump.get('contact_id'),
         'total_order': _sum_item,
         'total_package_price': _total_package_price,
         'total_price': _total_price

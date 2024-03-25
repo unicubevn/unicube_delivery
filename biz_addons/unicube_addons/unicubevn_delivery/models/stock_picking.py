@@ -18,6 +18,10 @@ class StockPicking(models.Model):
     total_order = fields.Integer(string='Total Order')
     total_package_price = fields.Monetary(string='Package Price', currency_field='currency_id')
     total_price = fields.Monetary(string='Price', currency_field='currency_id')
+    type = fields.Integer(string='Type', default=0)
+
+    contact_phone = fields.Char(string='Phone')
+    contact_address = fields.Char(string='Address')
 
     currency_id = fields.Many2one(
         'res.currency', 
@@ -70,7 +74,8 @@ class StockPicking(models.Model):
             print('----logic create Invoice here-----')
         
             try:
-                _partner = self.env['res.partner'].sudo().search([('id','=',self.partner_id)])
+                _partner = self.env['res.partner'].sudo().search([('id','=',self.partner_id.id)])
+                print('--------_partner---', _partner)
                 if not _partner:
                     return make_response(msg='order dose not assiged')
                 
@@ -86,7 +91,7 @@ class StockPicking(models.Model):
                 if not _result:
                     return make_response(msg='create account move failure!', status=1)
             except Exception as e:
-                return make_response(msg=e, status=0)
+                print('----logg----', e)
             
         elif self.state == 'done':
             print('logic create D.O here')
