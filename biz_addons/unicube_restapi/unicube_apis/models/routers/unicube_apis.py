@@ -172,12 +172,12 @@ async def create_receipt(env: Annotated[Environment, Depends(odoo_env)], receipt
     match _data.get('type'):
         case 0:
             _attibute_value = 'normal'
-            _product_id = 2
-            # _product_id = 8
+            # _product_id = 2
+            _product_id = 8
         case 1:
             _attibute_value = 'fast'
-            _product_id = 3
-            # _product_id = 7
+            # _product_id = 3
+            _product_id = 7
 
     new_picking = env["stock.picking"].sudo().create({
         'partner_id': _data.get('store_id'),
@@ -239,12 +239,12 @@ async def create_order(env: Annotated[Environment, Depends(odoo_env)], order_sch
     match _model_dump.get('type'):
         case 0:
             _attibute_value = 'normal'
-            _product_id = 2
-            # _product_id = 8
+            # _product_id = 2
+            _product_id = 8
         case 1:
             _attibute_value = 'fast'
-            _product_id = 3
-            # _product_id = 7
+            # _product_id = 3
+            _product_id = 7
     
     for item in _package_items:
        
@@ -404,6 +404,8 @@ async def get_receipt(env: Annotated[Environment, Depends(odoo_env)],store_id: i
                 'name': item.name,
                 'location_id': item.location_id.id,
                 'location': item.location_id.name,
+
+                'type': item.type,
                 'location_dest_id': item.location_dest_id.id,
                 'location_dest': item.location_dest_id.name,
                 'scheduled_date': item.scheduled_date,
