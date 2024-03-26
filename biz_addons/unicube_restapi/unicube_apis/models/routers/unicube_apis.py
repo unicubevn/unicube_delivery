@@ -417,7 +417,11 @@ async def get_receipt(env: Annotated[Environment, Depends(odoo_env)],store_id: i
             })
 
     except Exception as e:
-        _logger(e)
+        _logger.info('-----Exception----', e)
+        return make_response(
+            msg=e,
+            status=0
+        )
     
     return make_response(
         data=picking_data,
