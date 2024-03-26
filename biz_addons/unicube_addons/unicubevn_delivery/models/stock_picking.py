@@ -31,7 +31,7 @@ class StockPicking(models.Model):
     )
     qr_raw_data = fields.Char(string="QR data", compute="_compute_qr_data", store=True, default=False)
     qr_id = fields.Char("QR UUID", default=False)
-    use_cod = fields.Boolean("Use COD")
+    use_cod = fields.Boolean("Use COD", default=True)
 
     @api.depends('partner_id', 'total_package_price', 'name','use_cod')
     def _compute_qr_data(self, anchor="CUB", txn_code="D"):

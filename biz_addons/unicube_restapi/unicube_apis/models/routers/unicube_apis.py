@@ -172,12 +172,12 @@ async def create_receipt(env: Annotated[Environment, Depends(odoo_env)], receipt
     match _data.get('type'):
         case 0:
             _attibute_value = 'normal'
-            # _product_id = 2
-            _product_id = 8
+            _product_id = 2
+            # _product_id = 8
         case 1:
             _attibute_value = 'fast'
-            # _product_id = 3
-            _product_id = 7
+            _product_id = 3
+            # _product_id = 7
 
     new_picking = env["stock.picking"].sudo().create({
         'partner_id': _data.get('store_id'),
@@ -195,7 +195,7 @@ async def create_receipt(env: Annotated[Environment, Depends(odoo_env)], receipt
     })
 
     if not new_picking.id:
-        return 'create receipt failed'
+        return make_response(msg="create receipt failed", status=0)    
 
     new_stock_move = env['stock.move'].sudo().create({
         'partner_id': _data.get('store_id'),
@@ -210,12 +210,18 @@ async def create_receipt(env: Annotated[Environment, Depends(odoo_env)], receipt
         'description_picking': f'Delivery Pack {_attibute_value}'
     })
     if not new_stock_move:
-        return "create stock move failed"                
+        return make_response(msg="create stock move failed", status=0)       
 
     return make_response(
         data={
+            'name': new_picking.name,
             'picking_id': new_picking.id,
-            'type': _data.get('type')
+            'type': new_picking.type,
+            'owner_id': new_picking.owner_id.id,
+            'contact_phone': new_picking.contact_phone,
+            'contact_address': new_picking.contact_address,
+            'partner_id': new_picking.partner_id.id,
+            'scheduled_date': new_picking.scheduled_date
         },
         msg='success'
     )
@@ -233,12 +239,12 @@ async def create_order(env: Annotated[Environment, Depends(odoo_env)], order_sch
     match _model_dump.get('type'):
         case 0:
             _attibute_value = 'normal'
-            # _product_id = 2
-            _product_id = 8
+            _product_id = 2
+            # _product_id = 8
         case 1:
             _attibute_value = 'fast'
-            # _product_id = 3
-            _product_id = 7
+            _product_id = 3
+            # _product_id = 7
     
     for item in _package_items:
        
