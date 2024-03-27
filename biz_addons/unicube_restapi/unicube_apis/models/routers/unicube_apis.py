@@ -385,6 +385,7 @@ async def get_receipt(env: Annotated[Environment, Depends(odoo_env)],store_id: i
     _store_id = 7
     try:
         picking_model = env['stock.picking'].sudo().search([('partner_id','=',_store_id)], offset=(pageIndex - 1) * pageSize, limit=pageSize)
+        total = picking_model.sudo().search_count([])
 
         picking_data = []
         for item in picking_model:
@@ -433,6 +434,9 @@ async def get_receipt(env: Annotated[Environment, Depends(odoo_env)],store_id: i
     
     return make_response(
         data=picking_data,
+        extend={
+            'total': total
+        },
         msg='success'
     )
 

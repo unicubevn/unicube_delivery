@@ -5,12 +5,14 @@ def get_current_time():
     return datetime.utcnow().replace(tzinfo=timezone.utc)
 
 def make_response(data: dict = {},
+                  extend : dict = {},
                   msg: str = '',
                   error_code: str = '',
                   status: int = 1,
                   errors={}):
     result = {
         'data': data,
+        'extend': extend,
         'msg': msg,
         'error_code': error_code,
         'errors': errors,
