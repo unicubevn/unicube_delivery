@@ -324,8 +324,8 @@ async def update_stock_move(
 
 
 @router.post("/confirm-picking")
-async def create_order(env: Annotated[Environment, Depends(odoo_env)], confirm_picking: ConfirmPickingSchema):
-    _data = confirm_picking.model_dump()
+async def confirm_picking(env: Annotated[Environment, Depends(odoo_env)], confirm_picking_schema: ConfirmPickingSchema):
+    _data = confirm_picking_schema.model_dump()
     try:
 
         _stock_picking = env['stock.picking'].sudo().search([('id','=',_data.get('picking_id')), ('partner_id','=',_data.get('store_id'))])

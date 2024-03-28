@@ -19,5 +19,5 @@ class OrderSchema(BaseModel):
 class ConfirmPickingSchema(BaseModel):
     store_id: int
     picking_id: int
-    state: str
+    # state: str
 
