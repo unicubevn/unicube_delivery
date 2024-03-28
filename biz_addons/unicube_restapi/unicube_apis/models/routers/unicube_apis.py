@@ -381,11 +381,11 @@ async def get_order_by_store(env: Annotated[Environment, Depends(odoo_env)],page
     )
 
 @router.get("/get-picking")
-async def get_receipt(env: Annotated[Environment, Depends(odoo_env)],store_id: int, pageIndex: int = 1, pageSize: int = 10):
+async def get_receipt(env: Annotated[Environment, Depends(odoo_env)],store_id: int, state:str = 'draft', pageIndex: int = 1, pageSize: int = 10):
     _store_id = 7
     try:
-        picking_model = env['stock.picking'].sudo().search([('partner_id','=',_store_id)], offset=(pageIndex - 1) * pageSize, limit=pageSize)
-        total = picking_model.sudo().search_count([])
+        picking_model = env['stock.picking'].sudo().search([('partner_id','=',_store_id), ('state','=',state)], offset=(pageIndex - 1) * pageSize, limit=pageSize)
+        total = picking_model.sudo().search_count([('partner_id','=',_store_id), ('state','=',state)])
 
         picking_data = []
         for item in picking_model:
