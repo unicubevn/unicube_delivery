@@ -385,11 +385,27 @@ async def get_receipt(env: Annotated[Environment, Depends(odoo_env)],store_id: i
     _store_id = 7   
     try:
         if state_picking in RECIEPT_STATE:
-            picking_model = env['stock.picking'].sudo().search([('partner_id','=',_store_id), ('state','=',state_picking)], offset=(pageIndex - 1) * pageSize, limit=pageSize)
-            total = picking_model.sudo().search_count([('partner_id','=',_store_id), ('state','=',state_picking)])
+            match state_picking:
+                case 'draft':
+                    _state = 'draft'
+                case 'waiting':
+                    _state = 'assigned'
+                case 'receiving':
+                    _state = 'done'
+
+            picking_model = env['stock.picking'].sudo().search([('partner_id','=',_store_id), ('state','=',_state)], offset=(pageIndex - 1) * pageSize, limit=pageSize)
+            total = picking_model.sudo().search_count([('partner_id','=',_store_id), ('state','=',_state)])
+
         else:
-            picking_model = env['stock.picking'].sudo().search([('partner_id','=',_store_id), ('DO_state','=',state_picking)], offset=(pageIndex - 1) * pageSize, limit=pageSize)
-            total = picking_model.sudo().search_count([('partner_id','=',_store_id), ('DO_state','=',state_picking)])
+            match state_picking:
+                case 'sorting':
+                    _state = 'draft'
+                case 'delivering':
+                    _state = 'assigned'
+                case 'delivered':
+                    _state = 'done'
+            picking_model = env['stock.picking'].sudo().search([('partner_id','=',_store_id), ('DO_state','=',_state)], offset=(pageIndex - 1) * pageSize, limit=pageSize)
+            total = picking_model.sudo().search_count([('partner_id','=',_store_id), ('DO_state','=',_state)])
 
         picking_data = []
         for item in picking_model:
