@@ -71,9 +71,7 @@
         </template>
 
         <template id="package_receipt">
-            <button class="print_button btn btn-primary no-print" onclick="print_receipt('unicube_receipt_page')">Direct
-                Print Receipt
-            </button>
+
             <div class="unicube_receipt" style="display: flex;
                     flex-direction: column;
                     align-items: center;
@@ -169,19 +167,119 @@
 
         </t>
         </div>
+
         </template>
 
 
 <template id="delivery_receipt_template_">
 <!--            <div class="bean_receipt">-->
 <t t-call="web.html_container">
+
     <t t-foreach="docs" t-as="o">
         <t t-set="lang" t-value="o.partner_id.lang"/>
         <t t-set="print_with_payments" t-value="True"/>
+        <button class="print_button btn btn-primary no-print" t-attf-onclick="print_receipt('unicube_receipt_page_#{o.id}')">Direct
+                Print Receipt
+            </button>
         <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id"
              t-att-data-oe-lang="o and o.env.context.get('lang')"
-             style="background: #e5e5e5 !important; display: flex;flex-direction: column;">
-            <t t-call="unicubevn_delivery.package_receipt" t-lang="lang"/>
+             style=" display: flex;flex-direction: column;">
+<!--            <t t-call="unicubevn_delivery.package_receipt" t-lang="lang"/>-->
+            <div class="unicube_receipt" style="display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    padding: 1rem;">
+                <t t-call="web.basic_layout">
+                    <t t-set="o" t-value="o.with_context(lang=lang)"/>
+
+                    <div t-attf-class="page bean_page unicube_receipt_page_#{o.id}" style="min-width:396px; min-height:559px">
+                    <!--                        <div class="container">-->
+                    <table style="" class="table table-bordered">
+                    <tr id="company_info">
+                        <td colspan="2">
+                            <div class="row">
+                                <div class="col-8" id="logo">
+                                    <p>
+                                        <img t-att-src="image_data_uri(o.company_id.logo)"
+                                        />
+                                        <t t-esc="o.company_id.name"/>
+
+                                    </p>
+
+                                    <p>
+                                        <small>Delivery receipt id:</small>
+                                        <br/>
+                                        <span t-esc="o.name" id="delivery_id"/>
+                                    </p>
+                                </div>
+                                <div class="col-4" id="qr_place">
+                                    <img t-att-src="o.qr_raw_data"/>
+
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr id="addresses">
+                    <td>
+                        <p>
+                            <small>From:</small>
+                            <b>
+                                <t t-esc="o.partner_id.complete_name"/>
+                            </b>
+                            <br/>
+                            <t t-esc="o.partner_id.contact_address_complete"/>
+                            <br/>
+                            <t t-esc="o.partner_id.mobile"/>
+                            <br/>
+                            <t t-esc="o.partner_id.phone"/>
+                            <br/>
+                        </p>
+                    </td>
+                    <td>
+                    <p>
+                    <small>To:</small>
+                        <t t-if="o.owner_id">
+                    <b><t t-esc="o.owner_id.complete_name"/></b>
+                    <br/>
+                    <t t-esc="o.owner_id.contact_address_complete"/>
+                    <br/>
+                    <t t-esc="o.owner_id.mobile"/>
+                    <br/>
+                    <t t-esc="o.owner_id.phone"/>
+                    <br/>
+                </t>
+            </p>
+        </td>
+    </tr>
+    <tr id="package_desc">
+        <td colspan="2">
+            <p>
+                <small>Description:</small>
+            </p>
+            <p>...</p>
+        </td>
+    </tr>
+    <tr id="price_info">
+        <td>
+            <p>
+                <small>Package Price:</small>
+                <br/>
+                <span id="package_value" t-esc="o.total_package_price"
+                      t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+
+            </p>
+        </td>
+
+        <td>
+            <p>Customer Signature:</p>
+        </td>
+    </tr>
+</table>
+        <!--                        </div>-->
+        </div>
+
+        </t>
+        </div>
         </div>
 
     </t>

@@ -3,6 +3,16 @@
  * #  License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
  * #  These code are maintained by The UniCube.
  */
+.article {
+    background: #ffffff !important;
+  }
+
+@media print {
+  .no-print, .no-print * {
+    display: none !important;
+    }
+}
+
 
 .unicube_receipt_page {
   font-size: 0.875rem;
