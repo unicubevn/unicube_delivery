@@ -241,7 +241,6 @@ class WebManifest(http.Controller):
                     }
                 });
                 console.log('Firebase is supported: ',firebase.messaging.isSupported());
-                alert(firebase.messaging.isSupported());
                 if (firebase.messaging.isSupported()){
                     const messaging = firebase.messaging();
                     messaging.onBackgroundMessage(function(payload) {
