@@ -194,6 +194,7 @@ class WebManifest(http.Controller):
     @http.route('/firebase_credentials', type="json", auth="public")
     def firebase_credentials(self, **kw):
         """ Retrieve Firebase credentials for the current company."""
+        print(request.env.company.push_notification)
         return {'id': request.env.company.id,
                 'push_notification': request.env.company.push_notification}
 
@@ -239,11 +240,10 @@ class WebManifest(http.Controller):
                         clients.openWindow(event.notification.data.target_url);
                     }
                 });
-                console.log(firebase.messaging.isSupported());
+                console.log('Firebase is supported: ',firebase.messaging.isSupported());
+                alert(firebase.messaging.isSupported());
                 if (firebase.messaging.isSupported()){
                     const messaging = firebase.messaging();
-    
-                    
                     messaging.onBackgroundMessage(function(payload) {
                         console.log(
                             '[firebase-messaging-sw.js] Received background message ',
