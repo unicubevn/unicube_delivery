@@ -4,8 +4,9 @@
 import logging
 import uuid
 
-from odoo import api, models, fields
+from odoo import api, models, fields, Command
 from collections import defaultdict
+from datetime import date
 
 # from unicube_restapi.unicube_apis.models.routers.handlerespon import make_response
 from ..common.handlerespon import make_response
@@ -22,6 +23,8 @@ class StockPicking(models.Model):
 
     contact_phone = fields.Char(string='Phone')
     contact_address = fields.Char(string='Address')
+    DO_id = fields.Integer(string='DO id')
+    DO_state = fields.Char(string='Delivery Order State')
 
     currency_id = fields.Many2one(
         'res.currency', 
@@ -70,30 +73,101 @@ class StockPicking(models.Model):
         super()._compute_state()
 
         print('------logic here-----', self)
-        if self.state == 'assigned':
-            print('----logic create Invoice here-----')
-        
+        if self.state == 'assigned' and self.picking_type_id.id == 1:
+            _code = 5111
             try:
-                _partner = self.env['res.partner'].sudo().search([('id','=',self.partner_id.id)])
-                print('--------_partner---', _partner)
-                if not _partner:
-                    return make_response(msg='order dose not assiged')
+                _partner_id = self.partner_id.id
+                if not _partner_id:
+                    print('-----Cannot find Customer !----')
+                    return False
                 
-                _result = self.env['account.move'].sudo().create({
-                    'picking_id': self.id,
-                    'company_id': self.company_id,
-                    'partner_id': self.partner_id,
-                    'partner_bank_id': 1,
-                    'invoice_partner_display_name': _partner.name,
+                _type = self.type
+                _name_ac_move = 'Delivery Pack (normal)' if _type == 0 else 'Delivery Pack (fast)'
+                _total_price = self.total_price
+                
+                invoice_line_account_in_odoo = self.env['account.account'].search([('code','=',_code)])
+                if not invoice_line_account_in_odoo:
+                    print("Cannot find Account for the Invoice Line!")
+                    return False
 
+                invoice = self.env['account.move'].create({
+                    'move_type': 'out_invoice',
+                    'invoice_origin': 'External API Demo',
+                    'partner_id': _partner_id,
+                    'ref': 'B65253',
+                    'invoice_date': date.today(),
+                    'invoice_date_due': date.today(),
+                    'invoice_line_ids': [(0,0,{
+                    'name': _name_ac_move,
+                    'account_id': invoice_line_account_in_odoo.id,    
+                    'price_unit': _total_price,
+                    'quantity': 1,
+                    })],
                 })
+                print('----------invoice-----', invoice)
 
-                if not _result:
+                if not invoice:
                     return make_response(msg='create account move failure!', status=1)
+                return make_response(
+                    msg='create invoice success ',
+                )
+            
             except Exception as e:
                 print('----logg----', e)
-            
-        elif self.state == 'done':
-            print('logic create D.O here')
         
+        # elif self.state == 'draft' and self.picking_type_id.id == 2:
+        #     self.env['stock.picking'].sudo().search([('DO_id','=', self.id)]).write({
+        #         'DO_state': 'draft'
+        #     })
+        elif self.state == 'assigned' and self.picking_type_id.id == 2:
+            self.env['stock.picking'].sudo().search([('DO_id','=', self.id)]).write({
+                'DO_state': 'assigned'
+            })
+        elif self.state == 'done' and self.picking_type_id.id == 2:
+            self.env['stock.picking'].sudo().search([('DO_id','=', self.id)]).write({
+                'DO_state': 'done'
+            })
+
+        elif self.state == 'done' and self.picking_type_id.id == 1:
+            print('logic create D.O here')
+            new_picking = self.copy(
+                default={
+                        'picking_type_id': 2,
+                        'partner_id': self.owner_id.id,
+                        'company_id': 1,
+                        'move_type': 'direct',
+                        # 'total_order': self.total_order,
+                        # 'total_package_price': self.total_package_price,
+                        # 'total_price': self.total_price,
+                        # 'type': self.type,
+                        # 'contact_phone': self.contact_phone,
+                        # 'contact_address': self.contact_address,
+                        'use_cod': True,
+                    }
+                )
+            print('-----new_picking----', new_picking)
+
+            _stock_move = new_picking.move_ids[0]
+
+            for move_line in self.move_line_ids:
+                print("in loop",move_line)
+                move_line.copy(default={
+                    'move_id': new_picking.move_ids[0].id,
+                    'picking_id': new_picking.id,
+                    'quantity': 1,
+                    'location_id': 8,
+                })
+            
+            _stock_move.write({
+                'location_id': 8,
+                'location_dest_id': 4,
+
+            })
+
+            _update_picking = self.write({
+                'DO_id': new_picking.id,
+                'DO_state': new_picking.state
+            })
+            pass
+
         pass

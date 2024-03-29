@@ -16,6 +16,7 @@ from odoo.fields import Datetime
 from pydantic import BaseModel
 from jose import JWTError, jwt
 import json
+from odoo.addons.unicube_apis.const import RECIEPT_STATE, DO_STATE
 
 from odoo import tools
 from odoo.addons.fastapi.dependencies import odoo_env
@@ -28,7 +29,7 @@ from ..schemas.address import CountrySchema
 from ..schemas.contact import ContactSchema
 from .handlerespon import make_response
 from .address import get_country_state, get_country_district, get_country_ward
-from .contact import handle_create_conract, handle_get_contact
+from .contact import handle_create_conract, handle_get_contact, handle_get_contact_by_store
 
 
 _logger = logging.getLogger(__name__)
@@ -327,7 +328,6 @@ async def update_stock_move(
 async def confirm_picking(env: Annotated[Environment, Depends(odoo_env)], confirm_picking_schema: ConfirmPickingSchema):
     _data = confirm_picking_schema.model_dump()
     try:
-
         _stock_picking = env['stock.picking'].sudo().search([('id','=',_data.get('picking_id')), ('partner_id','=',_data.get('store_id'))])
         _stock_picking.action_confirm()
         
@@ -382,10 +382,30 @@ async def get_order_by_store(env: Annotated[Environment, Depends(odoo_env)],page
 
 @router.get("/get-picking")
 async def get_receipt(env: Annotated[Environment, Depends(odoo_env)],store_id: int, state_picking:str = 'draft', pageIndex: int = 1, pageSize: int = 10):
-    _store_id = 7
+    _store_id = 7   
     try:
-        picking_model = env['stock.picking'].sudo().search([('partner_id','=',_store_id), ('state','=',state_picking)], offset=(pageIndex - 1) * pageSize, limit=pageSize)
-        total = picking_model.sudo().search_count([('partner_id','=',_store_id), ('state','=',state_picking)])
+        if state_picking in RECIEPT_STATE:
+            match state_picking:
+                case 'draft':
+                    _state = 'draft'
+                case 'waiting':
+                    _state = 'assigned'
+                case 'receiving':
+                    _state = 'done'
+
+            picking_model = env['stock.picking'].sudo().search([('partner_id','=',_store_id), ('state','=',_state)], offset=(pageIndex - 1) * pageSize, limit=pageSize)
+            total = picking_model.sudo().search_count([('partner_id','=',_store_id), ('state','=',_state)])
+
+        else:
+            match state_picking:
+                case 'sorting':
+                    _state = 'draft'
+                case 'delivering':
+                    _state = 'assigned'
+                case 'delivered':
+                    _state = 'done'
+            picking_model = env['stock.picking'].sudo().search([('partner_id','=',_store_id), ('DO_state','=',_state)], offset=(pageIndex - 1) * pageSize, limit=pageSize)
+            total = picking_model.sudo().search_count([('partner_id','=',_store_id), ('DO_state','=',_state)])
 
         picking_data = []
         for item in picking_model:
@@ -503,6 +523,7 @@ async def country_state(env: Annotated[Environment, Depends(odoo_env)], country_
     return make_response(
         data=_result
     )
+    
 
 @router.get("/get-country-district")
 async def country_district(env: Annotated[Environment, Depends(odoo_env)], state_id: int):
@@ -541,6 +562,18 @@ async def create_contact(env: Annotated[Environment, Depends(odoo_env)], contact
 
     return make_response(msg='success')
 
+
+@router.get("/get-contact-by-store")
+async def get_contact_by_store(env: Annotated[Environment, Depends(odoo_env)], store_id: int, pageIndex: int = 1, pageSize: int = 10):
+    contact_data, total = handle_get_contact_by_store(env, store_id, pageIndex, pageSize)
+
+    return make_response(
+        data=contact_data,
+        extend={
+            'total': total
+        },
+        msg='success'
+    )
 
 # dummy variables
 # _name = 'stock.lot'

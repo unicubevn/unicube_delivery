@@ -46,3 +46,30 @@ def handle_get_contact(env, store_id, phone):
         'phone': contact_info.phone,
         'contact_address_complete': contact_info.contact_address_complete
     }
+
+
+def handle_get_contact_by_store(env, store_id, pageIndex, pageSize):
+
+    contact_info = env['res.partner'].sudo().search([('store_id','=',store_id)], offset=(pageIndex - 1) * pageSize, limit=pageSize)
+    total = env['res.partner'].sudo().search_count([('store_id','=',store_id)])
+
+    contact_data = []
+
+    if not contact_info:
+        return contact_data
+    
+    for item in contact_info:
+        contact_data.append({
+            'id': item.id,
+            'name': item.name,
+            'phone': item.phone,
+            'street': item.street,
+            'street2': item.street2,
+            'city': item.city,
+            'email': item.email,
+            'contact_address_complete': item.contact_address_complete,
+            'create_date': item.create_date.timestamp(),
+            'store_id': item.store_id.id
+        })
+
+    return contact_data, total
