@@ -194,7 +194,6 @@ class WebManifest(http.Controller):
     @http.route('/firebase_credentials', type="json", auth="public")
     def firebase_credentials(self, **kw):
         """ Retrieve Firebase credentials for the current company."""
-        print(request.env.company.push_notification)
         return {'id': request.env.company.id,
                 'push_notification': request.env.company.push_notification}
 
@@ -212,19 +211,7 @@ class WebManifest(http.Controller):
                     })
                   );
                 });
-                var self = this;
-                self.addEventListener('notificationclick', function (event) {
-                    if (event.action === 'close') {
-                        event.notification.close();
-                    } else if (event.notification.data.target_url && '' !== event.notification.data.target_url.trim()) {
-                        // user clicked on the notification itself or on the 'open' action
-                        // clients is a reserved variable in the service worker context.
-                        // check https://developer.mozilla.org/en-US/docs/Web/API/Clients/openWindow
-                
-                        clients.openWindow(event.notification.data.target_url);
-                    }
-                });
-                console.log("firebase-app is running...")
+                console.log("firebase-messaging-sw.js is running...")
                 importScripts('https://www.gstatic.com/firebasejs/8.4.2/firebase-app.js');
                 importScripts('https://www.gstatic.com/firebasejs/8.4.2/firebase-messaging.js');
                 var firebaseConfig = {
@@ -238,11 +225,25 @@ class WebManifest(http.Controller):
                 };
                 // firebase code expects a 'self' variable to be defined
                 // didn't find any explanation for this on the web, everyone seems cool with it
+                var self = this;
                 
-                console.log('Firebase is supported: ',firebase.messaging.isSupported());
+                self.addEventListener('notificationclick', function (event) {
+                    if (event.action === 'close') {
+                        event.notification.close();
+                    } else if (event.notification.data.target_url && '' !== event.notification.data.target_url.trim()) {
+                        // user clicked on the notification itself or on the 'open' action
+                        // clients is a reserved variable in the service worker context.
+                        // check https://developer.mozilla.org/en-US/docs/Web/API/Clients/openWindow
+                
+                        clients.openWindow(event.notification.data.target_url);
+                    }
+                });
+                
+                console.log(firebase.messaging.isSupported());
                 if (firebase.messaging.isSupported()){
                     firebase.initializeApp(firebaseConfig);
                     const messaging = firebase.messaging();
+    
                     messaging.onBackgroundMessage(function(payload) {
                         console.log(
                             '[firebase-messaging-sw.js] Received background message ',
@@ -251,7 +252,7 @@ class WebManifest(http.Controller):
                         const notificationTitle = "Background Message Title";
                         const notificationOptions = {
                             body: payload.notification.body,
-                            icon:'/mail_push_notification/static/description/icon.png',
+                            icon:'/unicubevn_pwa/static/description/icon.png',
                         };
                         return self.registration.showNotification(
                             notificationTitle,

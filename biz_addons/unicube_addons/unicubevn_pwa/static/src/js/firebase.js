@@ -44,14 +44,13 @@ jsonrpc("/firebase_config_details", {}).then(function (data) {
 
         if (firebase.messaging.isSupported()) {
 
-
             /**
              * Requests permission for receiving push notifications and retrieves the registration token.
              *
              * @function
              */
             Notification.requestPermission().then(function (permission) {
-                console.log('permission: ', permission)
+                // console.log('permission: ', permission)
                 if (permission === "granted") {
                     console.log("Notification permission granted. Requesting for token.");
                     firebase.initializeApp(firebaseConfig);
@@ -71,7 +70,6 @@ jsonrpc("/firebase_config_details", {}).then(function (data) {
                                  * @function
                                  * @param {string} token - The registration token.
                                  */
-                                console.log(currentToken)
                                 $.post("/push_notification", {
                                     name: currentToken
                                 });
@@ -81,20 +79,20 @@ jsonrpc("/firebase_config_details", {}).then(function (data) {
                         }).catch((err) => {
                             console.log('There is an error has occurred while attempting to retrieve the token.', err);
                         });
-                        /**
-                         * Handles incoming push notification messages.
-                         *
-                         * @function
-                         * @param {Object} payload - The notification payload.
-                         */
-                        messaging.onMessage((payload) => {
-                            const notificationOptions = {
-                                body: payload.notification.body,
-                            };
-                            let notification = payload.notification;
-                            navigator.serviceWorker.getRegistrations().then((registration) => {
-                                registration[0].showNotification(notification.title, notificationOptions);
-                            });
+                    });
+                    /**
+                     * Handles incoming push notification messages.
+                     *
+                     * @function
+                     * @param {Object} payload - The notification payload.
+                     */
+                    messaging.onMessage((payload) => {
+                        const notificationOptions = {
+                            body: payload.notification.body,
+                        };
+                        let notification = payload.notification;
+                        navigator.serviceWorker.getRegistrations().then((registration) => {
+                            registration[0].showNotification(notification.title, notificationOptions);
                         });
                     });
                 } else {

@@ -16,9 +16,9 @@
     "license": "LGPL-3",
     'category': 'UniCube/Utilities',
     "sequence": 200,
-    'version': '17.0.0.2',
+    'version': '17.0.0.3',
     'website': "https://unicube.vn",
-    'support': 'community@unicube.vn',
+    'support': 'community@unicube.me',
     "application": True,
     "installable": True,
 
