@@ -42,61 +42,63 @@ jsonrpc("/firebase_config_details", {}).then(function (data) {
          */
         console.log("firebase_config_details is running...")
 
-        firebase.initializeApp(firebaseConfig);
-        const messaging = firebase.messaging();
-        /**
-         * Requests permission for receiving push notifications and retrieves the registration token.
-         *
-         * @function
-         */
-        Notification.requestPermission().then(function (permission) {
-            console.log('permission: ', permission)
-            if (permission === "granted") {
-                console.log("Notification permission granted. Requesting for token.");
-                messaging.requestPermission().then(function () {
-                    /**
-                     * Retrieves the registration token and sends it to the server for subscription.
-                     *
-                     * @function
-                     * @param {string} vapidKey - The VAPID key for authentication.
-                     */
-                    messaging.getToken({vapidKey: vapid}).then((currentToken) => {
-                        if (currentToken) {
-                            /**
-                             * Sends a POST request to the server with the registration token.
-                             *
-                             * @function
-                             * @param {string} token - The registration token.
-                             */
-                            console.log(currentToken)
-                            $.post("/push_notification", {
-                                name: currentToken
-                            });
-                        } else {
-                            console.log('No registration token found');
-                        }
-                    }).catch((err) => {
-                        console.log('There is an error has occurred while attempting to retrieve the token.', err);
+        if (firebase.messaging.isSupported()) {
+
+
+            /**
+             * Requests permission for receiving push notifications and retrieves the registration token.
+             *
+             * @function
+             */
+            Notification.requestPermission().then(function (permission) {
+                console.log('permission: ', permission)
+                if (permission === "granted") {
+                    console.log("Notification permission granted. Requesting for token.");
+                    messaging.requestPermission().then(function () {
+                        /**
+                         * Retrieves the registration token and sends it to the server for subscription.
+                         *
+                         * @function
+                         * @param {string} vapidKey - The VAPID key for authentication.
+                         */
+                        messaging.getToken({vapidKey: vapid}).then((currentToken) => {
+                            if (currentToken) {
+                                /**
+                                 * Sends a POST request to the server with the registration token.
+                                 *
+                                 * @function
+                                 * @param {string} token - The registration token.
+                                 */
+                                console.log(currentToken)
+                                $.post("/push_notification", {
+                                    name: currentToken
+                                });
+                            } else {
+                                console.log('No registration token found');
+                            }
+                        }).catch((err) => {
+                            console.log('There is an error has occurred while attempting to retrieve the token.', err);
+                        });
                     });
+                } else {
+                    console.log("Notification permission not granted. Requesting for token.");
+                }
+            })
+            /**
+             * Handles incoming push notification messages.
+             *
+             * @function
+             * @param {Object} payload - The notification payload.
+             */
+            messaging.onMessage((payload) => {
+                const notificationOptions = {
+                    body: payload.notification.body,
+                };
+                let notification = payload.notification;
+                navigator.serviceWorker.getRegistrations().then((registration) => {
+                    registration[0].showNotification(notification.title, notificationOptions);
                 });
-            } else {
-                console.log("Notification permission not granted. Requesting for token.");
-            }
-        })
-        /**
-         * Handles incoming push notification messages.
-         *
-         * @function
-         * @param {Object} payload - The notification payload.
-         */
-        messaging.onMessage((payload) => {
-            const notificationOptions = {
-                body: payload.notification.body,
-            };
-            let notification = payload.notification;
-            navigator.serviceWorker.getRegistrations().then((registration) => {
-                registration[0].showNotification(notification.title, notificationOptions);
             });
-        });
+        }
     }
 });
