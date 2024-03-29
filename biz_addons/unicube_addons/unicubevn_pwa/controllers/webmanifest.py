@@ -139,7 +139,7 @@ class WebManifest(http.Controller):
         """ Returns a ServiceWorker javascript file scoped for the backend (aka. '/web')
         """
 
-        with file_open('unicubevn_pwa/static/src/js/backend_service_worker.js') as f:
+        with file_open('unicubevn_pwa/static/src/js/service_worker.js') as f:
             body = f.read()
             return body
 
