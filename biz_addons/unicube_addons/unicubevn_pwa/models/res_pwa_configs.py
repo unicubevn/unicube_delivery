@@ -9,6 +9,7 @@ from PIL import Image
 
 from odoo import _, api, exceptions, fields, models
 from odoo.tools.mimetypes import guess_mimetype
+from pyfcm import FCMNotification
 
 class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
