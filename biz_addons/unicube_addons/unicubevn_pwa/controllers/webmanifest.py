@@ -228,7 +228,7 @@ class WebManifest(http.Controller):
                 // didn't find any explanation for this on the web, everyone seems cool with it
                 var self = this;
                 
-                firebase.initializeApp(firebaseConfig);
+                
                 self.addEventListener('notificationclick', function (event) {
                     if (event.action === 'close') {
                         event.notification.close();
@@ -242,6 +242,7 @@ class WebManifest(http.Controller):
                 });
                 console.log('Firebase is supported: ',firebase.messaging.isSupported());
                 if (firebase.messaging.isSupported()){
+                    firebase.initializeApp(firebaseConfig);
                     const messaging = firebase.messaging();
                     messaging.onBackgroundMessage(function(payload) {
                         console.log(
