@@ -54,6 +54,8 @@ jsonrpc("/firebase_config_details", {}).then(function (data) {
                 console.log('permission: ', permission)
                 if (permission === "granted") {
                     console.log("Notification permission granted. Requesting for token.");
+                    firebase.initializeApp(firebaseConfig);
+                    const messaging = firebase.messaging();
                     messaging.requestPermission().then(function () {
                         /**
                          * Retrieves the registration token and sends it to the server for subscription.
@@ -79,26 +81,27 @@ jsonrpc("/firebase_config_details", {}).then(function (data) {
                         }).catch((err) => {
                             console.log('There is an error has occurred while attempting to retrieve the token.', err);
                         });
+                        /**
+                         * Handles incoming push notification messages.
+                         *
+                         * @function
+                         * @param {Object} payload - The notification payload.
+                         */
+                        messaging.onMessage((payload) => {
+                            const notificationOptions = {
+                                body: payload.notification.body,
+                            };
+                            let notification = payload.notification;
+                            navigator.serviceWorker.getRegistrations().then((registration) => {
+                                registration[0].showNotification(notification.title, notificationOptions);
+                            });
+                        });
                     });
                 } else {
                     console.log("Notification permission not granted. Requesting for token.");
                 }
             })
-            /**
-             * Handles incoming push notification messages.
-             *
-             * @function
-             * @param {Object} payload - The notification payload.
-             */
-            messaging.onMessage((payload) => {
-                const notificationOptions = {
-                    body: payload.notification.body,
-                };
-                let notification = payload.notification;
-                navigator.serviceWorker.getRegistrations().then((registration) => {
-                    registration[0].showNotification(notification.title, notificationOptions);
-                });
-            });
+
         }
     }
 });

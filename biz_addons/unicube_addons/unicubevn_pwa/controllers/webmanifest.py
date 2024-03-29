@@ -212,6 +212,18 @@ class WebManifest(http.Controller):
                     })
                   );
                 });
+                var self = this;
+                self.addEventListener('notificationclick', function (event) {
+                    if (event.action === 'close') {
+                        event.notification.close();
+                    } else if (event.notification.data.target_url && '' !== event.notification.data.target_url.trim()) {
+                        // user clicked on the notification itself or on the 'open' action
+                        // clients is a reserved variable in the service worker context.
+                        // check https://developer.mozilla.org/en-US/docs/Web/API/Clients/openWindow
+                
+                        clients.openWindow(event.notification.data.target_url);
+                    }
+                });
                 console.log("firebase-app is running...")
                 importScripts('https://www.gstatic.com/firebasejs/8.4.2/firebase-app.js');
                 importScripts('https://www.gstatic.com/firebasejs/8.4.2/firebase-messaging.js');
@@ -226,20 +238,7 @@ class WebManifest(http.Controller):
                 };
                 // firebase code expects a 'self' variable to be defined
                 // didn't find any explanation for this on the web, everyone seems cool with it
-                var self = this;
                 
-                
-                self.addEventListener('notificationclick', function (event) {
-                    if (event.action === 'close') {
-                        event.notification.close();
-                    } else if (event.notification.data.target_url && '' !== event.notification.data.target_url.trim()) {
-                        // user clicked on the notification itself or on the 'open' action
-                        // clients is a reserved variable in the service worker context.
-                        // check https://developer.mozilla.org/en-US/docs/Web/API/Clients/openWindow
-                
-                        clients.openWindow(event.notification.data.target_url);
-                    }
-                });
                 console.log('Firebase is supported: ',firebase.messaging.isSupported());
                 if (firebase.messaging.isSupported()){
                     firebase.initializeApp(firebaseConfig);
