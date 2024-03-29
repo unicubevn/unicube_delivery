@@ -29,7 +29,7 @@ from ..schemas.address import CountrySchema
 from ..schemas.contact import ContactSchema
 from .handlerespon import make_response
 from .address import get_country_state, get_country_district, get_country_ward
-from .contact import handle_create_conract, handle_get_contact
+from .contact import handle_create_conract, handle_get_contact, handle_get_contact_by_store
 
 
 _logger = logging.getLogger(__name__)
@@ -562,6 +562,18 @@ async def create_contact(env: Annotated[Environment, Depends(odoo_env)], contact
 
     return make_response(msg='success')
 
+
+@router.get("/get-contact-by-store")
+async def get_contact_by_store(env: Annotated[Environment, Depends(odoo_env)], store_id: int, pageIndex: int = 1, pageSize: int = 10):
+    contact_data, total = handle_get_contact_by_store(env, store_id, pageIndex, pageSize)
+
+    return make_response(
+        data=contact_data,
+        extend={
+            'total': total
+        },
+        msg='success'
+    )
 
 # dummy variables
 # _name = 'stock.lot'
