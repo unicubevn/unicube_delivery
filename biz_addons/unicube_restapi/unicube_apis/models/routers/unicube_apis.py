@@ -390,12 +390,11 @@ async def get_order_by_store(env: Annotated[Environment, Depends(odoo_env)],page
 @router.get("/get-picking")
 async def get_receipt(
         env: Annotated[Environment, Depends(odoo_env)], 
-        # current_user: Annotated[dict, Depends(get_current_active_user)], 
+        current_user: Annotated[dict, Depends(get_current_active_user)],
         store_id: int, state_picking:str = 'draft', pageIndex: int = 1, pageSize: int = 10
     ):
     
-    # _store_id = current_user.get('store_id')
-    _store_id = 7
+    _store_id = current_user.get('store_id')
     try:
         if state_picking in RECIEPT_STATE:
             match state_picking:
