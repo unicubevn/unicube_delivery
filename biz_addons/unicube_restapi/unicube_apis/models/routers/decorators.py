@@ -47,8 +47,17 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     result = verify_token_request(token)
     print('-----result-----', result)
     return verify_token_request(token)
-  
-    
+
+
+async def remove_token(token):
+    _token_info = get_token_info(token)
+    if not isinstance(_token_info, dict):
+        return None
+
+    _auth_key = gen_auth_key(obj_type='user_account', payload= _token_info)
+    redis_single.delete(_auth_key)
+    return True
+
 
 async def get_current_active_user(
     current_user: Annotated[dict, Depends(get_current_user)]
@@ -70,6 +79,7 @@ def gen_decorator(key: str, obj_type: str, is_required: bool = True):
             return f(*args, **kwargs)
         return wrapper
     return decorator
+
 
 def auth_user():
     """

@@ -21,12 +21,14 @@ from odoo.addons.unicube_apis.const import RECIEPT_STATE, DO_STATE
 from odoo import tools
 from odoo.addons.fastapi.dependencies import odoo_env
 from odoo.api import Environment
-from .decorators import auth_user, get_current_active_user, convert_timestamp_to_datetime
+from .decorators import auth_user, get_current_active_user, convert_timestamp_to_datetime, remove_token
 from .unicube_redis import redis_single, gen_auth_key
 from ..schemas.order import OrderSchema, ConfirmPickingSchema
 from ..schemas.receipt import ReceiptSchema
 from ..schemas.address import CountrySchema
 from ..schemas.contact import ContactSchema
+from ..schemas.user import LogoutSchema
+
 from .handlerespon import make_response
 from .address import get_country_state, get_country_district, get_country_ward
 from .contact import handle_create_conract, handle_get_contact, handle_get_contact_by_store
@@ -90,7 +92,6 @@ product_list = [
 
 @router.get("/partners", response_model=list[PartnerInfo])
 def get_partners(current_user: Annotated[dict, Depends(get_current_active_user)], env: Annotated[Environment, Depends(odoo_env)]): 
-    print('------current user------', current_user)
     
     return [
         PartnerInfo(name=str(partner.name), email=partner.email if partner.email else "No email" )
@@ -98,9 +99,7 @@ def get_partners(current_user: Annotated[dict, Depends(get_current_active_user)]
     ]
 
 def create_access_token(payload: dict, expires_delta: timedelta | None = None):
-
     to_encode = payload.copy()
-    print('------to_encode---', to_encode)
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta
     else: 
@@ -120,7 +119,6 @@ async def login_for_access_token(env: Annotated[Environment, Depends(odoo_env)],
     url = env['ir.config_parameter'].sudo().get_param('web.base.url')
 
     session_url = f'{url}/web/session/authenticate'
-    _logger.info('-----session_url----', session_url)
     data = {
         'jsonrpc': '2.0',
         'method': 'call',
@@ -131,9 +129,7 @@ async def login_for_access_token(env: Annotated[Environment, Depends(odoo_env)],
         }
     }
     session_response = requests.post(session_url, json=data)
-    _logger.info('-----session_response----', session_response)
     session_data = session_response.json()
-    _logger.info('-----session_data----', session_data)
     user = session_data.get('result')
 
     # user = None
@@ -145,7 +141,6 @@ async def login_for_access_token(env: Annotated[Environment, Depends(odoo_env)],
         )
     
     res_partner = env["res.partner"].sudo().search([('id', 'like', user.get('partner_id'))])
-    print('----res_partner------', res_partner.contact_address_complete)
 
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
@@ -161,7 +156,19 @@ async def login_for_access_token(env: Annotated[Environment, Depends(odoo_env)],
     )
 
     return Token1(data=Token(token=access_token, token_type="bearer"))
+
+
+@router.post("/logout")
+async def logout(env: Annotated[Environment, Depends(odoo_env)], logout_schema: LogoutSchema):
+    _token = logout_schema.model_dump()
+    if not _token:
+        return make_response(msg='logout fail', status=0)
     
+    res = remove_token(_token)
+    if res:
+        return make_response(msg='success', status=1)
+    return make_response(msg='false', status=0)
+
 
 @router.post("/create-receipt")
 async def create_receipt(env: Annotated[Environment, Depends(odoo_env)], receipt_schema:ReceiptSchema):
@@ -211,7 +218,7 @@ async def create_receipt(env: Annotated[Environment, Depends(odoo_env)], receipt
         'description_picking': f'Delivery Pack {_attibute_value}'
     })
     if not new_stock_move:
-        return make_response(msg="create stock move failed", status=0)       
+        return make_response(msg="create stock move failed", status=0)
 
     return make_response(
         data={
@@ -381,8 +388,14 @@ async def get_order_by_store(env: Annotated[Environment, Depends(odoo_env)],page
     )
 
 @router.get("/get-picking")
-async def get_receipt(env: Annotated[Environment, Depends(odoo_env)],store_id: int, state_picking:str = 'draft', pageIndex: int = 1, pageSize: int = 10):
-    _store_id = 7   
+async def get_receipt(
+        env: Annotated[Environment, Depends(odoo_env)], 
+        # current_user: Annotated[dict, Depends(get_current_active_user)], 
+        store_id: int, state_picking:str = 'draft', pageIndex: int = 1, pageSize: int = 10
+    ):
+    
+    # _store_id = current_user.get('store_id')
+    _store_id = 7
     try:
         if state_picking in RECIEPT_STATE:
             match state_picking:
@@ -446,7 +459,6 @@ async def get_receipt(env: Annotated[Environment, Depends(odoo_env)],store_id: i
             })
 
     except Exception as e:
-        _logger.info('-----Exception----', e)
         return make_response(
             msg=e,
             status=0
@@ -465,7 +477,6 @@ async def get_receipt_by_id(env: Annotated[Environment, Depends(odoo_env)],store
     try:
         picking_model = env['stock.picking'].sudo().search([('id','=',id), ('partner_id','=',store_id)],limit=1)
 
-        
         for item in picking_model:
             _stock_lot_data = []
             _stock_lot = env['stock.lot'].sudo().search([('picking_id','=',item.id)])
