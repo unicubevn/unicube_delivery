@@ -164,7 +164,7 @@ async def logout(
         current_user: Annotated[dict, Depends(get_current_active_user)],
         logout_schema: LogoutSchema
     ):
-    
+
     _token = logout_schema.model_dump()
     if not _token:
         return make_response(msg='logout fail', status=0)
@@ -548,7 +548,11 @@ async def get_receipt_by_id(
 
 
 @router.get("/get-country-state")
-async def country_state(env: Annotated[Environment, Depends(odoo_env)], country_id: int = 241):
+async def country_state(
+        env: Annotated[Environment, Depends(odoo_env)],
+        current_user: Annotated[dict, Depends(get_current_active_user)],
+        country_id: int = 241
+    ):
 
     _result = get_country_state(env=env, country_id=country_id )
 
@@ -558,7 +562,11 @@ async def country_state(env: Annotated[Environment, Depends(odoo_env)], country_
     
 
 @router.get("/get-country-district")
-async def country_district(env: Annotated[Environment, Depends(odoo_env)], state_id: int):
+async def country_district(
+        env: Annotated[Environment, Depends(odoo_env)], 
+        current_user: Annotated[dict, Depends(get_current_active_user)],
+        state_id: int
+    ):
 
     _result = get_country_district(env=env, state_id=state_id )
 
@@ -567,10 +575,13 @@ async def country_district(env: Annotated[Environment, Depends(odoo_env)], state
     )
 
 @router.get("/get-country-ward")
-async def country_ward(env: Annotated[Environment, Depends(odoo_env)], district_id: int):
+async def country_ward(
+        env: Annotated[Environment, Depends(odoo_env)], 
+        current_user: Annotated[dict, Depends(get_current_active_user)],
+        district_id: int
+    ):
 
     _result = get_country_ward(env=env, district_id=district_id )
-
     return make_response(
         data=_result
     )
