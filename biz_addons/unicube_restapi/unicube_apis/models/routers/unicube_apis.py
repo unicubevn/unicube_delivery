@@ -346,8 +346,9 @@ async def update_stock_move(
 
 @router.post("/confirm-picking")
 async def confirm_picking(
-        env: Annotated[Environment, Depends(odoo_env)], confirm_picking_schema: ConfirmPickingSchema,
+        env: Annotated[Environment, Depends(odoo_env)],
         current_user: Annotated[dict, Depends(get_current_active_user)],
+        confirm_picking_schema: ConfirmPickingSchema,
     ):
 
     _data = confirm_picking_schema.model_dump()
@@ -433,6 +434,9 @@ async def get_receipt(
                     _state = 'assigned'
                 case 'delivered':
                     _state = 'done'
+                case 'cancelled':
+                    _state = 'cancel'
+
             picking_model = env['stock.picking'].sudo().search([('partner_id','=',_store_id), ('DO_state','=',_state)], offset=(pageIndex - 1) * pageSize, limit=pageSize)
             total = picking_model.sudo().search_count([('partner_id','=',_store_id), ('DO_state','=',_state)])
 
