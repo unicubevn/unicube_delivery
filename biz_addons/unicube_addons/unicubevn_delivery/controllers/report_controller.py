@@ -14,7 +14,7 @@ class ReportController(ReportController):
         '/report_api/<converter>/<reportname>/<docids>',
     ], type='http', auth='none', website=True)
     def report_routes(self, reportname, docids=None, converter=None, **data):
-        report = request.env['ir.actions.report']
+        report = request.env['ir.actions.report'].sudo()
         context = dict(request.env.context)
 
         if docids:
