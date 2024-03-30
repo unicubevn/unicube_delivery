@@ -159,7 +159,12 @@ async def login_for_access_token(env: Annotated[Environment, Depends(odoo_env)],
 
 
 @router.post("/logout")
-async def logout(env: Annotated[Environment, Depends(odoo_env)], logout_schema: LogoutSchema):
+async def logout(
+        env: Annotated[Environment, Depends(odoo_env)],
+        current_user: Annotated[dict, Depends(get_current_active_user)],
+        logout_schema: LogoutSchema
+    ):
+    
     _token = logout_schema.model_dump()
     if not _token:
         return make_response(msg='logout fail', status=0)
@@ -171,7 +176,11 @@ async def logout(env: Annotated[Environment, Depends(odoo_env)], logout_schema: 
 
 
 @router.post("/create-receipt")
-async def create_receipt(env: Annotated[Environment, Depends(odoo_env)], receipt_schema:ReceiptSchema):
+async def create_receipt(
+        env: Annotated[Environment, Depends(odoo_env)],
+        current_user: Annotated[dict, Depends(get_current_active_user)],
+        receipt_schema:ReceiptSchema
+    ):
 
     _data = receipt_schema.model_dump()
 
@@ -235,7 +244,11 @@ async def create_receipt(env: Annotated[Environment, Depends(odoo_env)], receipt
     )
 
 @router.post("/create-order")
-async def create_order(env: Annotated[Environment, Depends(odoo_env)], order_schema: OrderSchema):
+async def create_order(
+        env: Annotated[Environment, Depends(odoo_env)],
+        current_user: Annotated[dict, Depends(get_current_active_user)],
+        order_schema: OrderSchema
+    ):
     
     _model_dump = order_schema.model_dump()
     _package_items = _model_dump.get('package_items')
@@ -332,7 +345,11 @@ async def update_stock_move(
 
 
 @router.post("/confirm-picking")
-async def confirm_picking(env: Annotated[Environment, Depends(odoo_env)], confirm_picking_schema: ConfirmPickingSchema):
+async def confirm_picking(
+        env: Annotated[Environment, Depends(odoo_env)], confirm_picking_schema: ConfirmPickingSchema,
+        current_user: Annotated[dict, Depends(get_current_active_user)],
+    ):
+
     _data = confirm_picking_schema.model_dump()
     try:
         _stock_picking = env['stock.picking'].sudo().search([('id','=',_data.get('picking_id')), ('partner_id','=',_data.get('store_id'))])
@@ -472,7 +489,12 @@ async def get_receipt(
     )
 
 @router.get("/get-picking-by-id")
-async def get_receipt_by_id(env: Annotated[Environment, Depends(odoo_env)],store_id: int, id: int):
+async def get_receipt_by_id(
+        env: Annotated[Environment, Depends(odoo_env)],
+        current_user: Annotated[dict, Depends(get_current_active_user)],
+        store_id: int,
+        id: int
+    ):
     try:
         picking_model = env['stock.picking'].sudo().search([('id','=',id), ('partner_id','=',store_id)],limit=1)
 
@@ -555,7 +577,11 @@ async def country_ward(env: Annotated[Environment, Depends(odoo_env)], district_
 
 
 @router.get("/get-contact-by-phone")
-async def get_contact(env: Annotated[Environment, Depends(odoo_env)], store_id: int, phone: str):
+async def get_contact(
+        env: Annotated[Environment, Depends(odoo_env)],
+        current_user: Annotated[dict, Depends(get_current_active_user)],
+        store_id: int, phone: str
+    ):
     _contact_data = handle_get_contact(env, store_id=store_id, phone=phone)
     
     return make_response(
@@ -563,7 +589,10 @@ async def get_contact(env: Annotated[Environment, Depends(odoo_env)], store_id: 
     )
 
 @router.post("/create-contact")
-async def create_contact(env: Annotated[Environment, Depends(odoo_env)], contact_schema:ContactSchema):
+async def create_contact(
+        env: Annotated[Environment, Depends(odoo_env)], contact_schema:ContactSchema,
+        current_user: Annotated[dict, Depends(get_current_active_user)],
+    ):
     
     _data = contact_schema.model_dump()
     result = handle_create_conract(env=env, contact_info=_data)
@@ -574,7 +603,11 @@ async def create_contact(env: Annotated[Environment, Depends(odoo_env)], contact
 
 
 @router.get("/get-contact-by-store")
-async def get_contact_by_store(env: Annotated[Environment, Depends(odoo_env)], store_id: int, pageIndex: int = 1, pageSize: int = 10):
+async def get_contact_by_store(
+        env: Annotated[Environment, Depends(odoo_env)],
+        current_user: Annotated[dict, Depends(get_current_active_user)],
+        store_id: int, pageIndex: int = 1, pageSize: int = 10
+    ):
     contact_data, total = handle_get_contact_by_store(env, store_id, pageIndex, pageSize)
 
     return make_response(
