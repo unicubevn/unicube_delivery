@@ -422,6 +422,8 @@ async def get_receipt(
                     _state = 'assigned'
                 case 'receiving':
                     _state = 'done'
+                case 'cancelled':
+                    _state = 'cancel'
 
             picking_model = env['stock.picking'].sudo().search([('partner_id','=',_store_id), ('state','=',_state)], offset=(pageIndex - 1) * pageSize, limit=pageSize, order="id desc")
             total = picking_model.sudo().search_count([('partner_id','=',_store_id), ('state','=',_state)])
@@ -434,8 +436,6 @@ async def get_receipt(
                     _state = 'assigned'
                 case 'delivered':
                     _state = 'done'
-                case 'cancelled':
-                    _state = 'cancel'
 
             picking_model = env['stock.picking'].sudo().search([('partner_id','=',_store_id), ('DO_state','=',_state)], offset=(pageIndex - 1) * pageSize, limit=pageSize, order="id desc")
             total = picking_model.sudo().search_count([('partner_id','=',_store_id), ('DO_state','=',_state)])
