@@ -127,6 +127,10 @@ class StockPicking(models.Model):
             self.env['stock.picking'].sudo().search([('DO_id','=', self.id)]).write({
                 'DO_state': 'done'
             })
+        elif self.state == 'cancel' and self.picking_type_id.id == 2:
+            self.env['stock.picking'].sudo().search([('DO_id','=', self.id)]).write({
+                'DO_state': 'cancelled'
+            })
 
         elif self.state == 'done' and self.picking_type_id.id == 1:
             print('logic create D.O here')
