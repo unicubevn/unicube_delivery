@@ -23,9 +23,10 @@ def handle_create_conract(env, contact_info):
             
             'store_id': contact_info.get('store_id'),
             'account_type': contact_info.get('account_type'),
-            'contact_address_complete': contact_info.get('contact_address_complete'),
+            # 'contact_address_complete': contact_info.get('contact_address_complete'),
             'type': 'contact',
-
+            'active': contact_info.get('active'),
+            'is_company': False
         })
         if result:
             return True
