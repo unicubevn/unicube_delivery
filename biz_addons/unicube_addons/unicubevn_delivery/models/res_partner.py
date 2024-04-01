@@ -1,7 +1,7 @@
 #   Copyright (c) by The UniCube, 2024.
 #   License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 #   These code are maintained by The UniCube.
-from odoo import models, fields, _
+from odoo import models, api, fields, _
 
 
 class ResPartner(models.Model):
@@ -40,3 +40,21 @@ class ResPartner(models.Model):
             'company_id': self.env.company.id,
             'company_ids': [(6, 0, self.env.company.ids)],
         })
+    
+    @api.depends('street', 'zip', 'city', 'country_id')
+    def _compute_complete_address(self):
+        for record in self:
+            record.contact_address_complete = ''
+            if record.street:
+                record.contact_address_complete += record.street + ', '
+            if record.street2:
+                record.contact_address_complete += record.street2 + ', '
+            if record.zip:
+                record.contact_address_complete += record.zip + ' '
+            if record.city:
+                record.contact_address_complete += record.city + ', '
+            if record.state_id:
+                record.contact_address_complete += record.state_id.name + ', '
+            if record.country_id:
+                record.contact_address_complete += record.country_id.name
+            record.contact_address_complete = record.contact_address_complete.strip().strip(',')
