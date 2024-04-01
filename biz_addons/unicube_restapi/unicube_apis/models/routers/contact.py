@@ -5,7 +5,10 @@ import logging
 _logger = logging.getLogger(__name__)
 
 def handle_create_conract(env, contact_info):
+
     try: 
+        slug_addres = env['res.country.ward'].sudo().browse(contact_info.get('ward_id'))
+
         result = env['res.partner'].sudo().create({
             'name': contact_info.get('name'),
             'company_id': contact_info.get('company_id'),
@@ -16,9 +19,9 @@ def handle_create_conract(env, contact_info):
             'mobile': contact_info.get('mobile'),
             'district_id': contact_info.get('district_id'),
             'ward_id': contact_info.get('ward_id'),
-
             'street': contact_info.get('street'),
-            'street2': contact_info.get('street2'),
+             
+            'street2': slug_addres.slug2,
             'city': contact_info.get('city'),
             
             'store_id': contact_info.get('store_id'),
