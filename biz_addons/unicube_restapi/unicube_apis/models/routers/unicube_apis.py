@@ -536,6 +536,7 @@ async def get_receipt_by_id(
                 'type': item.type,
 
                 'phone': item.contact_phone,
+                'name': item.contact_name,
                 'address': item.contact_address,
                 'owner_id': item.owner_id.id,
 
