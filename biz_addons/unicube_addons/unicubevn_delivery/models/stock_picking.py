@@ -23,6 +23,8 @@ class StockPicking(models.Model):
 
     contact_phone = fields.Char(string='Phone')
     contact_address = fields.Char(string='Address')
+    contact_name = fields.Char(string='Name')
+    
     DO_id = fields.Integer(string='DO id')
     DO_state = fields.Char(string='Delivery Order State')
 

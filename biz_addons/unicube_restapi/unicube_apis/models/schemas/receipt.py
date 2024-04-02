@@ -8,5 +8,6 @@ class ReceiptSchema(BaseModel):
     scheduled_date: int
 
     contact_id: int
+    contact_name: str
     contact_phone: str
     contact_address: str

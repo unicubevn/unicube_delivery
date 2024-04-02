@@ -200,6 +200,7 @@ async def create_receipt(
         'partner_id': _data.get('store_id'),
         'owner_id': _data.get('contact_id'),
         'contact_phone': _data.get('contact_phone'),
+        'contact_name': _data.get('contact_name'),
         'contact_address': _data.get('contact_address'),
         'company_id': 1,
         'type': _data.get('type'),
