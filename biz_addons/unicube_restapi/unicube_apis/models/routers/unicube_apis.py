@@ -473,6 +473,7 @@ async def get_receipt(
                 'store_phone': item.partner_id.id,
                 'store_name': item.partner_id.name,
                 'phone': item.owner_id.phone,
+                'contact_name': item.contact_name,
                 'address': item.owner_id.contact_address_complete,
 
                 'item': _stock_lot_data,
