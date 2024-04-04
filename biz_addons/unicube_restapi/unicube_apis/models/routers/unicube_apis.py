@@ -410,10 +410,23 @@ async def get_order_by_store(env: Annotated[Environment, Depends(odoo_env)],page
 async def get_receipt(
         env: Annotated[Environment, Depends(odoo_env)], 
         current_user: Annotated[dict, Depends(get_current_active_user)],
-        store_id: int, state_picking:str = 'draft', pageIndex: int = 1, pageSize: int = 10
+        store_id: int,
+        state_picking:str = 'draft',
+        code: str = '',
+        phone: str = '',
+        pageIndex: int = 1,
+        pageSize: int = 10
     ):
     
+
+    addons_filter = ()
+    if code:
+        addons_filter = ('name','=',code)
+    if phone:
+        addons_filter = ('contact_phone','=', phone)
+
     _store_id = current_user.get('store_id')
+    # _store_id = 7
     try:
         if state_picking in RECIEPT_STATE:
             match state_picking:
@@ -426,8 +439,18 @@ async def get_receipt(
                 case 'cancelled':
                     _state = 'cancel'
 
-            picking_model = env['stock.picking'].sudo().search([('partner_id','=',_store_id), ('state','=',_state)], offset=(pageIndex - 1) * pageSize, limit=pageSize, order="id desc")
-            total = picking_model.sudo().search_count([('partner_id','=',_store_id), ('state','=',_state)])
+            _filter = [('partner_id', '=', _store_id), ('state', '=', _state)]
+            if addons_filter:
+                _filter.append(addons_filter)
+
+
+            picking_model = env['stock.picking'].sudo().search(
+                _filter,
+                offset=(pageIndex - 1) * pageSize,
+                limit=pageSize,
+                order="id desc"
+            )
+            total = picking_model.sudo().search_count(_filter)
 
         else:
             match state_picking:
@@ -438,8 +461,17 @@ async def get_receipt(
                 case 'delivered':
                     _state = 'done'
 
-            picking_model = env['stock.picking'].sudo().search([('partner_id','=',_store_id), ('DO_state','=',_state)], offset=(pageIndex - 1) * pageSize, limit=pageSize, order="id desc")
-            total = picking_model.sudo().search_count([('partner_id','=',_store_id), ('DO_state','=',_state)])
+            _filter = [('partner_id','=',_store_id), ('DO_state','=',_state)]
+            if addons_filter:
+                _filter.append(addons_filter)
+
+            picking_model = env['stock.picking'].sudo().search(
+                _filter,
+                offset=(pageIndex - 1) * pageSize,
+                limit=pageSize,
+                order="id desc"
+            )
+            total = picking_model.sudo().search_count(_filter)
 
         picking_data = []
         for item in picking_model:
