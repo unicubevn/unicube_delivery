@@ -16,10 +16,10 @@
         "views/res_partner.xml",
         "views/res_users.xml",
         'views/stock_picking_views.xml',
+        'views/stock_picking_views_kaban.xml',
         'views/stock_lot.xml',
         'reports/paper_format.xml',
         'reports/delivery_receipt.xml',
-
     ],
     "images": ["static/description/image.jpeg"],
     'installable': True,
