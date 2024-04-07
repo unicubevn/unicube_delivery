@@ -55,7 +55,7 @@ class StockPickingStateType(models.Model):
         # context = {**action_context, **context}
         # action['context'] = context
         print(f"[('state', '=', '{self.state}'),('picking_type_id', '=', {self.type.id})]")
-        action['domain'] = [('state', '=', self.state),('picking_type_id', '=', self.type.id)]
+        action['domain'] = [('state', '=', self.state),('picking_type_id', '=', self.type.id), ('user_id','=',self.env.uid)]
         return action
     def get_stock_picking_action_picking_type_shiper(self):
         return self._get_action_shiper('stock.stock_picking_action_picking_type')
