@@ -15,6 +15,7 @@ _logger = logging.getLogger(__name__)
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
+    # state_type_id = fields.Many2one(comodel_name='stock.picking.state_type', string='state_type_id')
     invoice_id = fields.Many2one('account.move', string='Invoice')
     total_order = fields.Integer(string='Total Order')
     total_package_price = fields.Monetary(string='Package Price', currency_field='currency_id')

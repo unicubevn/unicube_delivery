@@ -40,13 +40,22 @@
                             </div>
                             <div class="o_kanban_record_body">
                                 <field name="picking_properties" widget="properties"/>
-                                <label for="total_price" string="Phí ship"/>
-                                <field name="total_price" string="Total Order" />
-                                <label for="total_package_price" string="Tổng tiền"/>
-                                <field name="total_package_price" string="Tổng tiền" />
+
                             </div>
                             <div class="o_kanban_record_bottom">
                                 <div class="oe_kanban_bottom_left">
+                                        <span>Phí ship: </span>
+                                        <field name="total_price" />
+                                </div>
+                                <div class="oe_kanban_bottom_right">
+                                        <span>Tổng tiền: </span>
+                                        <field name="total_package_price" />
+                                </div>
+                            </div>
+
+                            <div class="o_kanban_record_bottom">
+                                <div class="oe_kanban_bottom_left">
+
                                     <t t-esc="record.partner_id.value"/>
                                     <field name="activity_ids" widget="kanban_activity"/>
                                     <field name="json_popover" nolabel="1" widget="stock_rescheduling_popover" invisible="not json_popover"/>

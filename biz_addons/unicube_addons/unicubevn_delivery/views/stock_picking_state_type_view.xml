@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ #  Copyright (c) by The UniCube, 2024.
+  ~ #  License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+  ~ #  These code are maintained by The UniCube.
+  -->
+<odoo>
+
+
+    <record id="unicube_stock_picking_type_kanban1" model="ir.ui.view">
+        <field name="name">unicub stock </field>
+        <field name="model">stock.picking.state_type</field>
+        <field name="mode">primary</field>
+<!--        <field name="inherit_id" ref="stock.stock_picking_type_kanban"/>-->
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_dashboard o_emphasize_colors" create="0" group_create="false">
+                <field name="name"/>
+                <field name="type"/>
+                <field name="state"/>
+
+                <field name="count_picking_draft"/>
+                <field name="count_picking_waiting"/>
+                <field name="count_picking_late"/>
+                <field name="count_picking_backorders"/>
+<!--                <field name="show_picking_type" invisible="1"/>-->
+                <templates>
+
+                    <t t-name="kanban-box">
+                        <div style="height: 60px" class="d-flex justify-content-center align-items-center">
+                            <div t-attf-class="o_kanban_card_header ">
+                                <div class="o_kanban_card_header_title">
+                                    <div class="o_primary" >
+                                        <a type="object" name="get_stock_picking_action_picking_type_shiper" >
+                                            <field name="name"/>
+                                        </a>
+                                    </div>
+
+<!--                                    <div class="o_secondary"><field class="o_secondary"  name="warehouse_id" readonly="1" groups="stock.group_stock_multi_warehouses"/></div>-->
+                                </div>
+                            </div>
+                        </div>
+
+<!--                        <div class="container o_kanban_card_content" t-if="!selection_mode">-->
+<!--                            <div class="row">-->
+<!--                                <div class="col-6 o_kanban_primary_left">-->
+<!--                                    <div class="btn btn-primary" type="object">-->
+<!--                                        <span><t t-esc="record.count_picking_draft.value"/> To Process</span>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+
+<!--                            </div>-->
+<!--                        </div>-->
+                    </t>
+
+
+                </templates>
+
+            </kanban>
+        </field>
+    </record>
+
+    <record id="stock_picking_state_type_action" model="ir.actions.act_window">
+        <field name="name">State Type</field>
+        <field name="res_model">stock.picking.state_type</field>
+        <field name="view_mode">kanban,form</field>
+         <field name="view_id" ref="unicube_stock_picking_type_kanban1"/>
+
+    </record>
+
+    <menuitem
+        action="stock_picking_state_type_action"
+        id="stock_picking_state_type_menu"
+        parent="stock.menu_stock_root" sequence="0"
+        name="State Picking"/>
+</odoo>
