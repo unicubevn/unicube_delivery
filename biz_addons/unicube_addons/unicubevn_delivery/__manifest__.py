@@ -18,7 +18,7 @@
         "views/res_users.xml",
         'views/stock_picking_views.xml',
         'views/stock_picking_views_kaban.xml',
-        'views/stock_picking_type_view_kanban.xml',
+        # 'views/stock_picking_type_view_kanban.xml',
         'views/stock_picking_state_type_view.xml',
         'views/stock_lot.xml',
         'reports/paper_format.xml',
