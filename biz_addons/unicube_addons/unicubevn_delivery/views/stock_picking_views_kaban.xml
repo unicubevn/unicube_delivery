@@ -70,6 +70,7 @@
                                 <field name="contact_phone" position="attributes">
                                     <attribute name="click-to-call">true</attribute>
                                 </field>
+                                <button name="action_do_something" string="Click me" type="object"/>
                             </div>
                             <div class="o_kanban_record_body">
                                 <field name="contact_address" />
