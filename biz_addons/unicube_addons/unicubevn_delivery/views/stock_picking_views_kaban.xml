@@ -67,7 +67,9 @@
                                 </div>
                             </div>
                             <div class="o_kanban_record_body">
-                                <field name="contact_phone" />
+                                <field name="contact_phone" position="attributes">
+                                    <attribute name="click-to-call">true</attribute>
+                                </field>
                             </div>
                             <div class="o_kanban_record_body">
                                 <field name="contact_address" />
