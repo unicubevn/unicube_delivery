@@ -31,5 +31,8 @@
         'web.report_assets_common': [
             "unicubevn_delivery/static/src/scss/report.scss",
         ],
+        'web.assets_backend': [
+            "unicubevn_delivery/static/src/scss/kanban.scss",
+        ]
     }
 }

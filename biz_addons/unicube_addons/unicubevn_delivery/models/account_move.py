@@ -8,4 +8,5 @@ class AccountMove(models.Model):
     _inherit = 'account.move'
 
     picking_id = fields.Integer(string='Receipt Id')
-    
+    deliver_id = fields.Many2one('res.partner', string='Deliver ID')
+    receiver_id = fields.Many2one('res.partner', string='Receiver ID')

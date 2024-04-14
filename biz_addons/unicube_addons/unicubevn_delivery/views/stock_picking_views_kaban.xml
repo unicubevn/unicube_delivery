@@ -42,9 +42,9 @@
                                 <field name="picking_properties" widget="properties"/>
 
                             </div>
-                            <div class="o_kanban_record_bottom">
+                            <div class="o_kanban_record_bottom kanban_price">
                                 <div class="oe_kanban_bottom_left">
-                                        <span>Phí ship: </span>
+                                        <span >Phí ship: </span>
                                         <field name="total_price" />
                                 </div>
                                 <div class="oe_kanban_bottom_right">
@@ -70,7 +70,7 @@
                                 <field name="contact_phone" position="attributes">
                                     <attribute name="click-to-call">true</attribute>
                                 </field>
-                                <button name="action_do_something" string="Click me" type="object"/>
+                                <button name="action_tel" class="text_tel" string="Gọi ngay" type="object"/>
                             </div>
                             <div class="o_kanban_record_body">
                                 <field name="contact_address" />

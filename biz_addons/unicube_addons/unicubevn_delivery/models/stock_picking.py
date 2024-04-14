@@ -15,6 +15,11 @@ _logger = logging.getLogger(__name__)
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
+    """
+        picking_type_id = 1 : Reciept
+        picking_type_id = 2 : DO
+    """
+
     # state_type_id = fields.Many2one(comodel_name='stock.picking.state_type', string='state_type_id')
     invoice_id = fields.Many2one('account.move', string='Invoice')
     total_order = fields.Integer(string='Total Order')
@@ -39,8 +44,9 @@ class StockPicking(models.Model):
     qr_id = fields.Char("QR UUID", default=False)
     use_cod = fields.Boolean("Use COD", default=True)
 
-    def action_do_something(self):
-        phone_number = '0976517102'
+    def action_tel(self):
+        phone_number = self.contact_phone
+        print('-----self.phone-------', self.contact_phone)
 
         # Xây dựng URL để gọi điện thoại
         url = f'tel:{phone_number}'
@@ -51,6 +57,22 @@ class StockPicking(models.Model):
             'url': url,
             'target': 'self',  # Mở URL trong cửa sổ hiện tại
         }
+
+    @api.onchange('user_id')
+    def _onchange_user_id(self):
+        if self.picking_type_id.id == 1:
+            self.env['account.move'].sudo().search([('picking_id', '=', self.id)]).write({
+                'deliver_id': self.user_id
+            })
+        else:
+            _picking_id = self.env['stock.picking'].sudo().search([('DO_id', '=', self.id)])
+            if not _picking_id:
+                _logger.info('picking id not found!')
+            else:
+                self.env['account.move'].sudo().search([('picking_id', '=', _picking_id)]).write({
+                    'receiver_id': self.user_id
+                })
+        pass
 
     @api.depends('partner_id', 'total_package_price', 'name','use_cod')
     def _compute_qr_data(self, anchor="CUB", txn_code="D"):
@@ -118,6 +140,7 @@ class StockPicking(models.Model):
                     'account_id': invoice_line_account_in_odoo.id,    
                     'price_unit': _total_price,
                     'quantity': 1,
+                    'picking_id': self.id
                     })],
                 })
                 print('----------invoice-----', invoice)
