@@ -46,8 +46,6 @@ class StockPicking(models.Model):
 
     def action_tel(self):
         phone_number = self.contact_phone
-        print('-----self.phone-------', self.contact_phone)
-
         # Xây dựng URL để gọi điện thoại
         url = f'tel:{phone_number}'
 
@@ -61,16 +59,17 @@ class StockPicking(models.Model):
     @api.onchange('user_id')
     def _onchange_user_id(self):
         if self.picking_type_id.id == 1:
-            self.env['account.move'].sudo().search([('picking_id', '=', self.id)]).write({
-                'deliver_id': self.user_id
+
+            res_update = self.env['account.move'].sudo().search([('picking_id', '=', self._origin.id)]).write({
+                'deliver_id': self.user_id.id
             })
         else:
-            _picking_id = self.env['stock.picking'].sudo().search([('DO_id', '=', self.id)])
+            _picking_id = self.env['stock.picking'].sudo().search([('DO_id', '=', self._origin.id)])
             if not _picking_id:
                 _logger.info('picking id not found!')
             else:
-                self.env['account.move'].sudo().search([('picking_id', '=', _picking_id)]).write({
-                    'receiver_id': self.user_id
+                self.env['account.move'].sudo().search([('picking_id', '=', _picking_id.id)]).write({
+                    'receiver_id': self.user_id.id
                 })
         pass
 
@@ -110,7 +109,6 @@ class StockPicking(models.Model):
     def _compute_state(self):
         super()._compute_state()
 
-        print('------logic here-----', self)
         if self.state == 'assigned' and self.picking_type_id.id == 1:
             _code = 5111
             try:
@@ -135,15 +133,16 @@ class StockPicking(models.Model):
                     'ref': 'B65253',
                     'invoice_date': date.today(),
                     'invoice_date_due': date.today(),
+                    'picking_id': self.id,
+                    'deliver_id': self.user_id.id,
+                    'receiver_id': self.user_id.id,
                     'invoice_line_ids': [(0,0,{
-                    'name': _name_ac_move,
-                    'account_id': invoice_line_account_in_odoo.id,    
-                    'price_unit': _total_price,
-                    'quantity': 1,
-                    'picking_id': self.id
+                        'name': _name_ac_move,
+                        'account_id': invoice_line_account_in_odoo.id,
+                        'price_unit': _total_price,
+                        'quantity': 1
                     })],
                 })
-                print('----------invoice-----', invoice)
 
                 if not invoice:
                     return make_response(msg='create account move failure!', status=1)
