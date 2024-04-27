@@ -25,8 +25,8 @@ class StockPicking(models.Model):
     total_order = fields.Integer(string='Total Order')
     total_package_price = fields.Monetary(string='Package Price', currency_field='currency_id')
     total_price = fields.Monetary(string='Price', currency_field='currency_id')
-    type = fields.Integer(string='Type', default=0)
 
+    type = fields.Integer(string='Type', default=0)
     contact_phone = fields.Char(string='Phone')
     contact_address = fields.Char(string='Address')
     contact_name = fields.Char(string='Name')
@@ -43,6 +43,26 @@ class StockPicking(models.Model):
     qr_raw_data = fields.Char(string="QR data", compute="_compute_qr_data", store=True, default=False)
     qr_id = fields.Char("QR UUID", default=False)
     use_cod = fields.Boolean("Use COD", default=True)
+    is_partial = fields.Boolean(string="Is Partial", default=False)
+
+    # state = fields.Selection(selection_add=[('appointment', 'Appointment Order'), ('partial', 'Partial Order')])
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('waiting', 'Waiting Another Operation'),
+        ('confirmed', 'Waiting'),
+        ('assigned', 'Ready'),
+        ('appointment', 'Appointment Order'),
+        ('partial', 'Partial Order'),
+        ('done', 'Done'),
+        ('cancel', 'Cancelled'),
+    ], string='Status', compute='_compute_state',
+        copy=False, index=True, readonly=True, store=True, tracking=True,
+        help=" * Draft: The transfer is not confirmed yet. Reservation doesn't apply.\n"
+             " * Waiting another operation: This transfer is waiting for another operation before being ready.\n"
+             " * Waiting: The transfer is waiting for the availability of some products.\n(a) The shipping policy is \"As soon as possible\": no product could be reserved.\n(b) The shipping policy is \"When all products are ready\": not all the products could be reserved.\n"
+             " * Ready: The transfer is ready to be processed.\n(a) The shipping policy is \"As soon as possible\": at least one product has been reserved.\n(b) The shipping policy is \"When all products are ready\": all product have been reserved.\n"
+             " * Done: The transfer has been processed.\n"
+             " * Cancelled: The transfer has been cancelled.")
 
     def action_tel(self):
         phone_number = self.contact_phone
@@ -161,6 +181,15 @@ class StockPicking(models.Model):
             self.env['stock.picking'].sudo().search([('DO_id','=', self.id)]).write({
                 'DO_state': 'assigned'
             })
+        elif self.state == 'appointment' and self.picking_type_id.id == 2:
+            self.env['stock.picking'].sudo().search([('DO_id','=', self.id)]).write({
+                'DO_state': 'appointment'
+            })
+        elif self.state == 'partial' and self.picking_type_id.id == 2:
+            print('state partial update ----',self.id )
+            self.env['stock.picking'].sudo().search([('DO_id','=', self.id)]).write({
+                'DO_state': 'partial'
+            })
         elif self.state == 'done' and self.picking_type_id.id == 2:
             self.env['stock.picking'].sudo().search([('DO_id','=', self.id)]).write({
                 'DO_state': 'done'
@@ -203,7 +232,6 @@ class StockPicking(models.Model):
             _stock_move.write({
                 'location_id': 8,
                 'location_dest_id': 4,
-
             })
 
             _update_picking = self.write({
@@ -211,5 +239,25 @@ class StockPicking(models.Model):
                 'DO_state': new_picking.state
             })
             pass
+        pass
 
+    def button_appointment(self):
+        self.sudo().write({
+            'state': 'appointment',
+        })
+
+        self.env['stock.picking'].sudo().search([('DO_id', '=', self.id)]).write({
+            'DO_state': 'appointment'
+        })
+        pass
+
+    def button_partial(self):
+        self.sudo().write({
+            'state': 'partial',
+            'is_partial': True
+        })
+        self.env['stock.picking'].sudo().search([('DO_id', '=', self.id)]).write({
+            'is_partial': True,
+            'DO_state': 'partial'
+        })
         pass

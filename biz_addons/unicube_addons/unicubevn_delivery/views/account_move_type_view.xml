@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ #  Copyright (c) by The UniCube, 2024.
+  ~ #  License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+  ~ #  These code are maintained by The UniCube.
+  -->
+<odoo>
+
+
+    <record id="unicube_account_type_list" model="ir.ui.view">
+        <field name="name">unicube account </field>
+        <field name="model">account.move.type</field>
+        <field name="mode">primary</field>
+<!--        <field name="inherit_id" ref="stock.stock_picking_type_kanban"/>-->
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_dashboard o_emphasize_colors" create="0" group_create="false">
+                <field name="name"/>
+                <field name="type"/>
+
+                <templates>
+
+                    <t t-name="kanban-box">
+                        <div style="height: 60px" class="d-flex justify-content-center align-items-center">
+                            <div t-attf-class="o_kanban_card_header ">
+                                <div class="o_kanban_card_header_title">
+                                    <div class="o_primary" >
+                                        <a type="object" name="get_account_action_type_shiper" >
+                                            <field name="name"/>
+                                        </a>
+                                    </div>
+
+<!--                                    <div class="o_secondary"><field class="o_secondary"  name="warehouse_id" readonly="1" groups="stock.group_stock_multi_warehouses"/></div>-->
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="unicube_account_type_menu_action" model="ir.actions.act_window">
+        <field name="name">State Type</field>
+        <field name="res_model">account.move.type</field>
+        <field name="view_mode">kanban,form</field>
+        <field name="view_id" ref="unicube_account_type_list"/>
+
+    </record>
+
+    <menuitem
+        action="unicube_account_type_menu_action"
+        id="unicube_account_type_menu"
+        parent="account.menu_finance" sequence="0"
+        name="Account Custom"/>
+</odoo>

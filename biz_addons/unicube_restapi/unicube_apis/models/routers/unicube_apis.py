@@ -28,6 +28,7 @@ from ..schemas.receipt import ReceiptSchema
 from ..schemas.address import CountrySchema
 from ..schemas.contact import ContactSchema
 from ..schemas.user import LogoutSchema
+from ..schemas.report import ReportResponse
 
 from .handlerespon import make_response
 from .address import get_country_state, get_country_district, get_country_ward
@@ -140,7 +141,7 @@ async def login_for_access_token(env: Annotated[Environment, Depends(odoo_env)],
             headers={"WWW-Authenticate": "Bearer"},
         )
     
-    res_partner = env["res.partner"].sudo().search([('id', 'like', user.get('partner_id'))])
+    res_partner = env["res.partner"].sudo().search([('id', '=', user.get('partner_id'))])
 
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
@@ -183,6 +184,7 @@ async def create_receipt(
     ):
 
     _data = receipt_schema.model_dump()
+    print('----_data------', _data)
 
     _time_data = convert_timestamp_to_datetime(_data.get('scheduled_date'))
 
@@ -651,6 +653,13 @@ async def create_contact(
 
     return make_response(msg='success')
 
+@router.post("/create-store-user")
+async def create_store_user(
+        env: Annotated[Environment, Depends(odoo_env)],
+        contact_schema:ContactSchema
+    ):
+
+    return 'hello create user'
 
 @router.get("/get-contact-by-store")
 async def get_contact_by_store(
@@ -666,6 +675,71 @@ async def get_contact_by_store(
             'total': total
         },
         msg='success'
+    )
+
+def get_status_by_state_and_picking_type(state, picking_type_id):
+    cases = {
+        ("draft", 1): "Nháp",
+        ("assigned", 1): "Chờ lấy hàng",
+        ("done", 1): "Đã nhận hàng",
+        ("draft", 2): "Hàng tới kho giao",
+        ("assigned", 2): "Hàng đang giao",
+        ("done", 2): "Giao thành công",
+        ("cancel", 2): "Huỷ",
+    }
+    return cases.get((state, picking_type_id), "Khác")
+@router.get("/report")
+async def get_report(
+        env: Annotated[Environment, Depends(odoo_env)],
+        store_id : int,start_date : str , end_date : str
+):
+    try:
+        print('get_report', store_id)
+        print('data', start_date)
+        print('date', end_date)
+        query = """
+            SELECT picking_type_id, state, COUNT(*) AS count, 
+                   SUM(total_package_price) AS total_price,
+                   SUM(total_price) AS total_ship
+            FROM stock_picking 
+            WHERE partner_id = %s  
+                AND scheduled_date::date BETWEEN %s AND %s 
+            GROUP BY picking_type_id, state
+            ORDER BY picking_type_id;
+        """
+        print(query)
+        env.cr.execute(query,(store_id,start_date,end_date))
+        rows = env.cr.dictfetchall()
+        reports = []
+        for row in rows:
+            _status = get_status_by_state_and_picking_type(
+            row['state'],
+            row['picking_type_id']
+            )
+            report_instance = ReportResponse(
+                total_order =row['count'],
+                total_price=row['total_price'],
+                total_ship=row['total_ship'],
+                status = _status
+             )
+            reports.append(report_instance)
+
+        print('-----_response----', reports)
+        if not reports:
+            return make_response(
+                msg="Khong co data",
+                status=0
+            )
+    except Exception as e:
+        print('-----_response----', e)
+        make_response(
+            msg=e,
+            status=0
+        )
+
+    return make_response(
+        msg="Aloooo",
+        data=reports
     )
 
 # dummy variables
